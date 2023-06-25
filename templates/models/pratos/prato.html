@@ -1,0 +1,80 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualizar Prato</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <style>
+        /* Estilos adicionais específicos para este template */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .price {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .availability {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .category {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            margin-bottom: 20px;
+        }
+
+        .adicionais-list li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ prato.nome }}</h1>
+        <div class="image-container">
+            <img src="{{ prato.foto.url }}" alt="{{ prato.nome }}">
+        </div>
+        <div class="details">
+            <p class="price">Preço: R$ {{ prato.preco }}</p>
+            <p class="availability">Disponível: {% if prato.disponivel %}Sim{% else %}Não{% endif %}</p>
+            <p class="category">Categoria: {{ prato.get_categoria_display }}</p>
+            <p class="description">{{ prato.descricao }}</p>
+            <h2>Adicionais:</h2>
+            <ul class="adicionais-list">
+                {% for adicional in prato.adicionais.all %}
+                    <li>{{ adicional.nome }}</li>
+                {% empty %}
+                    <li>Nenhum adicional disponível</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

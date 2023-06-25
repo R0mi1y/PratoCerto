@@ -1,0 +1,181 @@
+{% comment %} {% extends "account/base.html" %} {% endcomment %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% comment %} {% block head_title %}{% trans "Sign In" %}{% endblock %} {% endcomment %}
+
+{% block content %}
+
+<style>
+    /* Estilos personalizados */
+    body {
+        background-color: #f2f2f2;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .form-wrapper {
+        max-width: 400px;
+        background-color: #ffffff;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    h1 {
+        color: #ff5a5f;
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    p {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .social-account {
+        background-color: #ffffcc;
+        padding: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    ul.social-account-providers {
+        list-style: none;
+        padding: 0;
+    }
+
+    .login-or {
+        color: #ff5a5f;
+        font-size: 14px;
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    form.login {
+        margin-top: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .button.secondaryAction {
+        color: #ff5a5f;
+        background-color: #ffffcc;
+        border: none;
+        padding: 5px 10px;
+        text-decoration: none;
+        margin-right: 10px;
+        font-size: 14px;
+    }
+
+    button.primaryAction {
+        color: #ffffff;
+        background-color: #ff5a5f;
+        border: none;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        margin-top: 10px;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .forgot-password {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="container">
+  <div class="form-wrapper">
+    <h1>{% trans "Sign In" %}</h1>
+
+    {% get_providers as socialaccount_providers %}
+
+    {% if socialaccount_providers %}
+      <div class="social-account">
+        <ul class="social-account-providers">
+          {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+        </ul>
+        <div class="login-or">{% trans 'or' %}</div>
+      </div>
+
+      {% include "socialaccount/snippets/login_extra.html" %}
+
+      {% endif %}
+      
+    <form class="login" method="POST" action="{% url 'account_login' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+      <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+      <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+    </form>
+    <p>{% blocktrans %}<a href="/clientes/register">Cadastre-se</a>{% endblocktrans %}</p>
+    
+  </div>
+</div>
+{% if messages %}
+<script>
+
+   // Função para fechar o alerta
+   function closeAlert(alert) {
+      alert.remove();
+   }
+
+   // Função para exibir as mensagens de sucesso
+   function showSuccessMessages() {
+      {% for message in messages %}
+      var messageText = "{{ message }}";
+      // Crie um elemento de alerta para cada mensagem
+      var alert = document.createElement('div');
+      alert.className = 'alert alert-success';
+      alert.textContent = messageText;
+      // Crie um botão de fechamento (X)
+      var closeButton = document.createElement('span');
+      closeButton.className = 'alert-close';
+      closeButton.textContent = 'X';
+      closeButton.onclick = function () {
+         closeAlert(alert);
+      };
+      alert.appendChild(closeButton);
+      // Adicione o elemento ao corpo do documento
+      document.body.appendChild(alert);
+      // Defina um tempo limite para remover o elemento após 5 segundos
+      setTimeout(function () {
+         closeAlert(alert);
+      }, 5000); // 5000 milissegundos = 5 segundos
+      {% endfor %}
+   }
+
+   // Chame a função para exibir as mensagens de sucesso
+   showSuccessMessages();
+</script>
+{% endif %}
+{% endblock %}

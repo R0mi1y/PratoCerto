@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Pratos</title>
+</head>
+<style>
+    img {
+        width: 200px;
+        height: auto;
+    }
+</style>
+<body>
+    <h1>Lista de Pratos</h1>
+    <h2>{{ Categoria }}</h2>
+    {% for prato in pratos %}
+        <div>
+            <h2>{{ prato.nome }}</h2>
+            {% if prato.disponivel %}
+                <p>Disponível</p>
+            {% else %}
+                <p>Indisponível</p>
+            {% endif %}
+            {% if prato.foto %}
+                <a href="/pedidos/pedir/{{ prato.id }}"><img src="{{ prato.foto.url }}" alt="Imagem do Prato"></a>
+            {% endif %}
+            <p>R$ {{prato.preco}}</p>
+        </div>
+        <hr>
+    {% endfor %}
+</body>
+</html>

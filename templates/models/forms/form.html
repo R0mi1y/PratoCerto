@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulários</title>
+</head>
+<body>
+    <style>
+        .form-container {
+            background-color: white;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 400px;
+            margin: 0 auto;
+        }
+        
+        .form-container h2 {
+            color: red;
+            text-align: center;
+        }
+        
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-container label {
+            margin-bottom: 10px;
+        }
+        
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .form-container input[type="submit"] {
+            background-color: yellow;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .form-container input[type="submit"]:hover {
+            background-color: gold;
+        }
+    </style>
+    
+    <div class="form-container">
+        <h2>Formulário</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
+    
+</body>
+</html>

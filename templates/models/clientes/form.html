@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulários</title>
+</head>
+<body>
+    <style>
+        .form-container {
+            background-color: white;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 400px;
+            margin: 0 auto;
+        }
+        
+        .form-container h2 {
+            color: red;
+            text-align: center;
+        }
+        
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-container label {
+            margin-bottom: 10px;
+        }
+        
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container input[type="password"],
+        .form-container textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .form-container input[type="submit"] {
+            background-color: yellow;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .form-container input[type="submit"]:hover {
+            background-color: gold;
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 22px 10px;
+            font-family: interBold;
+            font-size: 15px;
+            color: black;
+            background-color: gray;
+            border-radius: 10px;
+            border: 1px solid #90816A;
+            {% comment %} opacity: 0; {% endcomment %}
+            animation-name: fade-in-out;
+            animation-duration: 5s;
+            animation-fill-mode: forwards;
+        }
+        
+        .alert-close {
+            float: right;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 15px;
+            margin-top: -15px;
+        }
+    </style>
+    
+    <div class="form-container">
+        <h2>Formulário</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form_user.username.label }}
+            {{ form_user.username }}
+            {% for error in form_user.username.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            {{ form_user.email.label }}
+            {{ form_user.email }}
+            {% for error in form_user.email.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            
+            {% for field in form_cliente %}
+            {{ field.label }}
+            {{ field }}
+            {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+            {% endfor %}
+            
+            {{ form_user.password.label }}
+            {{ form_user.password }}
+            {% for error in form_user.password.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+
+            {% comment %} {{ form_user }}
+            {{ form_cliente }} {% endcomment %}
+            <input type="submit" value="Enviar">
+        </form>
+        <a href="{% url 'socialaccount_connections' %}">Connections</a>
+    </div>
+    {% if messages %}
+    <script>
+        // Função para fechar o alerta
+        function closeAlert(alert) {
+            alert.remove();
+        }
+
+        // Função para exibir as mensagens de sucesso
+        function showSuccessMessages() {
+            {% for message in messages %}
+            var messageText = "{{ message }}";
+            // Crie um elemento de alerta para cada mensagem
+            var alert = document.createElement('div');
+            alert.className = 'alert alert-success';
+            alert.textContent = messageText;
+            // Crie um botão de fechamento (X)
+            var closeButton = document.createElement('span');
+            closeButton.className = 'alert-close';
+            closeButton.textContent = 'X';
+            closeButton.onclick = function () {
+                closeAlert(alert);
+            };
+            alert.appendChild(closeButton);
+            // Adicione o elemento ao corpo do documento
+            document.body.appendChild(alert);
+            // Defina um tempo limite para remover o elemento após 5 segundos
+            setTimeout(function () {
+                closeAlert(alert);
+            }, 5000); // 5000 milissegundos = 5 segundos
+            {% endfor %}
+        }
+
+        // Chame a função para exibir as mensagens de sucesso
+        showSuccessMessages();
+    </script>
+    {% endif %}
+</body>
+</html>
