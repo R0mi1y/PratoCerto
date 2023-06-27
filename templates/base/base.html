@@ -1,0 +1,51 @@
+<!-- base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Título da Página{% endblock %}</title>
+    <style>
+        /* Estilos para a barra de navegação */
+        .navbar {
+            background-color: gray;
+            color: black;
+            padding: 10px;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+
+        /* Estilos para o rodapé */
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        body {
+            margin: 0 auto;
+        }
+        .content {
+            margin: 0 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <!-- Conteúdo da barra de navegação -->
+        <h1>Minha Barra de Navegação</h1>
+        <a href="{% url "home" %}">Home</a> |
+        <a href="/accounts/logout">Sair</a>
+    </div>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <div class="footer">
+        <!-- Conteúdo do rodapé -->
+        <p>Meu Rodapé</p>
+    </div>
+</body>
+</html>

@@ -15,6 +15,7 @@ urlpatterns = [
     path('garcons/', include('garcons.urls')),
     path('pedidos/', include('pedidos.urls')),
     path('pratos/', include('pratos.urls')),
+    path('eventos/', include('eventos.urls')),
     path('accounts/', include('allauth.urls')),
     path('', redirect_to_login),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

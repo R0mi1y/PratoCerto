@@ -104,11 +104,9 @@
             {{ form_user.password.label }}
             {{ form_user.password }}
             {% for error in form_user.password.errors %}
-                <li>{{ error }}</li>
+            <li>{{ error }}</li>
             {% endfor %}
-
-            {% comment %} {{ form_user }}
-            {{ form_cliente }} {% endcomment %}
+            
             <input type="submit" value="Enviar">
         </form>
         <a href="{% url 'socialaccount_connections' %}">Connections</a>

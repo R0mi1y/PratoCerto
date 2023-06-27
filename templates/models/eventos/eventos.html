@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eventos do Restaurante</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: red;
+        }
+
+        .event-box {
+            background-color: lightyellow;
+            border: 1px solid red;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .event-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+        }
+
+        .event-date {
+            color: red;
+        }
+
+        .message {
+            color: red;
+            font-style: italic;
+        }
+
+        a {
+            color: red;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Eventos do Restaurante</h1>
+
+            {% if events %}
+                <h2>Próximos Eventos:</h2>
+                {% for event in events %}
+                    <div class="event-box">
+                        <div class="event-name">{{ event.nome }}</div>
+                        <div class="event-date">{{ event.data }}</div>
+                        <div class="event-description">{{ event.descricao }}</div>
+                        <div>
+                            <a href="{% url 'editar_evento' event.id %}" style="color: red;">Editar</a>
+                            <a href="{% url 'deletar_evento' event.id %}" style="color: red;">Deletar</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="message">Não há eventos programados no momento.</p>
+            {% endif %}
+
+
+            <h2>Gerenciar Eventos:</h2>
+            <p>Aqui você pode cadastrar e editar eventos:</p>
+            <a href="{% url 'criar_evento' %}" style="color: red;">Cadastrar Evento</a>
+                <!-- Outras opções para editar eventos -->
+
+        </div>
+    </div>
+</body>
+</html>

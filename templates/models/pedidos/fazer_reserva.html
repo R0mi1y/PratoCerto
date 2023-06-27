@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulários</title>
+</head>
+<body>
+    <style>
+        .form-container {
+            background-color: white;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 400px;
+            margin: 0 auto;
+        }
+        
+        .form-container h2 {
+            color: red;
+            text-align: center;
+        }
+        
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-container label {
+            margin-bottom: 10px;
+        }
+        
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container input[type="date"],
+        .form-container input[type="time"],
+        .form-container textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .form-container input[type="submit"] {
+            background-color: yellow;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .form-container input[type="submit"]:hover {
+            background-color: gold;
+        }
+
+        #preco {
+
+        }
+    </style>
+    
+    <div class="form-container">
+        <h2>Formulário</h2>
+        <form method="POST" enctype="multipart/form-data" action="/pedidos/pedir/reserva">
+            {% csrf_token %}
+            {{ form.cliente.label }}
+            {{ form.cliente }}
+            {{ form.mesa.label }}
+            {{ form.mesa }}
+            Data reserva
+            <input type="date" name="data_reserva" required id="id_data_reserva">
+            Horario
+            <input type="time" name="horario" required id="id_horario">
+            Quantidade de pessoas
+            <input type="number" name="qnt_pessoas" min="1" max="0" value="1" required id="id_qnt_pessoas">
+            {{ form.observacao.label }}
+            {{ form.observacao }}
+            {{ form.preco_total }}
+            <h3>Preco Total: </h3><h3 id="preco">R$ 0.00</h3>
+            <input type="submit" value="Enviar">
+
+        </form>
+    </div>
+</body>
+<script>
+    var campo_preco = document.getElementById("preco");
+
+    // Obter o elemento pai que contém os checkboxes
+    var mesaContainer = document.getElementById("id_mesa");
+
+    // Obter todos os checkboxes dentro do elemento pai
+    var checkboxes = mesaContainer.getElementsByTagName("input");
+
+    // Contar quantos checkboxes estão marcados
+    function check_boxes() {
+        var contador = 0;
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].type === "checkbox" && checkboxes[i].checked) {
+                contador++;
+            }
+        }
+        // Substitua 'precoValue' pelo valor real de 'preco'
+        var precoValue = 10; // Exemplo de valor
+        campo_preco.innerHTML = "R$ " + String((contador * precoValue).toFixed(2));
+        document.getElementById("id_preco_total").value = contador * precoValue;
+
+        document.getElementById("id_qnt_pessoas").max = contador * {{ cadeiras_mesa }};
+    }
+
+    // Adicionar evento de mudança para os checkboxes
+    for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].addEventListener("change", check_boxes);
+    }
+
+</script>
+</html>

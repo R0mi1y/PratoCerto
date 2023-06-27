@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Página Inicial - Garçons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .sidebar {
+            background-color: #f2f2f2;
+            padding: 20px;
+            width: 200px;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .table-box {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .table-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .table-status {
+            color: #333;
+        }
+
+        .message {
+            color: #333;
+            font-style: italic;
+        }
+
+        a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Pedidos</a></li>
+                <li><a href="#">Relatórios</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>Página Inicial - Garçons</h1>
+
+            {% if tables %}
+                <h2>Mesas Disponíveis:</h2>
+                {% for table in tables %}
+                    <div class="table-box">
+                        <div class="table-number">Mesa {{ table.number }}</div>
+                        <div class="table-status">Status: {{ table.status }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="message">Não há mesas disponíveis no momento.</p>
+            {% endif %}
+
+            <h2>Pedidos em Andamento:</h2>
+            {% if orders %}
+                <ul>
+                    {% for order in orders %}
+                        <li>{{ order.item }} - {{ order.status }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="message">Não há pedidos em andamento.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

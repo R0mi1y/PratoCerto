@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-qsd8rbl#n!f4)s6$1q1e3ipih)9h-gd2w7607irvs)fr9nn7ki
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'cozinhas',
     'pedidos',
     'pratos',
+    'eventos',
 #  Django all-auth
     'allauth',
     'allauth.account',

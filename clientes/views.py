@@ -1,8 +1,8 @@
+import hashlib
+import random
 from django.shortcuts import render, redirect
 from django.forms import model_to_dict
-from django.http import JsonResponse
 from allauth.socialaccount.models import SocialAccount
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from PratoCerto.settings import AUX
 from .models import *
@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.contrib.auth.decorators import login_required
 
 
 @login_required
@@ -18,13 +19,12 @@ def home(request):
     if not request.user.email or request.user.email == "":
         return redirect("register")
 
-    user2 = model_to_dict(request.user)
-    clienteTrue = Cliente.objects.get(user=request.user.id)
-    userTrue = model_to_dict(clienteTrue.user)
-    clienteTrue = model_to_dict(clienteTrue)
+    cliente = Cliente.objects.get(user=request.user.id)
 
-    data = {"msm": [user2, userTrue, clienteTrue]}
+    data = {}
     data["Categorias"] = AUX["Categorias"]
+    data["codigo_afiliado"] = cliente.codigo_afiliado
+    print(cliente.user)
 
     return render(request, "models/clientes/home.html", data)
 
@@ -73,6 +73,8 @@ def criar_usuario_cliente(request):
                 )
             except:
                 pass
+            
+            cliente.codigo_afiliado = gerar_aleatorio(user.username)
             cliente = cliente.save()
             messages.success(request, "Cadastro realizado com sucesso!")
 
@@ -88,3 +90,16 @@ def criar_usuario_cliente(request):
         "models/clientes/form.html",
         {"form_user": form_user, "form_cliente": form_cliente},
     )
+
+
+def gerar_aleatorio(string):
+    # Concatena a string com um valor aleatório (neste caso, um número inteiro)
+    string_aleatoria = string + str(random.randint(1, 10000))
+    
+    # Aplica a função de hash (SHA-256) à string aleatória
+    hash_object = hashlib.sha256(string_aleatoria.encode())
+    hash_hex = hash_object.hexdigest()
+    
+    print(hash_hex)
+    
+    return hash_hex
