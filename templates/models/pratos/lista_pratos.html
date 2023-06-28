@@ -1,17 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Pratos</title>
-</head>
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Lista de Pratos{% endblock %}
+
+{% block content %}
 <style>
     img {
         width: 200px;
         height: auto;
     }
 </style>
-<body>
     <h1>Lista de Pratos</h1>
     <h2>{{ Categoria }}</h2>
     {% for prato in pratos %}
@@ -23,11 +22,14 @@
                 <p>Indisponível</p>
             {% endif %}
             {% if prato.foto %}
-                <a href="/pedidos/pedir/{{ prato.id }}"><img src="{{ prato.foto.url }}" alt="Imagem do Prato"></a>
+                {% if cliente.tipo_conta == "Cliente" %}
+                    <a href="/pedidos/pedir/{{ prato.id }}"><img src="{{ prato.foto.url }}" alt="Imagem do Prato"></a>
+                {% elif cliente.tipo_conta == "Garcom" %}
+                    <a href="/garcons/home/fazer_pedido/{{ prato.id }}"><img src="{{ prato.foto.url }}" alt="Imagem do Prato"></a>
+                {% endif %}
             {% endif %}
             <p>R$ {{prato.preco}}</p>
         </div>
         <hr>
     {% endfor %}
-</body>
-</html>
+{% endblock content %}

@@ -20,10 +20,6 @@ class Mesa(models.Model):
 
 
 class Pedido(models.Model):
-    cliente = models.ForeignKey(
-        Cliente,
-        on_delete=models.CASCADE,
-    )
     mesa = models.OneToOneField(
         Mesa,
         on_delete=models.CASCADE,
@@ -59,7 +55,6 @@ class Pedido(models.Model):
         max_length=20,
         choices=[
             ("restaurante", "Retirar no Restaurante"),
-            ("reserva", "Fazer Reserva"),
             ("entrega", "Entrega em Casa"),
         ],
     )
@@ -73,11 +68,26 @@ class Pedido(models.Model):
         ],
         null=True,
     )
+    endereco = models.TextField('Endereço')
+    cliente = models.ForeignKey(
+        Cliente,
+        on_delete=models.CASCADE,
+        null=True,
+    )
 
 
 class PedidoPrato(models.Model):
+    cliente = models.ForeignKey(
+        Cliente,
+        on_delete=models.CASCADE,
+        null=True,
+    )
     pedido = models.ForeignKey(
-        Pedido, on_delete=models.CASCADE, related_name="pedidos_pratos"
+        Pedido, on_delete=models.CASCADE, related_name="pedidos_pratos", default=None, null=True
+    )
+    status = models.CharField(
+        max_length=50,
+        default="No Carrinho",
     )
     prato = models.ForeignKey(Prato, on_delete=models.CASCADE)
     observacao = models.TextField("Observações", blank=True, default=None)
@@ -86,7 +96,6 @@ class PedidoPrato(models.Model):
 
     def __str__(self):
         return f"{self.pedido} - {self.prato}"
-
 
 class Reserva(models.Model):
     cliente = models.ForeignKey(
@@ -106,7 +115,6 @@ class Reserva(models.Model):
         decimal_places=2,
         null=True,
     )
-    pedido = models.OneToOneField(Pedido, on_delete=models.CASCADE)
     status = models.CharField("status", max_length=20, default="Pendente")
 
     def __str__(self):

@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.forms import model_to_dict
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import User
+from pedidos.models import Pedido, PedidoPrato
 from PratoCerto.settings import AUX
 from .models import *
 from .forms import *
@@ -12,6 +13,7 @@ from django.shortcuts import render
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 
 @login_required
@@ -23,10 +25,12 @@ def home(request):
 
     data = {}
     data["Categorias"] = AUX["Categorias"]
-    data["codigo_afiliado"] = cliente.codigo_afiliado
-    print(cliente.user)
-
-    return render(request, "models/clientes/home.html", data)
+    data["cliente"] = cliente
+    
+    if cliente.tipo_conta == "Cliente":
+        return render(request, "models/clientes/home.html", data)
+    elif cliente.tipo_conta == "Garcom":
+        return redirect("home_garcom")
 
 
 def check_password_strength(password):
@@ -102,4 +106,26 @@ def gerar_aleatorio(string):
     
     print(hash_hex)
     
-    return hash_hex
+    return (hash_hex[:2] + string + hash_hex[2:4]).upper()
+
+
+@login_required
+def ver_pedidos(request):
+    cliente = Cliente.objects.get(user=request.user.id)
+
+    context = {
+        "pedidos": Pedido.objects.filter(cliente=cliente).exclude(status="no Carrinho")
+    }
+    
+    return render(request, 'models/clientes/pedidos.html', context)
+
+
+@login_required
+def ver_carrinho(request):
+    cliente = Cliente.objects.get(user=request.user.id)
+
+    context = {
+        "pedidos": PedidoPrato.objects.filter(cliente=cliente, status="no Carrinho")
+    }
+    
+    return render(request, 'models/clientes/pedidos.html', context)

@@ -11,41 +11,38 @@ def fazer_pedido(request, id):
     prato = Prato.objects.get(id=id)
 
     if request.method == 'POST':
-        pedido_form = PedidoForm(request.POST, cliente_id=cliente.pk)
-        prato_form = PedidoPratoForm(request.POST, prato_id=id)
-        if pedido_form.is_valid() and prato_form.is_valid():
-            pedido = pedido_form.save()
-            prato = prato_form.save(commit=False)
-            prato.pedido = pedido
-            prato.save()
+        pedidoPrato_form = PedidoPratoForm(request.POST, prato_id=id)
+        
+        if pedidoPrato_form.is_valid():
+            pedidoPrato = pedidoPrato_form.save(commit=False)
+            pedidoPrato.cliente = cliente
+            cliente.pontos += AUX['pontos']['por_compra']
+            cliente.save()
+            pedidoPrato.save()
             
-            if pedido.local_retirada == "reserva":
-                request.session["pedido"] = pedido.pk
-                return render(request, 'models/pedidos/fazer_reserva.html', {'form': ReservaForm(cliente_id=cliente.pk), "preco": 20.00, 'cadeiras_mesa': 4})
-            else:
-                return redirect('home')
+            return redirect('home')
     else:
-        pedido_form = PedidoForm(cliente_id=cliente.pk)
         prato_form = PedidoPratoForm(prato_id=id)
         
     context = {
-        'pedido_form': pedido_form,
         'prato_form' : prato_form,
         'prato'      : prato,
         'comentarios': prato.comentarios.all(),
     }
     
-    return render(request, 'models/pedidos/fazer_pedido.html', context)
+    if Cliente.objects.get(user=request.user).tipo_conta == "Cliente":
+        return render(request, "models/pedidos/fazer_pedido.html", context)
+    elif Cliente.objects.get(user=request.user).tipo_conta == "Garcom":
+        return render(request, "models/garcons/fazer_pedido.html", context)
 
 
 @login_required
-def reserva_create(request):
-    pedido = request.session.get('pedido', None)
+def criar_reserva(request):
     cliente = Cliente.objects.get(user_id=request.user.pk)
     if request.method == 'POST':
-        form = ReservaForm(request.POST, cliente_id=cliente.pk, pedido_id=pedido)
+        form = ReservaForm(request.POST, cliente_id=cliente.pk)
         if form.is_valid():
             reserva = form.save()
             # Fazer algo com a reserva salva, como redirecionar para uma página de sucesso
-    
-    return redirect('home')
+            return redirect('home')
+    return render(request, 'models/pedidos/fazer_reserva.html', {'form': ReservaForm(cliente_id=cliente.pk), "preco": 20.00, 'cadeiras_mesa': 4})

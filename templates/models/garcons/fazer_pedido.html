@@ -1,0 +1,116 @@
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Criar Pedido Garçom{% endblock %}
+
+{% block content %}
+    <style>
+        /* Estilos adicionais específicos para este template */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .price {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .availability {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .category {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            margin-bottom: 20px;
+        }
+
+        .adicionais-list li {
+            margin-bottom: 5px;
+        }
+        .tab {
+            padding-left: 50px; /* Ajuste o valor conforme necessário */
+            color: gray;
+        }
+
+        .comment-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+            width: 40px; /* Ajuste o valor conforme necessário */
+            height: 40px; /* Ajuste o valor conforme necessário */
+        }
+    </style>
+    <div class="container">
+        <h1>{{ prato.nome }}</h1>
+        <div class="image-container">
+            <img src="{{ prato.foto.url }}" alt="{{ prato.nome }}">
+        </div>
+        <div class="details">
+            <p class="price">Preço: R$ {{ prato.preco }}</p>
+            <p class="availability">Disponível: {% if prato.disponivel %}Sim{% else %}Não{% endif %}</p>
+            <p class="category">Categoria: {{ prato.get_categoria_display }}</p>
+            <p class="description">{{ prato.descricao }}</p>
+        </div>
+        <h1>Criar Pedido</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ pedido_form.as_p }}
+            {{ prato_form.as_p }}
+            <input type="submit" value="Criar Pedido">
+        </form>
+    </div>
+<script>
+    function exibirTextarea(formId) {
+        var form = document.getElementById("form_" + formId);
+        var textareaElements = document.getElementsByClassName('textarea');
+    
+        // Remover todas as áreas de resposta abertas
+        for (var i = 0; i < textareaElements.length; i++) {
+            textareaElements[i].remove();
+        }
+    
+        if (form) {
+            var div = document.createElement("div");
+    
+            var textarea = document.createElement("textarea");
+            textarea.name = "comentario";
+            textarea.placeholder = "Resposta";
+            div.appendChild(textarea);
+    
+            var submitInput = document.createElement("input");
+            submitInput.type = "submit";
+            div.appendChild(submitInput);
+
+            div.className = "textarea";
+    
+            form.appendChild(div);
+        }
+    }
+</script>
+{% endblock content %}

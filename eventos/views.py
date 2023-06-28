@@ -7,7 +7,7 @@ from .forms import EventoForm
 def home(request):
     # Sua lógica para recuperar eventos e informações do usuário
     events = Evento.objects.all()  # Exemplo de recuperação de eventos usando um modelo Event
-
+    
     if events:
         # Renderize o template com eventos e informações do usuário
         return render(request, 'models/eventos/eventos.html', {'events': events, 'user': request.user})

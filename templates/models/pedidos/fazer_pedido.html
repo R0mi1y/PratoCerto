@@ -1,7 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Criar Pedido</title>
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Criar Pedido{% endblock %}
+
+{% block content %}
     <style>
         /* Estilos adicionais específicos para este template */
         .container {
@@ -63,8 +66,6 @@
             height: 40px; /* Ajuste o valor conforme necessário */
         }
     </style>
-</head>
-<body>
     <div class="container">
         <h1>{{ prato.nome }}</h1>
         <div class="image-container">
@@ -81,7 +82,7 @@
             {% csrf_token %}
             {{ pedido_form.as_p }}
             {{ prato_form.as_p }}
-            <input type="submit" value="Criar Pedido">
+            <input type="submit" value="Adicionar ao carrinho">
             <h1>Avaliar</h1>
         </form>
         <form action="/pratos/comentar/{{ prato.pk }}" method="post">
@@ -115,7 +116,6 @@
     {% endif %}
     
     </div>
-</body>
 <script>
     function exibirTextarea(formId) {
         var form = document.getElementById("form_" + formId);
@@ -144,4 +144,4 @@
         }
     }
 </script>
-</html>
+{% endblock content %}

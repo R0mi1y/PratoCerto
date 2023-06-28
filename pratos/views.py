@@ -5,7 +5,7 @@ from .models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def template_categoria(request, categoria):
     data = {}
     data["pratos"] = Prato.objects.filter(categoria=categoria, disponivel=True)
@@ -14,8 +14,10 @@ def template_categoria(request, categoria):
         if tupla[0] == categoria:
             data["Categoria"] = tupla[1]
             break
+    data['cliente'] = Cliente.objects.get(user=request.user)
     
     return render(request, "models/pratos/lista_pratos.html", data)
+
 
 @login_required
 def criar_atualizar_prato(request, prato_id=None):

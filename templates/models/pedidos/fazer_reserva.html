@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulários</title>
-</head>
-<body>
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Formulário de reserva{% endblock %}
+
+{% block content %}
     <style>
         .form-container {
             background-color: white;
@@ -66,10 +65,10 @@
             {{ form.cliente }}
             {{ form.mesa.label }}
             {{ form.mesa }}
-            Data reserva
-            <input type="date" name="data_reserva" required id="id_data_reserva">
-            Horario
-            <input type="time" name="horario" required id="id_horario">
+            {{ form.data_reserva.label }}
+            {{ form.data_reserva }}
+            {{ form.horario.label }}
+            {{ form.horario }}
             Quantidade de pessoas
             <input type="number" name="qnt_pessoas" min="1" max="0" value="1" required id="id_qnt_pessoas">
             {{ form.observacao.label }}
@@ -80,7 +79,6 @@
 
         </form>
     </div>
-</body>
 <script>
     var campo_preco = document.getElementById("preco");
 
@@ -112,4 +110,4 @@
     }
 
 </script>
-</html>
+{% endblock content %}

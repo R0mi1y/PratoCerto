@@ -10,7 +10,9 @@ class Cliente(models.Model):
     foto = models.ImageField(default=None, null=True, upload_to="media/")
     cliente_id = models.AutoField(primary_key=True)
     codigo_afiliado = models.CharField(max_length=255, null=False)
-    # pontos
+    pontos = models.IntegerField("Pontos de afiliado", default=0)
+    tipo_conta = models.CharField(max_length=20, default="Cliente")
     
     def __str__(self):
         return self.user.username
+    

@@ -38,10 +38,12 @@
 </style>
 <div class="codigo-afiliado">
     <p>Código</p>
-    <p>{{codigo_afiliado}}</p>
+    <p>{{cliente.codigo_afiliado}}</p>
 </div>
-
-<input type="button" name="" id="" onclick="exibirCodigo()">
+<div>
+    <p>pontos:</p>
+    <p>{{cliente.pontos}}</p>
+</div>
 <!-- Conteúdo da página -->
 <br><br><br>
 <a href="/pratos/cadastro/adicional">Cadastrar Adicional (teste)</a>
@@ -52,7 +54,10 @@
 <a href="{% url 'home_eventos' %}"> Eventos (teste)</a>
 <br>
 
-<a href="{% url 'home_garcon' %}"> Garçon (teste)</a>
+<a href="{% url 'home_garcom' %}"> Garçon (teste)</a>
+<br>
+
+<a href="{% url 'home_cozinha' %}"> Cozinha (teste)<a>
 <br><br><br> 
 
 <br><br><br>

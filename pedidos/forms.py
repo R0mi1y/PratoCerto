@@ -1,28 +1,15 @@
+from datetime import datetime, timedelta
 from django import forms
+from PratoCerto.settings import AUX
 from pratos.models import Prato
 from .models import Pedido, PedidoPrato, Reserva, Mesa
 
 
 class PedidoForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        cliente_id = kwargs.pop(
-            "cliente_id"
-        )  # Obtém o ID do prato passado como argumento
-        super().__init__(*args, **kwargs)
-        if cliente_id:
-            self.fields[
-                "cliente"
-            ].initial = cliente_id  # Define o valor inicial do campo "cliente"
-        self.fields[
-            "cliente"
-        ].widget = forms.HiddenInput()  # Torna o campo "cliente" invisível
 
     class Meta:
         model = Pedido
         fields = ["cliente", "local_retirada"]
-        # widgets = {
-        #     'observacao': forms.Textarea(attrs={'rows': 3}),
-        # }
 
 
 class PedidoPratoForm(forms.ModelForm):
@@ -52,28 +39,45 @@ class PedidoPratoForm(forms.ModelForm):
             ),
         }
 
-
 class ReservaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        cliente_id = kwargs.pop(
-            "cliente_id"
-        )  # Obtém o ID do prato passado como argumento
+        cliente_id = kwargs.pop("cliente_id")
         super().__init__(*args, **kwargs)
 
         if cliente_id:
-            self.fields[
-                "cliente"
-            ].initial = cliente_id  # Define o valor inicial do campo "cliente"
+            self.fields["cliente"].initial = cliente_id
 
         self.fields["cliente"].widget = forms.HiddenInput()
         self.fields["preco_total"].widget = forms.HiddenInput()
-        self.fields["pedido"].widget = forms.HiddenInput()
-
+        
         self.fields["mesa"] = forms.ModelMultipleChoiceField(
             queryset=Mesa.objects.filter(status="disponível"),
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
+
+        # Choices de horário
+        hora_inicio = datetime.strptime(AUX["horario_abertura"], "%H:%M")
+        hora_fim = datetime.strptime(AUX["horario_encerramento"], "%H:%M")
+        delta = timedelta(hours=1)
+        horarios_choices = []
+        hora_atual = hora_inicio
+        while hora_atual <= hora_fim:
+            horarios_choices.append(
+                (hora_atual.strftime("%H:%M"), hora_atual.strftime("%H:%M"))
+            )
+            hora_atual += delta
+        self.fields["horario"] = forms.ChoiceField(choices=horarios_choices)
+
+        # Choices de data
+        data_inicio = datetime.now().date()
+        data_fim = data_inicio + timedelta(days=(AUX["data_limite_reserva"]-1))
+        datas_choices = []
+        data_atual = data_inicio
+        while data_atual <= data_fim:
+            datas_choices.append((data_atual, data_atual.strftime("%d/%m/%Y")))
+            data_atual += timedelta(days=1)
+        self.fields["data_reserva"] = forms.ChoiceField(choices=datas_choices)
 
     class Meta:
         model = Reserva
@@ -85,15 +89,12 @@ class ReservaForm(forms.ModelForm):
             "qnt_pessoas",
             "preco_total",
             "observacao",
-            "pedido",
         ]
         widgets = {
             "observacao": forms.Textarea(
                 attrs={
                     "rows": 3,
-                        "placeholder": "Ex: Festa de aniversário,  reuniões de negócios, comemorações familiares, etc.",
-                 }
-             ),
+                    "placeholder": "Ex: Festa de aniversário, reuniões de negócios, comemorações familiares, etc.",
+                }
+            ),
         }
-
-# Reserva.objects.get(id=1).mesa.__len__()

@@ -36,7 +36,10 @@
         <!-- Conteúdo da barra de navegação -->
         <h1>Minha Barra de Navegação</h1>
         <a href="{% url "home" %}">Home</a> |
-        <a href="/accounts/logout">Sair</a>
+        <a href="{% url "criar reserva" %}">criar reserva</a> |
+        <a href="{% url "ver pedidos" %}">pedidos</a> |
+        <a href="{% url "ver carrinho" %}">carrinho</a> |
+        <a href="/accounts/logout">Sair</a> |
     </div>
 
     <div class="content">

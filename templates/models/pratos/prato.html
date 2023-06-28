@@ -1,10 +1,12 @@
 {% load static %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Visualizar Prato</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Visualizar Prato{% endblock %}
+
+{% block content %}
     <style>
         /* Estilos adicionais específicos para este template */
         .container {
@@ -54,8 +56,6 @@
             margin-bottom: 5px;
         }
     </style>
-</head>
-<body>
     <div class="container">
         <h1>{{ prato.nome }}</h1>
         <div class="image-container">
@@ -76,5 +76,5 @@
             </ul>
         </div>
     </div>
-</body>
-</html>
+{% endblock content %}
+

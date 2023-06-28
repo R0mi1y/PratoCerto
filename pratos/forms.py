@@ -14,6 +14,7 @@ class PratoForm(forms.ModelForm):
 
 
 class AdicionalForm(forms.ModelForm):
+    
     class Meta:
         model = Adicional
         fields = ['nome', 'descricao', 'preco', 'foto']
