@@ -1,6 +1,6 @@
 from django.db import models
 from pratos.models import Prato, Adicional
-from clientes.models import Cliente
+from clientes.models import Cliente, Endereco
 from datetime import datetime
 
 
@@ -21,58 +21,41 @@ class Mesa(models.Model):
 
 class Pedido(models.Model):
     mesa = models.OneToOneField(
-        Mesa,
-        on_delete=models.CASCADE,
-        null=True,
-    )
+        Mesa,on_delete=models.CASCADE,null=True,
+        )
     data_pedido = models.DateTimeField(
         default=datetime.now,
-    )
+        )
     status = models.CharField(
-        max_length=50,
-        default="Pendente",
-    )
+        max_length=50, default="Pendente",
+        )
     total = models.DecimalField(
-        "Preco total do pedido",
-        max_digits=10,
-        decimal_places=2,
-        null=True,
-    )
+        "Preco total do pedido", max_digits=10, decimal_places=2, null=True,
+        )
     taxa_entrega = models.DecimalField(
-        "Taxa de Entrega",
-        max_digits=10,
-        decimal_places=2,
-        default=0,
-    )
+        "Taxa de Entrega", max_digits=10, decimal_places=2, default=0,
+        )
     desconto = models.DecimalField(
-        "Desconto",
-        max_digits=10,
-        decimal_places=2,
-        default=0,
+        "Desconto", max_digits=10, decimal_places=2, default=0,
     )
     local_retirada = models.CharField(
-        "Local de Retirada",
-        max_length=20,
+        "Local de Retirada", max_length=20,
         choices=[
             ("restaurante", "Retirar no Restaurante"),
             ("entrega", "Entrega em Casa"),
         ],
     )
     metodo_pagamento = models.CharField(
-        "Método de Pagamento",
-        max_length=20,
+        "Método de Pagamento", max_length=20,
         choices=[
             ("dinheiro", "Dinheiro"),
             ("cartao", "Cartão de Crédito"),
             ("transferencia", "Transferência Bancária"),
-        ],
-        null=True,
+        ], null=True,
     )
-    endereco = models.TextField('Endereço')
+    endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE)
     cliente = models.ForeignKey(
-        Cliente,
-        on_delete=models.CASCADE,
-        null=True,
+        Cliente, on_delete=models.CASCADE, null=True,
     )
 
 
@@ -96,6 +79,7 @@ class PedidoPrato(models.Model):
 
     def __str__(self):
         return f"{self.pedido} - {self.prato}"
+
 
 class Reserva(models.Model):
     cliente = models.ForeignKey(

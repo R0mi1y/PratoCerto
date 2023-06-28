@@ -43,16 +43,21 @@
 {% if pedidos %}
     {% for pedido in pedidos %}
         <div class="pedido">
+            <img src="{{ pedido.prato.foto.url }}" alt="">
             <div class="info">
-                <div class="nome">{{ pedido.cliente.user.username }}</div>
-                <div class="username">{{ pedido.metodo_pagamento }}</div>
-                <div class="username">{{ pedido.endereco }}</div>
+                <div class="nome">{{ pedido.prato.nome }}</div>
+                <div class="username">{{ pedido.cliente.user.username }}</div>
                 <div class="data">{{ pedido.data_pedido }}</div>
-                <div class="data">{{ pedido.local_retirada }}</div>
+                <div class="data">{{ pedido.quantidade }}</div>
+
+                <a href="{% url "remover do carrinho" id=pedido.id %}"> excluir </a> |
+                <a href="{% url "editar do carrinho" id=pedido.id %}"> editar </a>
             </div>
         </div>
         <hr>
     {% endfor %}
+
+    <a href="{% url "comprar carrinho" %}">Pedir</a>
 {% endif %}
 
 {% endblock %}

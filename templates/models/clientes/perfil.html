@@ -1,0 +1,59 @@
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Perfil do Cliente{% endblock %}
+
+{% block content %}
+    <style>
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .profile-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            margin-bottom: 20px;
+        }
+
+        .profile-details p {
+            margin-bottom: 10px;
+        }
+    </style>
+    <div class="profile-container">
+        <div class="profile-picture">
+            <img src="{{ cliente.foto }}" alt="Foto do Cliente">
+        </div>
+        <h1>Perfil do Cliente: {{ cliente.user.username }}</h1>
+        <div class="profile-details">
+            <p>Telefone: {{ cliente.telefone }}</p>
+            <p>CPF: {{ cliente.cpf }}</p>
+            <p>Código Afiliado: {{ cliente.codigo_afiliado }}</p>
+            <p>Pontos de Afiliado: {{ cliente.pontos }}</p>
+            <p>Tipo de Conta: {{ cliente.tipo_conta }}</p>
+            <p>Endereço: {{ endereco }}</p>
+            <a href="{% url "trocar endereco padrao" %}">mudar endereço</a>
+        </div>
+    </div>
+
+{% endblock %}

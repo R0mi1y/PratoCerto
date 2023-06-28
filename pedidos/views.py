@@ -16,8 +16,6 @@ def fazer_pedido(request, id):
         if pedidoPrato_form.is_valid():
             pedidoPrato = pedidoPrato_form.save(commit=False)
             pedidoPrato.cliente = cliente
-            cliente.pontos += AUX['pontos']['por_compra']
-            cliente.save()
             pedidoPrato.save()
             
             return redirect('home')

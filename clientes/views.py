@@ -1,9 +1,9 @@
 import hashlib
 import random
-from django.shortcuts import render, redirect
-from django.forms import model_to_dict
+from django.shortcuts import get_object_or_404, render, redirect
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import User
+from pedidos.forms import PedidoPratoForm, PedidoForm
 from pedidos.models import Pedido, PedidoPrato
 from PratoCerto.settings import AUX
 from .models import *
@@ -13,7 +13,6 @@ from django.shortcuts import render
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 
 
 @login_required
@@ -91,7 +90,7 @@ def criar_usuario_cliente(request):
 
     return render(
         request,
-        "models/clientes/form.html",
+        "models/clientes/registrar.html",
         {"form_user": form_user, "form_cliente": form_cliente},
     )
 
@@ -128,4 +127,138 @@ def ver_carrinho(request):
         "pedidos": PedidoPrato.objects.filter(cliente=cliente, status="no Carrinho")
     }
     
-    return render(request, 'models/clientes/pedidos.html', context)
+    return render(request, 'models/clientes/carrinho.html', context)
+
+
+@login_required
+def remover_carrinho(request, id):
+    PedidoPrato.objects.get(id=id).delete()
+    return redirect("ver carrinho")
+
+
+@login_required
+def editar_carrinho(request, id):
+    cliente = Cliente.objects.get(user_id=request.user.pk)
+    pedidoPrato = PedidoPrato.objects.get(id=id)
+    
+    if request.method == "POST":
+        form = PedidoPratoForm(request.POST, prato_id=pedidoPrato.prato.pk, instance=pedidoPrato)
+        if form.is_valid():
+            pedidoPrato = form.save(commit=False)
+            pedidoPrato.cliente = cliente
+            pedidoPrato.save()
+            
+            return redirect("ver carrinho")
+        
+    context = {
+        'prato_form' : PedidoPratoForm(instance=pedidoPrato, prato_id=pedidoPrato.prato.pk),
+        'prato'      : pedidoPrato.prato,
+        'comentarios': pedidoPrato.prato.comentarios.all(),
+    }
+    return render(request, 'models/pedidos/fazer_pedido.html', context)
+
+
+@login_required
+def comprar_carrinho(request):
+    cliente = Cliente.objects.get(user=request.user.id)
+    pedidosPrato = PedidoPrato.objects.filter(cliente=cliente, status="no Carrinho")
+    
+    if request.method == "POST":
+        form = PedidoForm(request.POST)
+        if form.is_valid():
+            pedido = form.save(commit=False)
+            pedido.cliente = cliente
+            total = 0
+            
+            for pedidoPrato in pedidosPrato:
+                total += pedidoPrato.prato.preco * pedidoPrato.quantidade
+                pedidoPrato.status = "Pendente"
+                pedidoPrato.pedido = pedido
+                
+            pedido.total = total
+            pedido.save()
+            
+            [pedidoPrato.save() for pedidoPrato in pedidosPrato]
+
+    context = {
+        "pedidos": pedidosPrato,
+        "form": PedidoForm(),
+    }
+    
+    return render(request, 'models/pedidos/pagamento.html', context)
+
+
+@login_required
+def adicionar_endereco(request):
+    if request.method == 'POST':
+        form = EnderecoForm(request.POST)
+        if form.is_valid():
+            endereco = form.save(commit=False)
+            endereco.cliente = Cliente.objects.get(user=request.user.id)
+            endereco.save()
+            
+            return redirect('perfil cliente')
+    else:
+        form = EnderecoForm()
+    
+    return render(request, 'models/clientes/add_endereco.html', {'form': form})
+
+
+@login_required
+def mudar_endereco(request):
+    cliente = Cliente.objects.get(user=request.user.id)
+    enderecos = Endereco.objects.filter(cliente=cliente)
+    
+    if request.method == 'POST':
+        id = request.POST.get('id_endereco')
+        endereco = Endereco.objects.get(id=id)
+        endereco.padrao = True
+        endereco.save()
+        
+        return redirect('perfil cliente')
+
+    contexto = {
+        'cliente': cliente,
+        'enderecos': enderecos
+    }
+    
+    return render(request, 'models/clientes/mudar_endereco.html', contexto)
+    
+
+@login_required
+def perfil(request):
+    cliente = Cliente.objects.get(user=request.user.id)
+    try:
+        endereco = Endereco.objects.get(cliente=cliente, padrao=True)
+    except Endereco.DoesNotExist:
+        return redirect('adicionar endereco')
+    
+    contexto = {
+        'cliente': cliente,
+        'endereco': endereco,
+    }        
+     
+    return render(request, 'models/clientes/perfil.html', contexto)
+
+
+@login_required
+def deletar_endereco(request, id_endereco):
+    endereco = get_object_or_404(Endereco, pk=id_endereco)
+    
+    endereco.delete()
+    return redirect('trocar endereco padrao')
+
+
+@login_required
+def editar_endereco(request, id_endereco):
+    endereco = get_object_or_404(Endereco, pk=id_endereco)
+
+    if request.method == 'POST':
+        form = EditarEnderecoForm(request.POST, instance=endereco)
+        if form.is_valid():
+            form.save()
+            return redirect('trocar endereco padrao')
+    else:
+        form = EditarEnderecoForm(instance=endereco)
+
+    return render(request, 'models/clientes/add_endereco.html', {'form': form})

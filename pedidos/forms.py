@@ -1,15 +1,27 @@
 from datetime import datetime, timedelta
 from django import forms
+from clientes.models import Endereco, Cliente
 from PratoCerto.settings import AUX
 from pratos.models import Prato
 from .models import Pedido, PedidoPrato, Reserva, Mesa
 
 
 class PedidoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        try:
+            cliente = Cliente.objects.get(cliente_id=kwargs.pop("cliente_id"))
+            super().__init__(*args, **kwargs)
+
+            self.fields["endereco"] = forms.ModelMultipleChoiceField(
+                queryset=Endereco.objects.filter(cliente=cliente),
+            )
+        except:
+            pass
+
 
     class Meta:
         model = Pedido
-        fields = ["cliente", "local_retirada"]
+        fields = ["local_retirada", 'metodo_pagamento', "endereco"]
 
 
 class PedidoPratoForm(forms.ModelForm):
@@ -31,12 +43,14 @@ class PedidoPratoForm(forms.ModelForm):
         model = PedidoPrato
         fields = ["quantidade", "prato", "adicional", "observacao"]
         widgets = {
+            "quantidade": forms.NumberInput(attrs={"min": 1}),
             "observacao": forms.Textarea(
                 attrs={
                     "rows": 3,
                     "placeholder": "Ex: tirar a cebola, maionese à parte etc.",
                 }
             ),
+            
         }
 
 class ReservaForm(forms.ModelForm):

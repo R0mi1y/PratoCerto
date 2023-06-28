@@ -1,0 +1,19 @@
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Meus pedidos{% endblock %}
+
+{% block content %}
+    <form action="{% url "trocar endereco padrao" %}" method="post">
+        {% csrf_token %}
+        {% for endereco in enderecos %}
+            {{ endereco }}
+            <input type="submit" name="id_endereco" value="{{ endereco.pk }}">
+            <a href="{% url "deletar endereco" id_endereco=endereco.pk %}">deletar endereço</a> | 
+            <a href="{% url "editar endereco" id_endereco=endereco.pk %}">editar endereço</a>
+            <hr>
+        {% endfor %}
+    </form>
+    <a href="{% url "adicionar endereco" %}">adicionar endereço</a>
+{% endblock %}

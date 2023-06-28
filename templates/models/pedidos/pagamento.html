@@ -1,0 +1,90 @@
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Criar Pedido{% endblock %}
+
+{% block content %}
+<style>
+    .form-container {
+        background-color: white;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        width: 400px;
+        margin: 0 auto;
+    }
+    
+    .form-container h2 {
+        color: red;
+        text-align: center;
+    }
+    
+    .form-container form {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-container label {
+        margin-bottom: 10px;
+    }
+    
+    .form-container input[type="text"],
+    .form-container input[type="email"],
+    .form-container input[type="password"],
+    .form-container textarea {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+    
+    .form-container input[type="submit"] {
+        background-color: yellow;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .form-container input[type="submit"]:hover {
+        background-color: gold;
+    }
+
+    .alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 22px 10px;
+        font-family: interBold;
+        font-size: 15px;
+        color: black;
+        background-color: gray;
+        border-radius: 10px;
+        border: 1px solid #90816A;
+        {% comment %} opacity: 0; {% endcomment %}
+        animation-name: fade-in-out;
+        animation-duration: 5s;
+        animation-fill-mode: forwards;
+    }
+    
+    .alert-close {
+        float: right;
+        cursor: pointer;
+        margin-left: 10px;
+        font-size: 15px;
+        margin-top: -15px;
+    }
+</style>
+<div class="form-container">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        
+        <input type="submit" value="Comprar">
+    </form>
+    <a href="{% url "adicionar endereço" %}">adicionar endereço</a>
+</div>
+
+<div class="_6qQnMm"><div class="+8JojR">Novo Endereço</div><form><div class="FjAbyn"><div class="U+ue2m"><div class="M7ul5X"><div class="VBEzJh S550Wl"><div class="+QLhYo"><div class="VumFUt">Nome Completo</div><input class="_4TB5gZ" type="text" placeholder="Nome Completo" autocomplete="name" maxlength="50" value=""></div></div><div class="upIqg6"></div><div class="VBEzJh oadHXi"><div class="+QLhYo"><div class="VumFUt">Número de Telefone</div><input class="_4TB5gZ" type="text" placeholder="Número de Telefone" autocomplete="user-address-phone" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh mUJpLQ"><div class="+QLhYo"><div class="VumFUt">CEP</div><input class="_4TB5gZ" type="text" placeholder="CEP" autocomplete="postal-code" maxlength="9" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh Vo0kRt"><div class="+QLhYo"><div class="VumFUt">Estado - Cidade</div><input class="_4TB5gZ" readonly="" type="text" placeholder="Estado - Cidade" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh NHI4eE"><div class="+QLhYo"><div class="VumFUt">Bairro</div><input class="_4TB5gZ" type="text" placeholder="Bairro" maxlength="30" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh HC4rnd"><div class="+QLhYo"><div class="VumFUt">Rua / Avenida</div><input class="_4TB5gZ" type="text" placeholder="Rua / Avenida" maxlength="150" value=""></div></div><div class="upIqg6"></div><div class="VBEzJh _2Lm+me"><div class="+QLhYo"><div class="VumFUt">Número</div><input class="_4TB5gZ" type="text" placeholder="Número" maxlength="5" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh qnrlZg"><div class="+QLhYo"><div class="VumFUt">Complemento</div><input class="_4TB5gZ" type="text" placeholder="Complemento" maxlength="30" value=""></div></div></div><div class="S2LL9g"><div class="_5W-GdV">Salvar Como:</div><div class="n17c0S"><div class="_0jt5tH"><span class="MR8NHz">Casa</span></div><div class="_0jt5tH"><span class="MR8NHz">Trabalho</span></div></div></div><div class="_9m40T7"><label class="VQRLw-"><input class="QAVe-Q" type="checkbox"><div class="tcK1ox"></div>Definir como endereço padrão</label></div></div><div class="KKsTzS"><button class="MzDiRI _9q6Q2s _9+tJoA">Cancelar</button><button class="_9q6Q2s _3B7lBt">Enviar</button></div></div></form></div>
+{% endblock %}
