@@ -1,3 +1,9 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Cozinha{% endblock %}
+
+{% block content %}
 <h1>Cozinha</h1>
 
 {% for pedido in pedidos %}
@@ -6,23 +12,20 @@
     <h3>Pedido {{ pedido.id }}</h3>
     <p>Status: {{ pedido.status }}</p>
     <p>Mesa: {{ pedido.mesa }}</p>
-    <p>Prato: 
-        {% for pedidoprato in pedido.1 %}
-            {{ pedidoprato.prato.nome }}
-        {% endfor %}
-    </p>
+    <p>Prato: {{ pedido.prato.nome }}</p>
     <p>Adicionais: {{ pedido.adicionais.all|join:", " }}</p>
     <p>Quantidade: {{ pedido.quantidade }}</p>
     
     {% if pedido.pronto %}
       <p class="pronto">Pedido pronto para ser servido</p>
-    {% else %}
+      {% else %}
       <form action="home/pedido/pronto/{{ pedido.id }}" method="POST">
         {% csrf_token %}
         <button type="submit">Notificar garçom que está pronto</button>
       </form>
     {% endif %}
 
-   
   </div>
 {% endfor %}
+
+{% endblock %}

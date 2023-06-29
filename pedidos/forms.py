@@ -50,7 +50,6 @@ class PedidoPratoForm(forms.ModelForm):
                     "placeholder": "Ex: tirar a cebola, maionese à parte etc.",
                 }
             ),
-            
         }
 
 class ReservaForm(forms.ModelForm):
@@ -71,18 +70,21 @@ class ReservaForm(forms.ModelForm):
         )
 
         # Choices de horário
-        hora_inicio = datetime.strptime(AUX["horario_abertura"], "%H:%M")
-        hora_fim = datetime.strptime(AUX["horario_encerramento"], "%H:%M")
-        delta = timedelta(hours=1)
-        horarios_choices = []
-        hora_atual = hora_inicio
-        while hora_atual <= hora_fim:
-            horarios_choices.append(
-                (hora_atual.strftime("%H:%M"), hora_atual.strftime("%H:%M"))
-            )
-            hora_atual += delta
-        self.fields["horario"] = forms.ChoiceField(choices=horarios_choices)
-
+        if AUX["horario_pulo"] != 24:
+            hora_inicio = datetime.strptime(AUX["horario_abertura"], "%H:%M")
+            hora_fim = datetime.strptime(AUX["horario_encerramento"], "%H:%M")
+            delta = timedelta(hours=AUX["horario_pulo"])
+            horarios_choices = []
+            hora_atual = hora_inicio
+            while hora_atual <= hora_fim:
+                horarios_choices.append(
+                    (hora_atual.strftime("%H:%M"), hora_atual.strftime("%H:%M"))
+                )
+                hora_atual += delta
+            self.fields["horario"] = forms.ChoiceField(choices=horarios_choices)
+        else:
+            self.fields["horario"].widget = forms.HiddenInput(attrs={'required': False, 'value':"00:00"})
+            self.fields["horario"].label = ''
         # Choices de data
         data_inicio = datetime.now().date()
         data_fim = data_inicio + timedelta(days=(AUX["data_limite_reserva"]-1))
@@ -112,3 +114,11 @@ class ReservaForm(forms.ModelForm):
                 }
             ),
         }
+        
+    def clean_horario(self):
+        data = self.cleaned_data["horario"]
+        if data == '':
+            return None
+        return data
+
+    

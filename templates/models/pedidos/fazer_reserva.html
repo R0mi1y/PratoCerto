@@ -30,8 +30,8 @@
         
         .form-container input[type="text"],
         .form-container input[type="email"],
-        .form-container input[type="date"],
-        .form-container input[type="time"],
+        .form-container select,
+        .form-container input[type="number"],
         .form-container textarea {
             padding: 10px;
             border: 1px solid #ccc;
@@ -61,7 +61,6 @@
         <h2>Formulário</h2>
         <form method="POST" enctype="multipart/form-data" action="/pedidos/pedir/reserva">
             {% csrf_token %}
-            {{ form.cliente.label }}
             {{ form.cliente }}
             {{ form.mesa.label }}
             {{ form.mesa }}
@@ -108,6 +107,5 @@
     for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].addEventListener("change", check_boxes);
     }
-
 </script>
 {% endblock content %}

@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from clientes.models import Cliente
 from pratos.models import Prato
 from pedidos.models import Mesa, Pedido
 from .forms import PedidoForm
@@ -23,40 +24,43 @@ def home(request):
     return render(request, 'models/garcons/home.html', context)
 
 
-# def fazer_pedido(request):
-#     if request.method == 'POST':
-#         form = PedidoForm(request.POST)
-#         if form.is_valid():
-#             pedido = form.save()
-#             # Fazer algo com o pedido salvo, como redirecionar para uma página de sucesso
-#     else:
-#         form = PedidoForm()
-    
-#     return render(request, 'models/garcons/fazer_pedido.html', {'form': form})
-
-
 @login_required
 def fazer_pedido(request, id):
+    cliente = Cliente.objects.get(user=request.user.id)
     prato = Prato.objects.get(id=id)
 
     if request.method == 'POST':
-        pedido_form = PedidoForm(request.POST)
-        prato_form = PedidoPratoForm(request.POST, prato_id=id)
-        if pedido_form.is_valid() and prato_form.is_valid():
-            pedido = pedido_form.save()
-            prato = prato_form.save(commit=False)
-            prato.pedido = pedido
-            prato.save()
+        pedidoPrato_form = PedidoPratoGarcomForm(request.POST, prato_id=id)
+
+        if pedidoPrato_form.is_valid():
+            pedidoPrato = pedidoPrato_form.save(commit=False)
+            pedidoPrato.status = "carrinho garcom " + cliente.user.username
             
-            return redirect('home')
+            if pedidoPrato.nome_cliente.replace(".", "").replace("-", "").isdigit():
+                pedidoPrato.cliente = Cliente.objects.get(cpf=pedidoPrato.nome_cliente)
+                pedidoPrato.nome_cliente = pedidoPrato.cliente.user.username
+                
+            pedidoPrato.save()
+
+            return redirect("home")
     else:
-        pedido_form = PedidoForm()
-        prato_form = PedidoPratoForm(prato_id=id)
+        prato_form = PedidoPratoGarcomForm(prato_id=id)
         
     context = {
-        'pedido_form': pedido_form,
         'prato_form' : prato_form,
         'prato'      : prato,
     }
     
     return render(request, 'models/garcons/fazer_pedido.html', context)
+
+
+@login_required
+def ver_carrinho(request):
+    cliente = Cliente.objects.get(user=request.user.id)
+    status = "carrinho garcom " + cliente.user.username
+
+    context = {
+        "pedidos": PedidoPrato.objects.filter(status=status)
+    }
+    
+    return render(request, 'models/garcons/carrinho.html', context)

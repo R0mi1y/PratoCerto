@@ -67,6 +67,9 @@ def criar_usuario_cliente(request):
 
         if form_cliente.is_valid() and user:
             cliente = form_cliente.save(commit=False)
+            if not cliente.pontos:
+                cliente.pontos = 0
+                
             cliente.user = user
             try:
                 cliente.foto = (
@@ -122,6 +125,8 @@ def ver_pedidos(request):
 @login_required
 def ver_carrinho(request):
     cliente = Cliente.objects.get(user=request.user.id)
+    if cliente.tipo_conta == "Garcom":
+        return redirect("carrinho garcom")
 
     context = {
         "pedidos": PedidoPrato.objects.filter(cliente=cliente, status="no Carrinho")
@@ -262,3 +267,4 @@ def editar_endereco(request, id_endereco):
         form = EditarEnderecoForm(instance=endereco)
 
     return render(request, 'models/clientes/add_endereco.html', {'form': form})
+

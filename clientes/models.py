@@ -7,7 +7,7 @@ from django.db.models.signals import pre_save, post_save
 class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     telefone = models.CharField(max_length=20)
-    cpf = models.CharField(max_length=20)
+    cpf = models.CharField(max_length=20, unique=True)
     foto = models.ImageField(default=None, null=True, upload_to="media/")
     cliente_id = models.AutoField(primary_key=True)
     codigo_afiliado = models.CharField(max_length=255, null=False)

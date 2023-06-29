@@ -1,16 +1,10 @@
-
 from django.shortcuts import redirect, render, get_object_or_404
 from pedidos.models import Pedido, PedidoPrato
 
 def home(request):
-    pedidos = Pedido.objects.all()
     contexto = {
-            'pedidos': []
+            'pedidos': PedidoPrato.objects.all()
     }
-    
-    for pedido in pedidos:
-        pedidoPrato = PedidoPrato.objects.filter(pedido=pedido) 
-        contexto['pedidos'].append([pedido, pedidoPrato])
     
     return render(request, 'models/cozinhas/home_cozinha.html', contexto)
 

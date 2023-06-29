@@ -182,4 +182,5 @@ AUX = {
     "horario_abertura": "9:00",
     "horario_encerramento": "21:00",
     "data_limite_reserva": 9,
+    'horario_pulo': 1, # 24 para desativar o campo horário
 }

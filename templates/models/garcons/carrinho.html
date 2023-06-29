@@ -1,0 +1,63 @@
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Meus pedidos{% endblock %}
+
+{% block content %}
+<style>
+    .pedido {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .pedido img {
+        width: 50px;
+        height: auto;
+        margin-right: 10px;
+    }
+    
+    .pedido .info {
+        font-size: 16px;
+    }
+    
+    .pedido .info .nome {
+        font-weight: bold;
+    }
+    
+    .pedido .info .username {
+        color: #888;
+    }
+    
+    .pedido .info .data {
+        color: #aaa;
+    }
+    
+    .pedido hr {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+</style>
+
+{% if pedidos %}
+    {% for pedido in pedidos %}
+        <div class="pedido">
+            <img src="{{ pedido.prato.foto.url }}" alt="">
+            <div class="info">
+                <div class="nome">{{ pedido.prato.nome }}</div>
+                <div class="username">{{ pedido.cliente.user.username }}</div>
+                <div class="data">{{ pedido.data_pedido }}</div>
+                <div class="data">{{ pedido.quantidade }}</div>
+
+                <a href="{% url "remover do carrinho" id=pedido.id %}"> excluir </a> |
+                <a href="{% url "editar do carrinho" id=pedido.id %}"> editar </a>
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+
+    <a href="{% url "comprar carrinho" %}">Pedir</a>
+{% endif %}
+
+{% endblock %}

@@ -65,6 +65,7 @@ class PedidoPrato(models.Model):
         on_delete=models.CASCADE,
         null=True,
     )
+    nome_cliente = models.CharField(max_length=30, null=True)
     pedido = models.ForeignKey(
         Pedido, on_delete=models.CASCADE, related_name="pedidos_pratos", default=None, null=True
     )
@@ -90,7 +91,7 @@ class Reserva(models.Model):
         Mesa,
     )
     data_reserva = models.DateField()
-    horario = models.TimeField()
+    horario = models.TimeField(null=True)
     observacao = models.TextField("Observações", blank=True, default=None)
     qnt_pessoas = models.IntegerField(default="1")
     preco_total = models.DecimalField(
@@ -102,4 +103,4 @@ class Reserva(models.Model):
     status = models.CharField("status", max_length=20, default="Pendente")
 
     def __str__(self):
-        return self.data_reserva
+        return str(self.data_reserva) + str(self.horario) + self.status

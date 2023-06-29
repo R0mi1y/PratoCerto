@@ -5,6 +5,10 @@
 <head>
     <title>{% block title %}Título da Página{% endblock %}</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
         /* Estilos para a barra de navegação */
         .navbar {
             background-color: gray;
@@ -14,6 +18,10 @@
         
         a {
             text-decoration: none;
+            color: #333;
+        }
+        h1 {
+            color: #333;
         }
 
         /* Estilos para o rodapé */
@@ -29,6 +37,32 @@
         .content {
             margin: 0 100px;
         }
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 22px 10px;
+            font-family: "Inter", sans-serif;
+            font-weight: bold;
+            font-size: 15px;
+            color: #fff;
+            background-color: #333;
+            border-radius: 10px;
+            border: 1px solid #666;
+            /* opacity: 0; */
+            animation-name: fade-in-out;
+            animation-duration: 5s;
+            animation-fill-mode: forwards;
+        }
+        
+        .alert-close {
+            float: right;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 15px;
+            margin-top: -15px;
+        }
+        
     </style>
 </head>
 <body>
@@ -52,4 +86,40 @@
         <p>Meu Rodapé</p>
     </div>
 </body>
+<script>
+    {% if messages %}
+    // Função para fechar o alerta
+    function closeAlert(alert) {
+        alert.remove();
+    }
+    
+    // Função para exibir as mensagens de sucesso
+    function showSuccessMessages() {
+        {% for message in messages %}
+        var messageText = `{{ message }}`;
+        // Crie um elemento de alerta para cada mensagem
+        var alert = document.createElement('div');
+        alert.className = 'alert alert-success';
+        alert.textContent = messageText;
+        // Crie um botão de fechamento (X)
+        var closeButton = document.createElement('span');
+        closeButton.className = 'alert-close';
+        closeButton.textContent = 'X';
+        closeButton.onclick = function () {
+            closeAlert(alert);
+        };
+        alert.appendChild(closeButton);
+        // Adicione o elemento ao corpo do documento
+        document.body.appendChild(alert);
+        // Defina um tempo limite para remover o elemento após 5 segundos
+        setTimeout(function () {
+            closeAlert(alert);
+        }, 5000); // 5000 milissegundos = 5 segundos
+        {% endfor %}
+    }
+    
+    // Chame a função para exibir as mensagens de sucesso
+    showSuccessMessages();
+    {% endif %}
+</script>
 </html>
