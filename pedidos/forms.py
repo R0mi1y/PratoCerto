@@ -16,12 +16,28 @@ class PedidoForm(forms.ModelForm):
                 queryset=Endereco.objects.filter(cliente=cliente),
             )
         except:
+            super().__init__(*args, **kwargs)
             pass
 
 
     class Meta:
         model = Pedido
         fields = ["local_retirada", 'metodo_pagamento', "endereco"]
+        
+        
+class GarcomPedidoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        try:
+            super().__init__(*args, **kwargs)
+
+        except:
+            super().__init__(*args, **kwargs)
+            pass
+
+
+    class Meta:
+        model = Pedido
+        fields = ["mesa"]
 
 
 class PedidoPratoForm(forms.ModelForm):

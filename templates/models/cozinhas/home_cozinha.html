@@ -18,8 +18,8 @@
     
     {% if pedido.pronto %}
       <p class="pronto">Pedido pronto para ser servido</p>
-      {% else %}
-      <form action="home/pedido/pronto/{{ pedido.id }}" method="POST">
+    {% else %}
+      <form action="{% url 'pedido_pronto' pedido_id=pedido.id %}" method="POST">
         {% csrf_token %}
         <button type="submit">Notificar garçom que está pronto</button>
       </form>

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from clientes.models import Cliente
 from pratos.models import Prato
 from pedidos.models import Mesa, Pedido
-from .forms import PedidoForm
+from pedidos.forms import GarcomPedidoForm
 from PratoCerto.settings import AUX
 from .forms import *
 
@@ -64,3 +64,35 @@ def ver_carrinho(request):
     }
     
     return render(request, 'models/garcons/carrinho.html', context)
+
+
+@login_required
+def comprar_carrinho(request):
+    cliente = Cliente.objects.get(user=request.user.id)
+    pedidosPrato = PedidoPrato.objects.filter(cliente=cliente, status="no Carrinho")
+    
+    if request.method == "POST":
+        form = GarcomPedidoForm(request.POST)
+        if form.is_valid():
+            pedido = form.save(commit=False)
+            pedido.cliente = cliente
+            total = 0
+            
+            for pedidoPrato in pedidosPrato:
+                total += pedidoPrato.prato.preco * pedidoPrato.quantidade
+                pedidoPrato.status = "Pendente"
+                pedidoPrato.pedido = pedido
+                
+            pedido.total = total
+            pedido.save()
+            
+            [pedidoPrato.save() for pedidoPrato in pedidosPrato]
+            
+            return redirect("ver pedidos")
+
+    context = {
+        "pedidos": pedidosPrato,
+        "form": GarcomPedidoForm(),
+    }
+    
+    return render(request, 'models/pedidos/pagamento.html', context)

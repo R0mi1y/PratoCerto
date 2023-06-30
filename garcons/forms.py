@@ -3,10 +3,7 @@ from pratos.models import Prato
 from pedidos.models import PedidoPrato, Pedido
 
 
-class PedidoForm(forms.ModelForm):
-    class Meta:
-        model = Pedido
-        fields = ['mesa']
+
 
 
 class PedidoPratoForm(forms.ModelForm):

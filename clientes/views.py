@@ -3,7 +3,7 @@ import random
 from django.shortcuts import get_object_or_404, render, redirect
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import User
-from pedidos.forms import PedidoPratoForm, PedidoForm
+from pedidos.forms import PedidoPratoForm, PedidoForm, GarcomPedidoForm
 from pedidos.models import Pedido, PedidoPrato
 from PratoCerto.settings import AUX
 from .models import *
@@ -30,6 +30,8 @@ def home(request):
         return render(request, "models/clientes/home.html", data)
     elif cliente.tipo_conta == "Garcom":
         return redirect("home_garcom")
+    elif cliente.tipo_conta == "Cozinha":
+        return redirect("home_cozinha")
 
 
 def check_password_strength(password):
@@ -168,8 +170,12 @@ def comprar_carrinho(request):
     cliente = Cliente.objects.get(user=request.user.id)
     pedidosPrato = PedidoPrato.objects.filter(cliente=cliente, status="no Carrinho")
     
+    if cliente.tipo_conta == "Garcom":
+        return redirect("comprar carrinho garcom")
+    
     if request.method == "POST":
-        form = PedidoForm(request.POST)
+        if cliente.tipo_conta == "Cliente":
+            form = PedidoForm(request.POST)
         if form.is_valid():
             pedido = form.save(commit=False)
             pedido.cliente = cliente
@@ -184,10 +190,12 @@ def comprar_carrinho(request):
             pedido.save()
             
             [pedidoPrato.save() for pedidoPrato in pedidosPrato]
+            
+            return redirect("ver pedidos")
 
     context = {
         "pedidos": pedidosPrato,
-        "form": PedidoForm(),
+        "form": PedidoForm(cliente_id=cliente.pk),
     }
     
     return render(request, 'models/pedidos/pagamento.html', context)
