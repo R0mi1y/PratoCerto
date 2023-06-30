@@ -83,6 +83,10 @@
         
         <input type="submit" value="Comprar">
     </form>
+    {% for pedido in pedidos %}
+    <p>{{ pedido.prato }}</p>
+    <p>{{ pedido.cliente | default:pedido.nome_cliente }}</p>
+    {% endfor %}
     <a href="{% url "adicionar endereco" %}">adicionar endereço</a>
 </div>
 

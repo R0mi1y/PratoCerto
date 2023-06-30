@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('clientes', '0001_initial'),
-        ('pratos', '0004_remove_comentario_respostas_comentario_respostas'),
+        ('pratos', '0001_initial'),
     ]
 
     operations = [

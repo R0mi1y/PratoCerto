@@ -1,13 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, User
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
     
     
-class Cliente(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class Cliente(AbstractUser):
     telefone = models.CharField(max_length=20)
-    cpf = models.CharField(max_length=20, unique=True)
+    cpf = models.CharField(max_length=20, null=True)
     foto = models.ImageField(default=None, null=True, upload_to="media/")
     cliente_id = models.AutoField(primary_key=True)
     codigo_afiliado = models.CharField(max_length=255, null=False)
@@ -15,8 +14,8 @@ class Cliente(models.Model):
     tipo_conta = models.CharField(max_length=20, default="Cliente")
     
     def __str__(self):
-        return self.user.username
-
+        return self.username
+    
 
 class Endereco(models.Model):
     nome = models.CharField(max_length=40)

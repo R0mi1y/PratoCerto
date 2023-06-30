@@ -3,9 +3,6 @@ from pratos.models import Prato
 from pedidos.models import PedidoPrato, Pedido
 
 
-
-
-
 class PedidoPratoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         prato_id = kwargs.pop("prato_id")

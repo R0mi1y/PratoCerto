@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from pedidos.models import Pedido, PedidoPrato
+from pedidos.models import PedidoPrato
 
 def home(request):
     contexto = {

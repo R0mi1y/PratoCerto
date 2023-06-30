@@ -30,15 +30,15 @@ def fazer_pedido(request, id):
         "comentarios": prato.comentarios.all(),
     }
 
-    if Cliente.objects.get(user=request.user).tipo_conta == "Cliente":
+    if request.user.tipo_conta == "Cliente":
         return render(request, "models/pedidos/fazer_pedido.html", context)
-    elif Cliente.objects.get(user=request.user).tipo_conta == "Garcom":
+    elif request.user.tipo_conta == "Garcom":
         return render(request, "models/garcons/fazer_pedido.html", context)
 
 
 @login_required
 def criar_reserva(request):
-    cliente = Cliente.objects.get(user_id=request.user.pk)
+    cliente = request.user
     if request.method == "POST":
         msm = ""
 

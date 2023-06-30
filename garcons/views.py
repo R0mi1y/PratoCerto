@@ -2,22 +2,25 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from clientes.models import Cliente
 from pratos.models import Prato
-from pedidos.models import Mesa, Pedido
+from pedidos.models import Mesa, Pedido, PedidoPrato
 from pedidos.forms import GarcomPedidoForm
 from PratoCerto.settings import AUX
 from .forms import *
+from django.shortcuts import get_object_or_404
+
 
 @login_required
 def home(request):
-    # Recupera todas as mesas disponíveis
     tables = Mesa.objects.all()
-
-    # Recupera os pedidos em andamento
     orders = Pedido.objects.all()
+
+    # Filtra os PedidoPrato com status pronto para entrega
+    pedidoPrato_prontos = PedidoPrato.objects.filter(status='pronto para entrega')
 
     context = {
         'tables': tables,
-        'orders': orders
+        'orders': orders,
+        'pedidoPrato_prontos': pedidoPrato_prontos,  # Adiciona os PedidoPrato prontos ao contexto
     }
     context["Categorias"] = AUX["Categorias"]
 
@@ -69,7 +72,7 @@ def ver_carrinho(request):
 @login_required
 def comprar_carrinho(request):
     cliente = Cliente.objects.get(user=request.user.id)
-    pedidosPrato = PedidoPrato.objects.filter(cliente=cliente, status="no Carrinho")
+    pedidosPrato = PedidoPrato.objects.filter(status="carrinho garcom " + request.user.username)
     
     if request.method == "POST":
         form = GarcomPedidoForm(request.POST)
@@ -96,3 +99,11 @@ def comprar_carrinho(request):
     }
     
     return render(request, 'models/pedidos/pagamento.html', context)
+
+def servir_pedido(request, pedido_prato_id):
+    
+    pedido_prato = get_object_or_404(PedidoPrato, id=pedido_prato_id)
+
+    # Alterar o status do PedidoPrato para "sendo servido"
+    pedido_prato.status = "sendo servido"
+    pedido_prato.save()

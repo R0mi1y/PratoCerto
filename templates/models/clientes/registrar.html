@@ -58,29 +58,12 @@
         <h2>Formulário</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form_user.username.label }}
-            {{ form_user.username }}
-            {% for error in form_user.username.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-            {{ form_user.email.label }}
-            {{ form_user.email }}
-            {% for error in form_user.email.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-            
             {% for field in form_cliente %}
-            {{ field.label }}
-            {{ field }}
-            {% for error in field.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-            {% endfor %}
-            
-            {{ form_user.password.label }}
-            {{ form_user.password }}
-            {% for error in form_user.password.errors %}
-            <li>{{ error }}</li>
+                {{ field.label }}
+                {{ field }}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
             {% endfor %}
             
             <input type="submit" value="Enviar">

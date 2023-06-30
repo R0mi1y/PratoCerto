@@ -14,7 +14,7 @@ def template_categoria(request, categoria):
         if tupla[0] == categoria:
             data["Categoria"] = tupla[1]
             break
-    data['cliente'] = Cliente.objects.get(user=request.user)
+    data['cliente'] = request.user
     
     return render(request, "models/pratos/lista_pratos.html", data)
 
@@ -67,7 +67,7 @@ def comentar(request, id_prato):
         texto = request.POST.get("comentario")
         comentario = Comentario.objects.create(
             texto=texto,
-            cliente=Cliente.objects.get(user_id=request.user.pk)
+            cliente=request.user
         )
         
         prato.comentarios.add(comentario.pk)
@@ -82,7 +82,7 @@ def responder_comentario(request, id_prato, id_comentario):
         comentario = Comentario.objects.get(id=id_comentario)
         resposta = Comentario.objects.create(
             texto=request.POST.get("comentario"),
-            cliente=Cliente.objects.get(user_id=request.user.pk)
+            cliente=request.user.pk
         )
         
         comentario.respostas.add(resposta)

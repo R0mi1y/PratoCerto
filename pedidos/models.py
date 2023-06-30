@@ -21,7 +21,7 @@ class Mesa(models.Model):
 
 class Pedido(models.Model):
     mesa = models.OneToOneField(
-        Mesa,on_delete=models.CASCADE,null=True,
+        Mesa,on_delete=models.CASCADE, null=True,
         )
     data_pedido = models.DateTimeField(
         default=datetime.now,
@@ -53,7 +53,7 @@ class Pedido(models.Model):
             ("transferencia", "Transferência Bancária"),
         ], null=True,
     )
-    endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE)
+    endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE, null=True)
     cliente = models.ForeignKey(
         Cliente, on_delete=models.CASCADE, null=True,
     )

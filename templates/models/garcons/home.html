@@ -85,6 +85,41 @@
             text-align: center;
             color: white;
         }
+        /* Estilos adicionais para notificações da cozinha */
+        .kitchen-notifications {
+            background-color: #f2f2f2;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .kitchen-notifications h2 {
+            color: #333;
+        }
+
+        .kitchen-notifications .notification {
+            background-color: #ffcc00;
+            color: #333;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .kitchen-notifications .notification p {
+            margin: 0;
+        }
+
+        .kitchen-notifications .notification .order {
+            font-weight: bold;
+        }
+
+        .kitchen-notifications .notification .pratos {
+            margin-top: 5px;
+        }
+
+        .kitchen-notifications .notification .prato {
+            margin-bottom: 5px;
+        }
     </style>
     <div class="container">
         <div class="sidebar">
@@ -100,6 +135,7 @@
         </div>
         <div class="content">
             <h1>Página Inicial - Garçons</h1>
+            <a href="{% url "comprar carrinho garcom" %}">comprar carrinho garcom</a>
 
             {% if tables %}
                 <h2>Mesas Disponíveis:</h2>
@@ -123,7 +159,25 @@
             {% else %}
                 <p class="message">Não há pedidos em andamento.</p>
             {% endif %}
-            
+            <div class="kitchen-notifications">
+                <h2>Notificações da Cozinha</h2>
+                {% for pedidoPrato in pedidoPrato_prontos %}
+                    <div class="notification">
+                        <p class="order">Pedido {{ pedidoPrato.id }} está pronto para ser servido na mesa {{ pedidoPrato.pedido.mesa.numero}} </p>
+                        <div class="pratos">
+                            {% for prato in pedidoPrato.pratos.all %}
+                                <p class="prato">{{ prato.nome }}</p>
+                            {% endfor %}
+                        </div>
+                        <form action="{% url 'servir_pedido' pedidoPrato.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit">Servir Pedido</button>
+                        </form>
+                    </div>
+                {% empty %}
+                    <p>Não há notificações da cozinha no momento.</p>
+                {% endfor %}
+            </div>                
         </div>
     </div>
 {% endblock content %}

@@ -13,6 +13,7 @@ from django.shortcuts import render
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 
 
 @login_required
@@ -20,17 +21,15 @@ def home(request):
     if not request.user.email or request.user.email == "":
         return redirect("register")
 
-    cliente = Cliente.objects.get(user=request.user.id)
-
     data = {}
     data["Categorias"] = AUX["Categorias"]
-    data["cliente"] = cliente
+    data["cliente"] = request.user
     
-    if cliente.tipo_conta == "Cliente":
+    if request.user.tipo_conta == "Cliente":
         return render(request, "models/clientes/home.html", data)
-    elif cliente.tipo_conta == "Garcom":
+    elif request.user.tipo_conta == "Garcom":
         return redirect("home_garcom")
-    elif cliente.tipo_conta == "Cozinha":
+    elif request.user.tipo_conta == "Cozinha":
         return redirect("home_cozinha")
 
 
@@ -46,57 +45,44 @@ def check_password_strength(password):
 
 def criar_usuario_cliente(request):
     if request.method == "POST":
-        try:
-            user = User.objects.get(id=request.user.id)
-        except User.DoesNotExist:
-            user = None
-
-        form_user = UserClienteForm(request.POST, prefix="user", instance=user)
-        form_cliente = ClienteForm(request.POST, prefix="cliente")
-
-        if form_user.is_valid():
-            user = form_user.save(commit=False)
-            if not check_password_strength(request.POST.get("user-password")):
-                messages.error(
-                    request,
-                    "A senha deve ter no mínimo 8 caracteres, incluir pelo menos 1 numero, uma letra maiúscula, uma minúscula e um simbolo. Ela não pode ser comum nem similar aos campos do usuário.",
-                )
-
-                return redirect("register")
-
-            user.set_password(form_user.cleaned_data["password"])
-            user.save()
-
-        if form_cliente.is_valid() and user:
-            cliente = form_cliente.save(commit=False)
-            if not cliente.pontos:
-                cliente.pontos = 0
-                
-            cliente.user = user
-            try:
-                cliente.foto = (
-                    SocialAccount.objects.filter(user=user)
-                    .first()
-                    .extra_data["picture"]
-                )
-            except:
-                pass
+        form_cliente = ClienteForm(request.POST)
             
-            cliente.codigo_afiliado = gerar_aleatorio(user.username)
-            cliente = cliente.save()
-            messages.success(request, "Cadastro realizado com sucesso!")
-
+        try:
+            cliente = Cliente.objects.get(username=request.POST.get("username"))
+            cliente.password = make_password(request.POST.get("password"))
+            cliente.cpf = request.POST.get('cpf')
+            cliente.telefone = request.POST.get('telefone')
+            cliente.email = request.POST.get('email')
+            cliente.save()
+            
             return redirect("home")
+        except Cliente.DoesNotExist:
+            if form_cliente.is_valid():
+                cliente = form_cliente.save(commit=False)
+                        
+                if not cliente.pontos:
+                    cliente.pontos = 0
+                try:
+                    cliente.foto = (
+                        SocialAccount.objects.filter(user=request.user)
+                        .first()
+                        .extra_data["picture"]
+                    )
+                except:
+                    pass
+                
+                cliente.codigo_afiliado = gerar_aleatorio(cliente.username)
+                cliente = cliente.save()
+                messages.success(request, "Cadastro realizado com sucesso!")
+
+                return redirect("home")
     else:
-        form_user = UserClienteForm(
-            prefix="user", instance=User.objects.filter(id=request.user.id).first()
-        )
-        form_cliente = ClienteForm(prefix="cliente")
+        form_cliente = ClienteForm(instance=Cliente.objects.filter(pk=request.user.pk).first())
 
     return render(
         request,
         "models/clientes/registrar.html",
-        {"form_user": form_user, "form_cliente": form_cliente},
+        {"form_cliente": form_cliente},
     )
 
 
@@ -207,7 +193,7 @@ def adicionar_endereco(request):
         form = EnderecoForm(request.POST)
         if form.is_valid():
             endereco = form.save(commit=False)
-            endereco.cliente = Cliente.objects.get(user=request.user.id)
+            endereco.cliente = Cliente.objects.get(username=request.user.username)
             endereco.save()
             
             return redirect('perfil cliente')
@@ -240,7 +226,7 @@ def mudar_endereco(request):
 
 @login_required
 def perfil(request):
-    cliente = Cliente.objects.get(user=request.user.id)
+    cliente = Cliente.objects.get(username=request.user.username)
     try:
         endereco = Endereco.objects.get(cliente=cliente, padrao=True)
     except Endereco.DoesNotExist:

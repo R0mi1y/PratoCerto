@@ -146,7 +146,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 LOGIN_REDIRECT_URL = "/clientes/home"
 LOGOUT_REDIRECT_URL = "/accounts/login"
 
-# AUTH_USER_MODEL = 'cliente.Cliente'
+AUTH_USER_MODEL = 'clientes.Cliente'
 
 # Configurações de emails
 

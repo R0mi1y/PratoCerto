@@ -3,28 +3,18 @@ from .models import User, Cliente, Endereco
 from PratoCerto.settings import AUX
 
 
-class UserClienteForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ["email", "username", "password"]
-        widgets = {
-            "password": forms.PasswordInput(
-                attrs={"autocomplete": "new-password", "class": "custom-class"}
-            ),
-        }
-
-    # def
-
-
 class ClienteForm(forms.ModelForm):
     indicador = forms.CharField(max_length=20, required=False)
 
     class Meta:
         model = Cliente
-        fields = ["telefone", "cpf", "pontos"]
+        fields = ["telefone", "cpf", "pontos", "email", "username", "password"]
 
         widgets = {
             "pontos": forms.HiddenInput(),
+            "password": forms.PasswordInput(
+                attrs={"autocomplete": "new-password", "class": "custom-class"}
+            ),
         }
 
     def clean_indicador(self):
@@ -40,29 +30,12 @@ class ClienteForm(forms.ModelForm):
                 raise forms.ValidationError("Código do indicador inválido.")
 
         return indicador
-
-
-class ClienteForm(forms.ModelForm):
-    indicador = forms.CharField(max_length=20, required=False)
-    pontos = forms.IntegerField(widget=forms.HiddenInput(), required=False)
-
-    class Meta:
-        model = Cliente
-        fields = ["telefone", "cpf", "pontos"]
-
-    def clean_indicador(self):
-        indicador = self.cleaned_data.get("indicador")
-
-        if indicador and indicador != "":
-            try:
-                cliente_indicador = Cliente.objects.get(codigo_afiliado=indicador)
-                self.cleaned_data["pontos"] = AUX["pontos"]["indicado"]
-                cliente_indicador.pontos += AUX["pontos"]["indicação"]
-                cliente_indicador.save()
-            except Cliente.DoesNotExist:
-                raise forms.ValidationError("Código do indicador inválido.")
-
-        return indicador
+    
+    def clean_username(self):
+        data = self.cleaned_data["username"]
+        
+        return data
+    
 
 
 class EnderecoForm(forms.ModelForm):
