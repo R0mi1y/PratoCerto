@@ -16,11 +16,11 @@ class Mesa(models.Model):
     )
 
     def __str__(self):
-        return f"Mesa {self.numero}"
+        return f"mesa {self.numero}"
 
 
 class Pedido(models.Model):
-    mesa = models.OneToOneField(
+    mesa = models.ForeignKey(
         Mesa,on_delete=models.CASCADE, null=True,
         )
     data_pedido = models.DateTimeField(
@@ -43,7 +43,7 @@ class Pedido(models.Model):
         choices=[
             ("restaurante", "Retirar no Restaurante"),
             ("entrega", "Entrega em Casa"),
-        ],
+        ], null=True
     )
     metodo_pagamento = models.CharField(
         "Método de Pagamento", max_length=20,

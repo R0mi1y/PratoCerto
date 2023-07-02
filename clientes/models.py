@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, User
+from django.contrib.auth.models import AbstractUser
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
     
@@ -8,7 +8,6 @@ class Cliente(AbstractUser):
     telefone = models.CharField(max_length=20)
     cpf = models.CharField(max_length=20, null=True)
     foto = models.ImageField(default=None, null=True, upload_to="media/")
-    cliente_id = models.AutoField(primary_key=True)
     codigo_afiliado = models.CharField(max_length=255, null=False)
     pontos = models.IntegerField("Pontos de afiliado", default=0)
     tipo_conta = models.CharField(max_length=20, default="Cliente")

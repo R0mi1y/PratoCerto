@@ -9,7 +9,7 @@ from .models import Pedido, PedidoPrato, Reserva, Mesa
 class PedidoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         try:
-            cliente = Cliente.objects.get(cliente_id=kwargs.pop("cliente_id"))
+            cliente = Cliente.objects.get(pk=kwargs.pop("cliente_id"))
             super().__init__(*args, **kwargs)
 
             self.fields["endereco"] = forms.ModelMultipleChoiceField(
@@ -26,14 +26,6 @@ class PedidoForm(forms.ModelForm):
         
         
 class GarcomPedidoForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        try:
-            super().__init__(*args, **kwargs)
-
-        except:
-            super().__init__(*args, **kwargs)
-            pass
-
 
     class Meta:
         model = Pedido

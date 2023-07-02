@@ -46,7 +46,7 @@
             <img src="{{ pedido.prato.foto.url }}" alt="">
             <div class="info">
                 <div class="nome">{{ pedido.prato.nome }}</div>
-                <div class="username">{{ pedido.cliente.user.username }}</div>
+                <div class="username">{{ pedido.cliente.username }}</div>
                 <div class="data">{{ pedido.data_pedido }}</div>
                 <div class="data">{{ pedido.quantidade }}</div>
 
@@ -56,8 +56,8 @@
         </div>
         <hr>
     {% endfor %}
-
-    <a href="{% url "comprar carrinho" %}">Pedir</a>
+    
+    <a href="{% url "comprar_carrinho_cliente" %}">Pedir</a>
 {% endif %}
 
 {% endblock %}

@@ -16,7 +16,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -26,6 +25,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Django role-permissions
+    "rolepermissions",
+    # meus apps
     "caixas",
     "clientes",
     "garcons",
@@ -34,6 +36,8 @@ INSTALLED_APPS = [
     "pratos",
     "eventos",
     "django_cron",
+    "main",
+    "admin_gerente",
     #  Django all-auth
     "allauth",
     "allauth.account",
@@ -143,10 +147,12 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-LOGIN_REDIRECT_URL = "/clientes/home"
+LOGIN_REDIRECT_URL = "/home"
 LOGOUT_REDIRECT_URL = "/accounts/login"
 
 AUTH_USER_MODEL = 'clientes.Cliente'
+
+ROLEPERMISSIONS_MODULE = "PratoCerto.roles"
 
 # Configurações de emails
 

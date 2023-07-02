@@ -1,7 +1,8 @@
+from .models import Garcom
 from django import forms
 from pratos.models import Prato
-from pedidos.models import PedidoPrato, Pedido
-
+from pedidos.models import PedidoPrato
+from django.contrib.auth.hashers import make_password
 
 class PedidoPratoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -59,3 +60,21 @@ class PedidoPratoGarcomForm(forms.ModelForm):
             ),
             "nome_cliente": forms.TextInput(attrs={"placeholder": "Nome do cliente ou cpf"}),
     }
+        
+
+class GarcomForm(forms.ModelForm):
+    class Meta:
+        model = Garcom
+        fields = ['username', 'email', 'telefone', 'cpf', 'password']
+        widgets = {
+            'password': forms.PasswordInput()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def clean_password(self):
+        data = self.cleaned_data["password"]
+        
+        return make_password(data)
+    

@@ -1,0 +1,73 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <style type = 'text/css'>
+        .box-link {
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            display: inline-block;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s;
+          }
+          
+          .box-link:hover {
+            background-color: #ddd;
+          }
+    </style>
+
+  <h1>Caixa de Restaurante</h1>
+  
+  <h2>Realizar Pagamento</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <label for="pedido_id">ID do Pedido:</label>
+    <input type="text" name="pedido_id">
+    <br>
+    <label for="valor_pago">Valor Pago:</label>
+    <input type="text" name="valor_pago">
+    <br>
+    <button type="submit">Realizar Pagamento</button>
+  </form>
+
+  <h1>Pedidos</h1>
+
+  <div class="box-link">
+    <button id="atualizar-pedidos">Atualizar</button>
+  </div>
+
+  <div id="pedidoPratos">
+  </div>
+
+  <h2>Buscar Pedido</h2>
+  <form method="GET">
+      <label for="pedido_id">ID do Pedido:</label>
+      <input type="text" name="pedido_id">
+      <br>
+      <button type="submit">Buscar Pedido</button>
+    </form>
+    
+    {% if pedido %}
+    <h2>Dados do Pedido</h2>
+    <p>ID: {{ pedido.id }}</p>
+    <p>Cliente: {{ pedido.cliente }}</p>
+    <p>Mesa: {{ pedido.mesa.numero }}</p>
+    <p>Status: {{ pedido.status }}</p>
+    <p>Total: R$ {{ pedido.total }}</p>
+    <p>Taxa de Entrega: R$ {{ pedido.taxa_entrega }}</p>
+    <p>Desconto: R$ {{ pedido.desconto }}</p>
+    <p>Local de Retirada: {{ pedido.local_retirada }}</p>
+    <p>Método de Pagamento: {{ pedido.metodo_pagamento }}</p>
+    <p>Endereço: {{ pedido.endereco }}</p>
+    {% endif %}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="{% static "js/pedidos_caixa.js" %}"></script>
+    {% endblock %}
+
+    
+    

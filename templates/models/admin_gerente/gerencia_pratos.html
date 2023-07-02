@@ -1,0 +1,99 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    img {
+        max-width: 100px;
+        max-height: 100px;
+    }
+
+    .actions {
+        white-space: nowrap;
+    }
+
+    .actions a {
+        margin-right: 10px;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .actions a:hover {
+        text-decoration: underline;
+    }
+</style>
+<h1>{{ cliente.0.tipo_conta }}</h1>
+
+<a href="{% url 'cadastrar_'|add:pg %}">Cadastrar</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Disponível</th>
+            <th>Categoria</th>
+            <th>Foto</th>
+            <th>Preço</th>
+            <th>Descrição</th>
+            <th>Adicionais</th>
+            <th>Comentários</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prato in pratos %}
+        <tr>
+            <td>{{ prato.nome }}</td>
+            <td>{{ prato.disponivel }}</td>
+            <td>{{ prato.get_categoria_display }}</td>
+            <td><img src="{{ prato.foto.url }}" alt="Foto do Prato"></td>
+            <td>{{ prato.preco }}</td>
+            <td>{{ prato.descricao }}</td>
+            <td>
+                {% for adicional in prato.adicional.all %}
+                    {{ adicional.nome }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    Sem adicionais
+                {% endfor %}
+            </td>
+            <td>
+                {% for comentario in prato.comentarios.all %}
+                    {{ comentario.texto }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    Sem comentários
+                {% endfor %}
+            </td>
+            <td class="actions">
+                <a href="{% url 'editar_prato' prato.id %}">Editar</a>
+                <a href="{% url 'deletar_prato' prato.id %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

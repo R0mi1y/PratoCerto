@@ -8,7 +8,7 @@ from django.contrib import messages
 
 @login_required
 def fazer_pedido(request, id):
-    cliente = Cliente.objects.get(user_id=request.user.pk)
+    cliente = request.user
     prato = Prato.objects.get(id=id)
 
     if request.method == "POST":
@@ -17,7 +17,7 @@ def fazer_pedido(request, id):
         if pedidoPrato_form.is_valid():
             pedidoPrato = pedidoPrato_form.save(commit=False)
             pedidoPrato.cliente = cliente
-            pedidoPrato.nome_cliente = cliente.user.username
+            pedidoPrato.nome_cliente = cliente.username
             pedidoPrato.save()
 
             return redirect("home")

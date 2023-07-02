@@ -7,9 +7,12 @@ from pedidos.forms import GarcomPedidoForm
 from PratoCerto.settings import AUX
 from .forms import *
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import permission_required, user_passes_test
+from rolepermissions.roles import assign_role
+from rolepermissions.decorators import has_role_decorator
 
 
-@login_required
+@has_role_decorator("garcom")
 def home(request):
     tables = Mesa.objects.all()
     orders = Pedido.objects.all()
@@ -27,9 +30,9 @@ def home(request):
     return render(request, 'models/garcons/home.html', context)
 
 
-@login_required
+@has_role_decorator("garcom")
 def fazer_pedido(request, id):
-    cliente = Cliente.objects.get(user=request.user.id)
+    cliente = request.user
     prato = Prato.objects.get(id=id)
 
     if request.method == 'POST':
@@ -37,15 +40,15 @@ def fazer_pedido(request, id):
 
         if pedidoPrato_form.is_valid():
             pedidoPrato = pedidoPrato_form.save(commit=False)
-            pedidoPrato.status = "carrinho garcom " + cliente.user.username
+            pedidoPrato.status = "carrinho garcom " + cliente.username
             
             if pedidoPrato.nome_cliente.replace(".", "").replace("-", "").isdigit():
                 pedidoPrato.cliente = Cliente.objects.get(cpf=pedidoPrato.nome_cliente)
-                pedidoPrato.nome_cliente = pedidoPrato.cliente.user.username
+                pedidoPrato.nome_cliente = pedidoPrato.cliente.username
                 
             pedidoPrato.save()
 
-            return redirect("home")
+            return redirect("home_garcom")
     else:
         prato_form = PedidoPratoGarcomForm(prato_id=id)
         
@@ -57,10 +60,10 @@ def fazer_pedido(request, id):
     return render(request, 'models/garcons/fazer_pedido.html', context)
 
 
-@login_required
+@has_role_decorator("garcom")
 def ver_carrinho(request):
-    cliente = Cliente.objects.get(user=request.user.id)
-    status = "carrinho garcom " + cliente.user.username
+    cliente = request.user
+    status = "carrinho garcom " + cliente.username
 
     context = {
         "pedidos": PedidoPrato.objects.filter(status=status)
@@ -69,10 +72,10 @@ def ver_carrinho(request):
     return render(request, 'models/garcons/carrinho.html', context)
 
 
-@login_required
+@has_role_decorator("garcom")
 def comprar_carrinho(request):
-    cliente = Cliente.objects.get(user=request.user.id)
-    pedidosPrato = PedidoPrato.objects.filter(status="carrinho garcom " + request.user.username)
+    cliente = request.user
+    pedidosPrato = PedidoPrato.objects.filter(status="carrinho garcom " + cliente.username)
     
     if request.method == "POST":
         form = GarcomPedidoForm(request.POST)
@@ -83,7 +86,7 @@ def comprar_carrinho(request):
             
             for pedidoPrato in pedidosPrato:
                 total += pedidoPrato.prato.preco * pedidoPrato.quantidade
-                pedidoPrato.status = "Pendente"
+                pedidoPrato.status = "Pendente local"
                 pedidoPrato.pedido = pedido
                 
             pedido.total = total
@@ -91,7 +94,7 @@ def comprar_carrinho(request):
             
             [pedidoPrato.save() for pedidoPrato in pedidosPrato]
             
-            return redirect("ver pedidos")
+            return redirect("ver_pedidos_garcom")
 
     context = {
         "pedidos": pedidosPrato,
@@ -100,10 +103,51 @@ def comprar_carrinho(request):
     
     return render(request, 'models/pedidos/pagamento.html', context)
 
-def servir_pedido(request, pedido_prato_id):
-    
-    pedido_prato = get_object_or_404(PedidoPrato, id=pedido_prato_id)
 
+@has_role_decorator("garcom")
+def ver_pedidos(request):
+    cliente = request.user
+
+    context = {
+        "pedidos": Pedido.objects.filter(cliente=cliente).exclude(status="no Carrinho")
+    }
+    
+    return render(request, 'models/clientes/pedidos.html', context)
+
+
+def servir_pedido(request, pedido_prato_id):
+    pedido_prato = get_object_or_404(PedidoPrato, id=pedido_prato_id)
     # Alterar o status do PedidoPrato para "sendo servido"
-    pedido_prato.status = "sendo servido"
+    pedido_prato.status = "servido"
     pedido_prato.save()
+    return redirect("home_garcom")
+
+
+@has_role_decorator("garcom")
+def remover_carrinho(request, id):
+    pedido = get_object_or_404(PedidoPrato, id=id)
+    pedido.delete()
+    
+    return redirect("ver_carrinho_garcom")
+
+
+@has_role_decorator("garcom")
+def editar_carrinho(request, id):
+    cliente = request.user
+    pedidoPrato = PedidoPrato.objects.get(id=id)
+    
+    if request.method == "POST":
+        form = PedidoPratoForm(request.POST, prato_id=pedidoPrato.prato.pk, instance=pedidoPrato)
+        if form.is_valid():
+            pedidoPrato = form.save(commit=False)
+            pedidoPrato.cliente = cliente
+            pedidoPrato.save()
+            
+            return redirect("ver_carrinho_cliente")
+        
+    context = {
+        'prato_form' : PedidoPratoForm(instance=pedidoPrato, prato_id=pedidoPrato.prato.pk),
+        'prato'      : pedidoPrato.prato,
+        'comentarios': pedidoPrato.prato.comentarios.all(),
+    }
+    return render(request, 'models/pedidos/fazer_pedido.html', context)

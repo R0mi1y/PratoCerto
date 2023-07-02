@@ -22,10 +22,10 @@
                 <p>Indisponível</p>
             {% endif %}
             {% if prato.foto %}
-                {% if cliente.tipo_conta == "Cliente" %}
-                    <a href="/pedidos/pedir/{{ prato.id }}"><img src="{{ prato.foto.url }}" alt="Imagem do Prato"></a>
-                {% elif cliente.tipo_conta == "Garcom" %}
-                    <a href="/garcons/home/fazer_pedido/{{ prato.id }}"><img src="{{ prato.foto.url }}" alt="Imagem do Prato"></a>
+                {% if has_cliente_role %}
+                    <a href="{% url "fazer_pedido_cliente" id=prato.id %}"><img src="{{ prato.foto.url }}" alt="Imagem do Prato"></a>
+                {% elif has_garcom_role %}
+                    <a href="{% url "fazer_pedido_garcom" id=prato.id %}"><img src="{{ prato.foto.url }}" alt="Imagem do Prato"></a>
                 {% endif %}
             {% endif %}
             <p>R$ {{prato.preco}}</p>

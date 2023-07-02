@@ -1,5 +1,7 @@
 <!-- base.html -->
 {% load static %}
+{% load decorators %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -69,14 +71,56 @@
     <div class="navbar">
         <!-- Conteúdo da barra de navegação -->
         <h1>Minha Barra de Navegação</h1>
-        <a href="{% url "home" %}">Home</a> |
+        
+        {% has_role user 'admin' as has_admin_role %}
+        {% has_role user 'cliente' as has_cliente_role %}
+        {% has_role user 'garcom' as has_garcom_role %}
+        {% has_role user 'cozinha' as has_cozinha_role %}
+        {% has_role user 'caixa' as has_caixa_role %}
+
+        {% if has_admin_role %}
+
+        <a href="{% url "home_cliente" %}">Home cliente</a> |
+        <a href="{% url "gerenciar_prato" %}">Gerenciar prato</a> |
+        <a href="{% url "gerenciar_garcons" %}">Gerenciar garcom</a> | 
+        <a href="{% url "gerenciar_caixas" %}">Gerenciar caixa</a> | 
+        <a href="{% url "gerenciar_cozinhas" %}">Gerenciar cozinha</a> | 
+        <a href="{% url "gerenciar_clientes" %}">Gerenciar clientes</a> | 
+        <a href="{% url "gerenciar_adicionais" %}">Gerenciar Adicionais</a> | 
         <a href="{% url "criar reserva" %}">criar reserva</a> |
-        <a href="{% url "ver pedidos" %}">pedidos</a> |
-        <a href="{% url "ver carrinho" %}">carrinho</a> |
-        <a href="{% url "perfil cliente" %}">Perfil</a> |
+        <a href="{% url "perfil_cliente" %}">Perfil</a> |
+        <a href="{% url 'home_eventos' %}"> Eventos</a> |
+        
+        {% elif has_cliente_role %}
+        
+        <a href="{% url "home_cliente" %}">Home</a> |
+        <a href="{% url 'home_eventos' %}"> Eventos</a> |
+        <a href="{% url "criar reserva" %}">criar reserva</a> |
+        <a href="{% url "ver_pedidos_cliente" %}">pedidos</a> |
+        <a href="{% url "ver carrinho cliente" %}">carrinho</a> |
+        <a href="{% url "perfil_cliente" %}">Perfil</a> |
+        
+        {% elif has_garcom_role %}
+        
+        <a href="{% url "home_garcom" %}">Home</a> |
+        <a href="{% url 'home_eventos' %}"> Eventos</a> |
+        <a href="{% url "ver_pedidos_garcom" %}">pedidos</a> |
+        <a href="{% url "ver_carrinho_garcom" %}">carrinho</a> |
+        
+        {% elif has_cozinha_role %}
+        
+        <a href="{% url "home_cozinha" %}">Home</a> |
+        <a href="{% url 'home_eventos' %}"> Eventos</a> |
+        
+        {% elif has_caixa_role %}
+        
+        <a href="{% url "home" %}">Home</a> |
+        <a href="{% url 'home_eventos' %}"> Eventos</a> |
+
+        {% endif %}
+        
         <a href="/accounts/logout">Sair</a> |
     </div>
-
     <div class="content">
         {% block content %}{% endblock %}
     </div>
@@ -86,6 +130,7 @@
         <p>Meu Rodapé</p>
     </div>
 </body>
+<script src="{% block js %}{% endblock js %}"></script>
 <script>
     {% if messages %}
     // Função para fechar o alerta

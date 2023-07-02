@@ -1,3 +1,8 @@
 from django.db import models
+from clientes.models import Cliente
 
-# Create your models here.
+class Caixa(Cliente):
+    observacoes = models.TextField()
+    
+    def __str__(self):
+        return self.username

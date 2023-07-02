@@ -135,8 +135,6 @@
         </div>
         <div class="content">
             <h1>Página Inicial - Garçons</h1>
-            <a href="{% url "comprar carrinho garcom" %}">comprar carrinho garcom</a>
-
             {% if tables %}
                 <h2>Mesas Disponíveis:</h2>
                 {% for table in tables %}
@@ -159,25 +157,16 @@
             {% else %}
                 <p class="message">Não há pedidos em andamento.</p>
             {% endif %}
+
+
             <div class="kitchen-notifications">
                 <h2>Notificações da Cozinha</h2>
-                {% for pedidoPrato in pedidoPrato_prontos %}
-                    <div class="notification">
-                        <p class="order">Pedido {{ pedidoPrato.id }} está pronto para ser servido na mesa {{ pedidoPrato.pedido.mesa.numero}} </p>
-                        <div class="pratos">
-                            {% for prato in pedidoPrato.pratos.all %}
-                                <p class="prato">{{ prato.nome }}</p>
-                            {% endfor %}
-                        </div>
-                        <form action="{% url 'servir_pedido' pedidoPrato.id %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit">Servir Pedido</button>
-                        </form>
-                    </div>
-                {% empty %}
+                <div class="notification" id="pedidoPratos">
                     <p>Não há notificações da cozinha no momento.</p>
-                {% endfor %}
-            </div>                
+                </div>
+            </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/notificar_garcom.js' %}"></script>
 {% endblock content %}

@@ -79,7 +79,11 @@
 
             <h2>Gerenciar Eventos:</h2>
             <p>Aqui você pode cadastrar e editar eventos:</p>
-            <a href="{% url 'criar_evento' %}" style="color: red;">Cadastrar Evento</a>
+            {% if user.is_authenticated and user.is_superuser %}
+                <a href="{% url 'criar_evento' %}" style="color: red;">Cadastrar Evento</a>
+            {% endif %}
+            
+
                 <!-- Outras opções para editar eventos -->
 
         </div>

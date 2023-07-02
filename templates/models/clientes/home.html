@@ -38,35 +38,23 @@
 </style>
 <div class="codigo-afiliado">
     <p>Código</p>
-    <p>{{cliente.codigo_afiliado}}</p>
+    <p>{{ cliente.codigo_afiliado }}</p>
+    <p>{{ cliente.username }}</p>
+
 </div>
 <div>
     <p>pontos:</p>
-    <p>{{cliente.pontos}}</p>
+    <p>{{ cliente.pontos }}</p>
 </div>
 <!-- Conteúdo da página -->
-<br><br><br>
-<a href="/pratos/cadastro/adicional">Cadastrar Adicional (teste)</a>
-<br>
-<a href="/pratos/cadastro/prato">Cadastrar prato (teste)</a>
-<br>
+<a href="{% url "home_cozinha" %}">cozinha</a></br>
+<a href="{% url "home_caixa" %}">caixa</a>
 
-<a href="{% url 'home_eventos' %}"> Eventos (teste)</a>
-<br>
-
-<a href="{% url 'home_garcom' %}"> Garçon (teste)</a>
-<br>
-
-<a href="{% url 'home_cozinha' %}"> Cozinha (teste)<a>
-<br><br><br> 
-
-<br><br><br>
 <div class="sidebar">
     <h2>Cardápio</h2>
     {% for categoria in Categorias %}
         <a href="/pratos/categoria/{{ categoria.0 }}" class="category-link">
             <div class="image-container">
-                
                 <img src="{% static 'img/' %}{{ categoria.0 }}.jpeg" alt="">
                 <p>{{ categoria.1 }}</p>
             </div>

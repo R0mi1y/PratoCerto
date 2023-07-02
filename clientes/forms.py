@@ -1,17 +1,38 @@
 from django import forms
-from .models import User, Cliente, Endereco
+from .models import Cliente, Endereco
 from PratoCerto.settings import AUX
 
 
 class ClienteForm(forms.ModelForm):
     indicador = forms.CharField(max_length=20, required=False)
+    pontos = forms.CharField(
+        max_length=20, required=False, widget=forms.HiddenInput(attrs={"class": ""}),
+        label="",
+    )
 
     class Meta:
         model = Cliente
         fields = ["telefone", "cpf", "pontos", "email", "username", "password"]
 
         widgets = {
-            "pontos": forms.HiddenInput(),
+            "password": forms.PasswordInput(
+                attrs={"autocomplete": "new-password", "class": "custom-class"}
+            ),
+        }
+        
+        
+class ClienteFormAdmin(forms.ModelForm):
+    indicador = forms.CharField(max_length=20, required=False)
+    pontos = forms.CharField(
+        max_length=20, required=False, widget=forms.HiddenInput(attrs={"class": ""}),
+        label="",
+    )
+
+    class Meta:
+        model = Cliente
+        fields = ["telefone", "foto", "cpf", "pontos", "email", "username", "password"]
+
+        widgets = {
             "password": forms.PasswordInput(
                 attrs={"autocomplete": "new-password", "class": "custom-class"}
             ),
@@ -30,17 +51,16 @@ class ClienteForm(forms.ModelForm):
                 raise forms.ValidationError("Código do indicador inválido.")
 
         return indicador
-    
+
     def clean_username(self):
         data = self.cleaned_data["username"]
-        
+
         return data
-    
 
 
 class EnderecoForm(forms.ModelForm):
     padrao = forms.BooleanField(widget=forms.CheckboxInput, required=False)
-    
+
     class Meta:
         model = Endereco
         fields = [
@@ -55,8 +75,8 @@ class EnderecoForm(forms.ModelForm):
             "complemento",
             "padrao",
         ]
-        
-        
+
+
 class EditarEnderecoForm(forms.ModelForm):
     class Meta:
         model = Endereco

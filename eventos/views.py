@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Evento
 from .forms import EventoForm
-
+from rolepermissions.decorators import has_role_decorator
 
 def home(request):
     # Sua lógica para recuperar eventos e informações do usuário
@@ -15,6 +15,8 @@ def home(request):
         # Renderize o template sem eventos e informações do usuário
         return render(request, 'models/eventos/eventos.html', {'user': request.user})
 
+
+@has_role_decorator("admin")
 def criar_evento(request):
     if request.method == 'POST':
         form = EventoForm(request.POST)
@@ -25,9 +27,10 @@ def criar_evento(request):
         form = EventoForm()
     
     context = {'form': form}
-    return render(request, 'models/eventos/criar_eventos.html', context)
+    return render(request, 'models/forms/form.html', context)
 
 
+@has_role_decorator("garcom")
 def deletar_evento(request, evento_id):
     evento = get_object_or_404(Evento, id=evento_id)
     
@@ -38,6 +41,7 @@ def deletar_evento(request, evento_id):
     return render(request, 'models/eventos/deletar_eventos.html', {'evento': evento})
 
 
+@has_role_decorator("garcom")
 def editar_evento(request, evento_id):
     evento = get_object_or_404(Evento, id=evento_id)
     
@@ -49,4 +53,4 @@ def editar_evento(request, evento_id):
     else:
         form = EventoForm(instance=evento)
     
-    return render(request, 'models/eventos/editar_eventos.html', {'form': form, 'evento': evento})
+    return render(request, 'models/forms/form.html', {'form': form, 'evento': evento})

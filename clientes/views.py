@@ -1,10 +1,12 @@
 import hashlib
 import random
+from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404, render, redirect
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import User
+from pratos.models import *
 from pedidos.forms import PedidoPratoForm, PedidoForm, GarcomPedidoForm
-from pedidos.models import Pedido, PedidoPrato
+from pedidos.models import *
 from PratoCerto.settings import AUX
 from .models import *
 from .forms import *
@@ -12,25 +14,21 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.hashers import make_password
+from rolepermissions.roles import assign_role, get_user_roles
+from rolepermissions.decorators import has_permission_decorator, has_permission, has_role_decorator
 
 
-@login_required
+@has_role_decorator("cliente")
 def home(request):
-    if not request.user.email or request.user.email == "":
-        return redirect("register")
+    # print(get_user_roles(request.user))
 
     data = {}
     data["Categorias"] = AUX["Categorias"]
     data["cliente"] = request.user
     
-    if request.user.tipo_conta == "Cliente":
-        return render(request, "models/clientes/home.html", data)
-    elif request.user.tipo_conta == "Garcom":
-        return redirect("home_garcom")
-    elif request.user.tipo_conta == "Cozinha":
-        return redirect("home_cozinha")
+    return render(request, "models/clientes/home.html", data)
 
 
 def check_password_strength(password):
@@ -46,36 +44,42 @@ def check_password_strength(password):
 def criar_usuario_cliente(request):
     if request.method == "POST":
         form_cliente = ClienteForm(request.POST)
-            
+
         try:
             cliente = Cliente.objects.get(username=request.POST.get("username"))
             cliente.password = make_password(request.POST.get("password"))
             cliente.cpf = request.POST.get('cpf')
             cliente.telefone = request.POST.get('telefone')
             cliente.email = request.POST.get('email')
+            cliente.tipo_conta = "Cliente"
+            cliente.codigo_afiliado = gerar_aleatorio(cliente.username)
+            try:
+                cliente.foto = (
+                    SocialAccount.objects.filter(user=request.user)
+                    .first()
+                    .extra_data["picture"]
+                )
+            except:
+                messages.error("Imagem não salva")
             cliente.save()
-            
-            return redirect("home")
         except Cliente.DoesNotExist:
             if form_cliente.is_valid():
                 cliente = form_cliente.save(commit=False)
-                        
+
                 if not cliente.pontos:
                     cliente.pontos = 0
-                try:
-                    cliente.foto = (
-                        SocialAccount.objects.filter(user=request.user)
-                        .first()
-                        .extra_data["picture"]
-                    )
-                except:
-                    pass
-                
+
+                cliente.tipo_conta = "Cliente"
                 cliente.codigo_afiliado = gerar_aleatorio(cliente.username)
-                cliente = cliente.save()
+                cliente.save()
                 messages.success(request, "Cadastro realizado com sucesso!")
 
-                return redirect("home")
+        assign_role(cliente, "cliente")
+        user = authenticate(request, username=cliente.username, password=request.POST.get("password"))
+        login(request, user)
+
+        return redirect("home_cliente")
+
     else:
         form_cliente = ClienteForm(instance=Cliente.objects.filter(pk=request.user.pk).first())
 
@@ -84,6 +88,7 @@ def criar_usuario_cliente(request):
         "models/clientes/registrar.html",
         {"form_cliente": form_cliente},
     )
+
 
 
 def gerar_aleatorio(string):
@@ -99,9 +104,9 @@ def gerar_aleatorio(string):
     return (hash_hex[:2] + string + hash_hex[2:4]).upper()
 
 
-@login_required
+@has_role_decorator("cliente")
 def ver_pedidos(request):
-    cliente = Cliente.objects.get(user=request.user.id)
+    cliente = request.user
 
     context = {
         "pedidos": Pedido.objects.filter(cliente=cliente).exclude(status="no Carrinho")
@@ -110,11 +115,9 @@ def ver_pedidos(request):
     return render(request, 'models/clientes/pedidos.html', context)
 
 
-@login_required
+@has_role_decorator("cliente")
 def ver_carrinho(request):
-    cliente = Cliente.objects.get(user=request.user.id)
-    if cliente.tipo_conta == "Garcom":
-        return redirect("carrinho garcom")
+    cliente = request.user
 
     context = {
         "pedidos": PedidoPrato.objects.filter(cliente=cliente, status="no Carrinho")
@@ -125,14 +128,17 @@ def ver_carrinho(request):
 
 @login_required
 def remover_carrinho(request, id):
-    PedidoPrato.objects.get(id=id).delete()
-    return redirect("ver carrinho")
+    cliente = request.user
+    pedido = get_object_or_404(PedidoPrato, id=id, cliente=cliente)
+    pedido.delete()
+    
+    return redirect("ver_carrinho_cliente")
 
 
 @login_required
 def editar_carrinho(request, id):
-    cliente = Cliente.objects.get(user_id=request.user.pk)
-    pedidoPrato = PedidoPrato.objects.get(id=id)
+    cliente = request.user
+    pedidoPrato = PedidoPrato.objects.get(cliente=request.user ,id=id)
     
     if request.method == "POST":
         form = PedidoPratoForm(request.POST, prato_id=pedidoPrato.prato.pk, instance=pedidoPrato)
@@ -141,7 +147,7 @@ def editar_carrinho(request, id):
             pedidoPrato.cliente = cliente
             pedidoPrato.save()
             
-            return redirect("ver carrinho")
+            return redirect("ver_carrinho_cliente")
         
     context = {
         'prato_form' : PedidoPratoForm(instance=pedidoPrato, prato_id=pedidoPrato.prato.pk),
@@ -151,13 +157,10 @@ def editar_carrinho(request, id):
     return render(request, 'models/pedidos/fazer_pedido.html', context)
 
 
-@login_required
+@has_role_decorator("cliente")
 def comprar_carrinho(request):
-    cliente = Cliente.objects.get(user=request.user.id)
+    cliente = request.user
     pedidosPrato = PedidoPrato.objects.filter(cliente=cliente, status="no Carrinho")
-    
-    if cliente.tipo_conta == "Garcom":
-        return redirect("comprar carrinho garcom")
     
     if request.method == "POST":
         if cliente.tipo_conta == "Cliente":
@@ -177,7 +180,7 @@ def comprar_carrinho(request):
             
             [pedidoPrato.save() for pedidoPrato in pedidosPrato]
             
-            return redirect("ver pedidos")
+            return redirect("ver_pedidos_cliente")
 
     context = {
         "pedidos": pedidosPrato,
@@ -187,7 +190,7 @@ def comprar_carrinho(request):
     return render(request, 'models/pedidos/pagamento.html', context)
 
 
-@login_required
+@has_role_decorator("cliente")
 def adicionar_endereco(request):
     if request.method == 'POST':
         form = EnderecoForm(request.POST)
@@ -196,16 +199,16 @@ def adicionar_endereco(request):
             endereco.cliente = Cliente.objects.get(username=request.user.username)
             endereco.save()
             
-            return redirect('perfil cliente')
+            return redirect('perfil_cliente')
     else:
         form = EnderecoForm()
     
     return render(request, 'models/clientes/add_endereco.html', {'form': form})
 
 
-@login_required
+@has_role_decorator("cliente")
 def mudar_endereco(request):
-    cliente = Cliente.objects.get(user=request.user.id)
+    cliente = request.user
     enderecos = Endereco.objects.filter(cliente=cliente)
     
     if request.method == 'POST':
@@ -214,7 +217,7 @@ def mudar_endereco(request):
         endereco.padrao = True
         endereco.save()
         
-        return redirect('perfil cliente')
+        return redirect('perfil_cliente')
 
     contexto = {
         'cliente': cliente,
@@ -224,9 +227,9 @@ def mudar_endereco(request):
     return render(request, 'models/clientes/mudar_endereco.html', contexto)
     
 
-@login_required
+@has_role_decorator("cliente")
 def perfil(request):
-    cliente = Cliente.objects.get(username=request.user.username)
+    cliente = request.user
     try:
         endereco = Endereco.objects.get(cliente=cliente, padrao=True)
     except Endereco.DoesNotExist:
@@ -240,7 +243,7 @@ def perfil(request):
     return render(request, 'models/clientes/perfil.html', contexto)
 
 
-@login_required
+@has_role_decorator("cliente")
 def deletar_endereco(request, id_endereco):
     endereco = get_object_or_404(Endereco, pk=id_endereco)
     
@@ -248,7 +251,7 @@ def deletar_endereco(request, id_endereco):
     return redirect('trocar endereco padrao')
 
 
-@login_required
+@has_role_decorator("cliente")
 def editar_endereco(request, id_endereco):
     endereco = get_object_or_404(Endereco, pk=id_endereco)
 
@@ -261,4 +264,41 @@ def editar_endereco(request, id_endereco):
         form = EditarEnderecoForm(instance=endereco)
 
     return render(request, 'models/clientes/add_endereco.html', {'form': form})
+
+
+@has_role_decorator("cliente")
+def fazer_pedido(request, id):
+    cliente = request.user
+    prato = Prato.objects.get(id=id)
+
+    if request.method == "POST":
+        pedidoPrato_form = PedidoPratoForm(request.POST, prato_id=id)
+
+        if pedidoPrato_form.is_valid():
+            pedidoPrato = pedidoPrato_form.save(commit=False)
+            pedidoPrato.cliente = cliente
+            pedidoPrato.nome_cliente = cliente.username
+            pedidoPrato.save()
+
+            return redirect("home")
+    else:
+        prato_form = PedidoPratoForm(prato_id=id)
+
+    context = {
+        "prato_form": prato_form,
+        "prato": prato,
+        "comentarios": prato.comentarios.all(),
+    }
+
+    return render(request, "models/pedidos/fazer_pedido.html", context)
+
+
+@login_required
+def mudar_foto(request):
+    if request.method == "POST":
+        cliente = request.user
+        cliente.foto = request.FILE.get("foto")
+        cliente.save()
+        
+    return redirect("perfil_cliente")
 

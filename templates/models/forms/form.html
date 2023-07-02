@@ -55,6 +55,15 @@
         <h2>Formulário</h2>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+            {% if prato.foto %}
+                <img src="{{ prato.foto.url }}" alt="Imagem do Prato">
+            {% elif cliente.foto %}
+            <img src="{{ cliente.foto.url }}" alt="Imagem do Prato">
+            {% elif adicional.foto %}
+                <img src="{{ adicional.foto.url }}" alt="Imagem do Prato">
+            {% else %}
+                <p>Nenhuma imagem disponível.</p>
+            {% endif %}
             {{ form.as_p }}
             <input type="submit" value="Enviar">
         </form>
