@@ -216,6 +216,7 @@ def editar_cliente(request, id):
     cliente = Cliente.objects.get(id=id)
 
     if request.method == "POST":
+        form = ClienteFormAdmin(request.POST, request.FILES)
         if form.is_valid():
             form.save()
 

@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 @login_required
 def home(request):
     if not request.user.email or request.user.email == "":
-        return redirect("register")
+        return redirect("cadastrar_cliente")
     else:
         if request.user.tipo_conta == "Cliente":
             return redirect("home_cliente")

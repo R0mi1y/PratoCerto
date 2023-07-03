@@ -17,6 +17,22 @@
           .box-link:hover {
             background-color: #ddd;
           }
+          #pedidoPratos {
+            width: 200px;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+          }
+          
+          #pedidoPratos h2 {
+            font-size: 16px;
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+          }
+          
+          
     </style>
 
   <h1>Caixa de Restaurante</h1>
@@ -33,13 +49,14 @@
     <button type="submit">Realizar Pagamento</button>
   </form>
 
-  <h1>Pedidos</h1>
-
+  <br><br><br>
   <div class="box-link">
-    <button id="atualizar-pedidos">Atualizar</button>
+    <a href="{% url "historico_pedidos" %}">Historico de Pedidos</a></br>
   </div>
 
+  <h1>Pedidos</h1>
   <div id="pedidoPratos">
+    <h2>Pedidos</h2>
   </div>
 
   <h2>Buscar Pedido</h2>
@@ -68,6 +85,3 @@
 
     <script src="{% static "js/pedidos_caixa.js" %}"></script>
     {% endblock %}
-
-    
-    

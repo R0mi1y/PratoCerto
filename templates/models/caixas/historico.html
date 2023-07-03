@@ -1,0 +1,68 @@
+<style>
+  .pedido-box {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  .pedido-box h3 {
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 5px;
+  }
+  
+  .pedido-box p {
+    margin: 0;
+  }
+  
+  .pedido-box p:not(:last-child) {
+    margin-bottom: 5px;
+  }
+  
+  .pedido-box p span {
+    font-weight: bold;
+  }
+  
+  /* Estilo específico para a taxa de entrega */
+  .pedido-box .taxa-entrega {
+    font-style: italic;
+  }
+</style>
+
+<h2>Histórico Diário {{ hoje }}</h2>
+{% for pedido in historico_diario %}
+  <div class="pedido-box">
+    <h3>Pedido {{ pedido.id }}</h3>
+    <p>Status: {{ pedido.status }}</p>
+    <p>Valor Total: R$ {{ pedido.total }}</p>
+    
+    {% if pedido.local_retirada == 'entrega' %}
+      <p>Taxa de Entrega: R$ {{ pedido.taxa_entrega }}</p>
+    {% endif %}
+    
+    <p>Método de Pagamento: {{ pedido.data_pedido }}</p>
+  </div>
+  <!-- Exiba outras informações do pedido aqui -->
+{% empty %}
+  <p>Não há histórico de pedidos para hoje.</p>
+{% endfor %}
+
+<h2>Histórico Mensal {{ hoje|date:"F" }}</h2>
+{% for pedido in historico_mensal %}
+  <div class="pedido-box">
+    <h3>Pedido {{ pedido.id }}</h3>
+    <p>Status: {{ pedido.status }}</p>
+    <p>Valor Total: R$ {{ pedido.total }}</p>
+    
+    {% if pedido.local_retirada == 'entrega' %}
+      <p>Taxa de Entrega: R$ {{ pedido.taxa_entrega }}</p>
+    {% endif %}
+    
+    <p>Método de Pagamento: {{ pedido.data_pedido }}</p>
+  </div>
+  <!-- Exiba outras informações do pedido aqui -->
+{% empty %}
+  <p>Não há histórico de pedidos para este mês.</p>
+{% endfor %}

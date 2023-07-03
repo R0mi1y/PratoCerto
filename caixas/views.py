@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
 from pedidos.models import Pedido
 from django.utils import timezone
-
+from datetime import datetime
+from datetime import timedelta
 
 def home(request):
     pedido = None
@@ -36,11 +37,9 @@ def home(request):
     
     return render(request, 'models/caixas/home_caixa.html', contexto)
 
-
-def pedidos_hoje(request):
-    # Obter pedidos pendentes
-    pedidos_pendentes = Pedido.objects.filter(status='Pendente')
+def historico_pedidos(request):
     hoje = timezone.now().date()
+    
     # Obter histórico diário
     pedidos_pagos = Pedido.objects.filter(status='Pago')
     historico_diario = []
@@ -49,13 +48,22 @@ def pedidos_hoje(request):
         data_pedido = timezone.localtime(pedido.data_pedido).date()
         if data_pedido == hoje:
             historico_diario.append(pedido)
+    
+    # Obter histórico mensal
+    historico_mensal = []
+    primeiro_dia_mes = hoje.replace(day=1)
+    ultimo_dia_mes = primeiro_dia_mes + timedelta(days=31)
+    pedidos_mensais = Pedido.objects.filter(status='Pago', data_pedido__range=(primeiro_dia_mes, ultimo_dia_mes))
+    
+    for pedido in pedidos_mensais:
+        data_pedido = timezone.localtime(pedido.data_pedido).date()
+        if primeiro_dia_mes <= data_pedido <= ultimo_dia_mes:
+            historico_mensal.append(pedido)
 
     contexto = {
-        'pedidos_pendentes': pedidos_pendentes,
         'historico_diario': historico_diario,
-        'hoje':hoje,
+        'historico_mensal': historico_mensal,
+        'hoje': hoje,
     }
 
-    return render(request, 'models/caixas/pedidos.html', contexto)
-
-
+    return render(request, 'models/caixas/historico.html', contexto)
