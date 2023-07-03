@@ -40,7 +40,6 @@ def check_password_strength(password):
         # A senha não atende aos requisitos
         return False
 
-
 def criar_usuario_cliente(request):
     if request.method == "POST":
         form_cliente = ClienteForm(request.POST)
@@ -60,7 +59,7 @@ def criar_usuario_cliente(request):
                     .extra_data["picture"]
                 )
             except:
-                messages.error("Imagem não salva")
+                messages.error(request, "Imagem não salva")
             cliente.save()
         except Cliente.DoesNotExist:
             if form_cliente.is_valid():
@@ -81,14 +80,13 @@ def criar_usuario_cliente(request):
         return redirect("home_cliente")
 
     else:
-        form_cliente = ClienteForm(instance=Cliente.objects.filter(pk=request.user.pk).first())
+        form_cliente = ClienteForm(instance=Cliente.objects.filter(username=request.user.username).first())
 
     return render(
         request,
         "models/clientes/registrar.html",
         {"form_cliente": form_cliente},
     )
-
 
 
 def gerar_aleatorio(string):
