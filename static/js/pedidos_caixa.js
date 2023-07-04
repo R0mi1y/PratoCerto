@@ -8,7 +8,7 @@ function atualizar_notificacoes() {
 
             $.each(response.pedido_prontos, function (index, pedido_pronto) {
                 var pedidoHTML = '<div class="pedido">';
-                pedidoHTML += '<p>ID do Pedido: ' + pedido_pronto.pedido.id + '</p>';
+                pedidoHTML += '<a href="/pedidos/ver/' + pedido_pronto.pedido.id + '"><p>ID do Pedido: ' + pedido_pronto.pedido.id + '</p>';
                 pedidoHTML += '<p>Valor Total: ' + pedido_pronto.pedido.total + '</p>';
                 pedidoHTML += '<p>Status: ' + pedido_pronto.pedido.status + '</p>';
                 pedidoHTML += '<p>Método de Pagamento: ' + pedido_pronto.pedido.metodo_pagamento + '</p>';

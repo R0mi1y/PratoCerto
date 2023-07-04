@@ -51,11 +51,15 @@ class PedidoPratoForm(forms.ModelForm):
         model = PedidoPrato
         fields = ["quantidade", "prato", "adicional", "observacao"]
         widgets = {
-            "quantidade": forms.NumberInput(attrs={"min": 1}),
+            "quantidade": forms.NumberInput(attrs={
+                "min": 1,
+                "class": "form-control"
+            }),
             "observacao": forms.Textarea(
                 attrs={
                     "rows": 3,
                     "placeholder": "Ex: tirar a cebola, maionese à parte etc.",
+                    "class": "form-control",
                 }
             ),
         }

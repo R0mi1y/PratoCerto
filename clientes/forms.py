@@ -1,6 +1,7 @@
 from django import forms
 from .models import Cliente, Endereco
 from PratoCerto.settings import AUX
+from django.contrib.auth.hashers import make_password
 
 
 class ClienteForm(forms.ModelForm):
@@ -20,24 +21,12 @@ class ClienteForm(forms.ModelForm):
             ),
         }
         
+    def clean_password(self):
+        data = self.cleaned_data["password"]
         
-class ClienteFormAdmin(forms.ModelForm):
-    indicador = forms.CharField(max_length=20, required=False)
-    pontos = forms.CharField(
-        max_length=20, required=False, widget=forms.HiddenInput(attrs={"class": ""}),
-        label="",
-    )
-
-    class Meta:
-        model = Cliente
-        fields = ["telefone", "foto", "cpf", "pontos", "email", "username", "password"]
-
-        widgets = {
-            "password": forms.PasswordInput(
-                attrs={"autocomplete": "new-password", "class": "custom-class"}
-            ),
-        }
-
+        return make_password(data)
+    
+        
     def clean_indicador(self):
         indicador = self.cleaned_data.get("indicador")
 
@@ -51,6 +40,17 @@ class ClienteFormAdmin(forms.ModelForm):
                 raise forms.ValidationError("Código do indicador inválido.")
 
         return indicador
+        
+class ClienteFormAdmin(forms.ModelForm):
+    telefone = forms.CharField(required=False)
+    foto = forms.ImageField(required=False)
+    cpf = forms.CharField(required=False)
+    email = forms.EmailField(required=False)
+    username = forms.CharField(required=False)
+
+    class Meta:
+        model = Cliente
+        fields = ["telefone", "foto", "cpf", "email", "username"]
 
     def clean_username(self):
         data = self.cleaned_data["username"]

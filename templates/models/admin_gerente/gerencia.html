@@ -3,9 +3,6 @@
 {% block content %}
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-    }
 
     h1 {
         text-align: center;
@@ -46,6 +43,7 @@
         text-decoration: underline;
     }
 </style>
+<section class="book_section layout_padding">
 <h1>{{ cliente.0.tipo_conta }}</h1>
 
 <a href="{% url 'cadastrar_'|add:pg %}">cadastrar</a>
@@ -79,5 +77,6 @@
         {% endfor %}
     </tbody>
 </table>
+</section>
 
 {% endblock %}

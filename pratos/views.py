@@ -43,7 +43,7 @@ def comentar(request, id_prato):
         prato.comentarios.add(comentario.pk)
         prato.save()
     
-    return redirect("/pedidos/pedir/" + str(id_prato))
+    return redirect("/clientes/fazer_pedido/" + str(id_prato))
 
 
 @login_required
@@ -52,9 +52,9 @@ def responder_comentario(request, id_prato, id_comentario):
         comentario = Comentario.objects.get(id=id_comentario)
         resposta = Comentario.objects.create(
             texto=request.POST.get("comentario"),
-            cliente=request.user.pk
+            cliente=request.user
         )
         
         comentario.respostas.add(resposta)
     
-    return redirect("/pedidos/pedir/" + str(id_prato))
+    return redirect("/clientes/fazer_pedido/" + str(id_prato))

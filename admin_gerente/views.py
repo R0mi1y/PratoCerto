@@ -17,6 +17,7 @@ from pedidos.forms import *
 from rolepermissions.roles import assign_role
 from rolepermissions.decorators import has_role_decorator
 from .forms import AdminForm
+from clientes.views import gerar_aleatorio
 
 
 # Create your views here.
@@ -156,14 +157,29 @@ def criar_editar_garcom(request, id=None):
         garcom = Garcom.objects.get(id=id)
 
     if request.method == "POST":
-        form = GarcomForm(request.POST)
-        if form.is_valid():
-            garcom = form.save(commit=False)
+        if id:
+            garcom = Garcom.objects.get(id=id)
+            
+            garcom.password = make_password(request.POST.get("password"))
+            garcom.cpf = request.POST.get('cpf')
+            garcom.telefone = request.POST.get('telefone')
+            garcom.email = request.POST.get('email')
             garcom.tipo_conta = "Garcom"
             garcom.save()
+            
             assign_role(garcom, "garcom")
-
+            
             return redirect("home_admin")
+        else:
+            form = GarcomForm(request.POST)
+            if form.is_valid():
+                print("É Validooooo")
+                garcom = form.save(commit=False)
+                garcom.tipo_conta = "Garcom"
+                garcom.save()
+                assign_role(garcom, "garcom")
+
+                return redirect("home_admin")
     else:
         form = GarcomForm(instance=garcom)
 
@@ -196,6 +212,19 @@ def criar_editar_caixa(request, id=None):
         caixa = Caixa.objects.get(id=id)
 
     if request.method == "POST":
+        if id:
+            garcom = Garcom.objects.get(id=id)
+            
+            garcom.password = make_password(request.POST.get("password"))
+            garcom.cpf = request.POST.get('cpf')
+            garcom.telefone = request.POST.get('telefone')
+            garcom.email = request.POST.get('email')
+            garcom.tipo_conta = "Garcom"
+            garcom.save()
+            
+            assign_role(garcom, "garcom")
+            
+            return redirect("home_admin")
         form = CaixaForm(request.POST)
         if form.is_valid():
             caixa = form.save(commit=False)
@@ -214,13 +243,26 @@ def criar_editar_caixa(request, id=None):
 @has_role_decorator("admin")
 def editar_cliente(request, id):
     cliente = Cliente.objects.get(id=id)
-
+    
     if request.method == "POST":
-        form = ClienteFormAdmin(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-
+        try:
+            cliente = Cliente.objects.get(id=id)
+            cliente.username = request.POST.get('username')
+            cliente.cpf = request.POST.get('cpf')
+            cliente.telefone = request.POST.get('telefone')
+            cliente.email = request.POST.get('email')
+            cliente.tipo_conta = "Cliente"
+            cliente.codigo_afiliado = gerar_aleatorio(cliente.username)
+            cliente.foto = request.FILES.get("foto")
+            cliente.save()
+            
             return redirect("gerenciar_clientes")
+        except:
+            form = ClienteFormAdmin(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+
+                return redirect("gerenciar_clientes")
     else:
         form = ClienteFormAdmin(instance=cliente)
     return render(request, "models/forms/form.html", {"form": form, "cliente": cliente})
@@ -229,11 +271,7 @@ def editar_cliente(request, id):
 @has_role_decorator("admin")
 def deletar_cliente(request, id):
     Cliente.objects.get(id=id).delete()
-    return render(
-        request,
-        "models/admin_gerente/gerencia.html",
-        {"clientes": Cliente.objects.all()},
-    )
+    return redirect("gerenciar_clientes")
 
 
 @has_role_decorator("admin")

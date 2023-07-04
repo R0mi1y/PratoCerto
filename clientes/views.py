@@ -20,7 +20,7 @@ from rolepermissions.roles import assign_role, get_user_roles
 from rolepermissions.decorators import has_permission_decorator, has_permission, has_role_decorator
 
 
-@has_role_decorator("cliente")
+@login_required
 def home(request):
     # print(get_user_roles(request.user))
 
@@ -74,10 +74,8 @@ def criar_usuario_cliente(request):
                 messages.success(request, "Cadastro realizado com sucesso!")
 
         assign_role(cliente, "cliente")
-        user = authenticate(request, username=cliente.username, password=request.POST.get("password"))
-        login(request, user)
 
-        return redirect("home_cliente")
+        return redirect("home")
 
     else:
         form_cliente = ClienteForm(instance=Cliente.objects.filter(username=request.user.username).first())
@@ -167,6 +165,12 @@ def comprar_carrinho(request):
             pedido = form.save(commit=False)
             pedido.cliente = cliente
             total = 0
+            if pedido.local_retirada == "entrega":
+                pedido.taxa_entrega = settings.AUX["frete_entrega"]
+                total += pedido.taxa_entrega
+            else:
+                pedido.taxa_entrega = 0
+                
             
             for pedidoPrato in pedidosPrato:
                 total += pedidoPrato.prato.preco * pedidoPrato.quantidade
@@ -201,7 +205,7 @@ def adicionar_endereco(request):
     else:
         form = EnderecoForm()
     
-    return render(request, 'models/clientes/add_endereco.html', {'form': form})
+    return render(request, 'models/forms/form.html', {'form': form})
 
 
 @has_role_decorator("cliente")

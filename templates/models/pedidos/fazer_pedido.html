@@ -5,78 +5,8 @@
 {% block title %}Criar Pedido{% endblock %}
 
 {% block content %}
-    <style>
-        /* Estilos adicionais específicos para este template */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            font-family: Arial, sans-serif;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .image-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .price {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .availability {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        .category {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        .description {
-            margin-bottom: 20px;
-        }
-
-        .adicionais-list li {
-            margin-bottom: 5px;
-        }
-        .tab {
-            padding-left: 50px; /* Ajuste o valor conforme necessário */
-            color: gray;
-        }
-
-        .comment-img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 50%;
-            width: 40px; /* Ajuste o valor conforme necessário */
-            height: 40px; /* Ajuste o valor conforme necessário */
-        }
-    </style>
-    <div class="container">
-        <h1>{{ prato.nome }}</h1>
-        <div class="image-container">
-            <img src="{{ prato.foto.url }}" alt="{{ prato.nome }}">
-        </div>
-        <div class="details">
-            <p class="price">Preço: R$ {{ prato.preco }}</p>
-            <p class="availability">Disponível: {% if prato.disponivel %}Sim{% else %}Não{% endif %}</p>
-            <p class="category">Categoria: {{ prato.get_categoria_display }}</p>
-            <p class="description">{{ prato.descricao }}</p>
-        </div>
+    {% comment %} <div class="container">
+        
         <h1>Criar Pedido</h1>
         <form method="post">
             {% csrf_token %}
@@ -85,37 +15,160 @@
             <input type="submit" value="Adicionar ao carrinho">
             <h1>Avaliar</h1>
         </form>
-        <form action="/pratos/comentar/{{ prato.pk }}" method="post">
-            {% csrf_token %}
-            Comentar
-            <textarea name="comentario" id="comentario" cols="20" rows="2"></textarea>
-            <input type="submit" value="Comentar">
-        </form>
+        
 
-        {% if comentarios %}
-        <h3>Comentários</h3>
+         {% endcomment %}
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css"%}" />
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <!-- font awesome style -->
+  <link href="{% static "css/font-awesome.min.css"%}" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="{% static "css/style.css"%}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static "css/responsive.css"%}" rel="stylesheet" />
+
+  <style>
+    .imagem-quadrada {
+        width: 100%; /* Defina a largura desejada */
+        height: 150px; /* Defina a altura desejada */
+        overflow: hidden; /* Para ocultar qualquer conteúdo que exceda as dimensões definidas */
+      }
+      
+      .imagem-quadrada img {
+        width: 100%;
+        height: auto;
+        object-fit: cover; /* Para preencher a área mantendo a proporção */
+      }
+
+    h3 {
+        font-family: 'Dancing Script', cursive;
+    }
+
+    input[type="text"],
+    textarea {
+        width: 100%;
+        border: none;
+        height: 50px;
+        margin-bottom: 25px;
+        padding-left: 25px;
+        border: 1px solid #999;
+        outline: none;
+        color: #000;
+        border-radius: 5px;
+        box-shadow: none;
+    }
+
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+        color: #222222;
+    }
+
+    .comentar button[type="submit"] {
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      
+      button[type="submit"]:hover {
+        background-color: #45a049;
+      }
+      
+      button[type="submit"]:focus {
+        outline: none;
+      }
+
+      
+
+  </style>
+
+  <section class="book_section layout_padding">
+    <div class="container">
+      <div class="heading_container">
+        <h2>
+            {{ prato.nome }}
+        </h2>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form_container">
+            <form action="">
+            {% csrf_token %}
+            {{ pedido_form.as_p }}
+            {{ prato_form.as_p }}
+              <div class="btn_box">
+                <button type="submit">
+                  Adicionar ao carrinho
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="map_container ">
+            <div id="googleMap">
+                <div class="imagem-quadrada">
+                    <img src="{{ prato.foto.url }}" alt="{{ prato.nome }}" style="">
+                </div>
+                <div class="details">
+                    <h3 class="price">Preço: R$ {{ prato.preco }}</h3>
+                    <h3 class="availability">Disponível: {% if prato.disponivel %}Sim{% else %}Não{% endif %}</h3>
+                    <h3 class="category">Categoria: {{ prato.get_categoria_display }}</h3>
+                    <h3 class="description">{{ prato.descricao }}</h3>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <form action="/pratos/comentar/{{ prato.pk }}" method="post">
+        {% csrf_token %}
+        <button class="comentar" type="submit">
+            Comentar
+        </button>
+        <br>
+        <br>
+        <textarea name="comentario" id="comentario" cols="20" rows="2"></textarea>
+    </form>
+    <h3>Comentários</h3>
+    {% if comentarios %}
         <hr>
         {% for comentario in comentarios %}
         <img src="{{ comentario.cliente.foto }}" class="comment-img" alt="">
-        {{ comentario.cliente }}
+        <h2> {{ comentario.cliente }} </h2>
         {{ comentario.texto }}
         <form action="/pratos/comentar/{{ prato.pk }}/{{ comentario.pk }}" id="form_{{ comentario.pk }}" method="post">
             {% csrf_token %}
-            <input type="button" onclick="exibirTextarea({{ comentario.pk }})" value="Responder">
+            <button type="button" class="comentar" onclick="exibirTextarea({{ comentario.pk }})">
+                Responder
+            </button>
         </form>
-            {% for resposta in comentario.respostas.all %}
-            <hr>
-                <p class="tab">
-                    <img src="{{ resposta.cliente.foto }}" class="comment-img" alt="">
-                    {{ resposta.cliente }}
-                    {{ resposta.texto }}
-                </p>
-            {% endfor %}
-            <hr>
-    {% endfor %}
+        {% for resposta in comentario.respostas.all %}
+        <hr>
+            <p class="tab">
+                <img src="{{ resposta.cliente.foto }}" class="comment-img" alt="">
+                <h5>{{ resposta.cliente }}</h5>
+                <p>{{ resposta.texto }}</p>
+            </p>
+        {% endfor %}
+        <hr>
+        {% endfor %}
+    {% else %}
+    <p>Não há comentários neste prato</p>
     {% endif %}
-    
-    </div>
+  </section>
 <script>
     function exibirTextarea(formId) {
         var form = document.getElementById("form_" + formId);
@@ -135,12 +188,14 @@
             div.appendChild(textarea);
     
             var submitInput = document.createElement("input");
-            submitInput.type = "submit";
             div.appendChild(submitInput);
-
+            
             div.className = "textarea";
-    
+            
             form.appendChild(div);
+            setTimeout(() => {
+                submitInput.type = "submit";
+            }, 1000);
         }
     }
 </script>

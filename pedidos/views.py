@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from clientes.models import Cliente
 from .forms import *
+from .models import *
 from pratos.models import Prato, Comentario
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -74,3 +74,7 @@ def criar_reserva(request):
             "cadeiras_mesa": 4,
         },
     )
+
+
+def ver_pedido(request, id):
+    return render(request, "models/pedidos/ver_pedido.html", {"pedido": Pedido.objects.get(id=id)})

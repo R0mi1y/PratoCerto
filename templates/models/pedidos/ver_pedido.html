@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Formulário de reserva{% endblock %}
+
+{% block content %}
+<h1>Detalhes do Pedido</h1>
+
+<p>Mesa: {{ pedido.mesa }}</p>
+<p>Data do Pedido: {{ pedido.data_pedido }}</p>
+<p>Status: {{ pedido.status }}</p>
+<p>Total: R$ {{ pedido.total }}</p>
+<p>Taxa de Entrega: R$ {{ pedido.taxa_entrega }}</p>
+<p>Desconto: R$ {{ pedido.desconto }}</p>
+<p>Local de Retirada: {{ pedido.get_local_retirada_display }}</p>
+<p>Método de Pagamento: {{ pedido.get_metodo_pagamento_display }}</p>
+<p>Endereço: {{ pedido.endereco }}</p>
+<p>Cliente: {{ pedido.cliente }}</p>
+
+<h2>Pratos do Pedido</h2>
+<ul>
+  {% for pedido_prato in pedido.pedidos_pratos.all %}
+    <li>
+      Prato: {{ pedido_prato.prato }}
+      Quantidade: {{ pedido_prato.quantidade }}
+      Observações: {{ pedido_prato.observacao }}
+      Adicionais: {{ pedido_prato.adicional.all|join:", " }}
+    </li>
+  {% endfor %}
+</ul>
+
+<h2>Reserva</h2>
+<p>Cliente: {{ pedido.cliente }}</p>
+<p>Mesa: 
+  {% for mesa in pedido.reserva.mesa.all %}
+    {{ mesa }},
+  {% endfor %}
+</p>
+<p>Data da Reserva: {{ pedido.reserva.data_reserva }}</p>
+<p>Horário: {{ pedido.reserva.horario }}</p>
+<p>Observações: {{ pedido.reserva.observacao }}</p>
+<p>Quantidade de Pessoas: {{ pedido.reserva.qnt_pessoas }}</p>
+<p>Preço Total da Reserva: R$ {{ pedido.reserva.preco_total }}</p>
+<p>Status da Reserva: {{ pedido.reserva.status }}</p>
+
+{% endblock %}
