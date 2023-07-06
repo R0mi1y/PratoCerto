@@ -5,38 +5,10 @@
 {% block title %}Meus pedidos{% endblock %}
 
 {% block content %}
+
 <style>
-    .pedido {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-    
-    .pedido img {
-        width: 50px;
-        height: auto;
-        margin-right: 10px;
-    }
-    
-    .pedido .info {
-        font-size: 16px;
-    }
-    
-    .pedido .info .nome {
-        font-weight: bold;
-    }
-    
-    .pedido .info .username {
-        color: #888;
-    }
-    
-    .pedido .info .data {
-        color: #aaa;
-    }
-    
-    .pedido hr {
-        margin-top: 10px;
-        margin-bottom: 20px;
+    .nome {
+        color: red;
     }
 </style>
 
@@ -44,9 +16,13 @@
     {% for pedido in pedidos %}
         <div class="pedido">
             <div class="info">
-                <div class="nome">{{ pedido.cliente.username }}</div>
-                <div class="data">{{ pedido.data_pedido }}</div>
-                <div class="data">{{ pedido.mesa }}</div>
+                <div class="nome"><h2>{{ pedido.cliente.username }}</h2></div>
+                <div class="data"><p>{{ pedido.data_pedido }}</p></div>
+                <div class="data"><p>{{ pedido.status }}</p></div>
+                <div class="data"><p>R$ {{ pedido.total }}</p></div>
+                {% if has_garcom_role %}
+                <div class="data"><p>{{ pedido.mesa }}</p></div>
+                {% endif %}
             </div>
         </div>
         <hr>

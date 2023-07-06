@@ -60,9 +60,9 @@
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
           <a class="navbar-brand" href="index.html">
-              <a style="color:white;" href="{% if has_cliente_role %}{% url "home_cliente" %}{% elif has_garcom_role %}{% url "home_garcom" %}{% elif has_cozinha_role %}{% url "home_cliente" %}{% elif has_caixa_role %}{% url "home_cliente" %}{% endif %}">
+              <a style="color:white;" href="{% if has_cliente_role %}{% url "home_cliente" %}{% elif has_garcom_role %}{% url "home_garcom" %}{% elif has_cozinha_role %}{% url "home_cozinha" %}{% elif has_caixa_role %}{% url "home_cliente" %}{% endif %}">
                 <span>
-                    <h1>
+                    <h1 style="color: red;">
                         Prato Certo
                     </h1>
                 </span>
@@ -129,7 +129,7 @@
                     </li>
                 {% elif has_cozinha_role %}
                     <li class="nav-item">
-                        <a class="nav-link" href="">Home</a>
+                        <a class="nav-link" href="{% url "home_cozinha" %}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>

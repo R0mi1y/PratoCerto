@@ -2,12 +2,12 @@ import hashlib
 import random
 from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404, render, redirect
+from PratoCerto import settings
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import User
 from pratos.models import *
 from pedidos.forms import PedidoPratoForm, PedidoForm, GarcomPedidoForm
 from pedidos.models import *
-from PratoCerto.settings import AUX
 from .models import *
 from .forms import *
 from django.contrib import messages

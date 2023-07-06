@@ -75,9 +75,9 @@
             {% endif %}
 
 
+            {% if user.is_authenticated and user.is_superuser %}
             <h2>Gerenciar Eventos:</h2>
             <p>Aqui você pode cadastrar e editar eventos:</p>
-            {% if user.is_authenticated and user.is_superuser %}
                 <a class="a" href="{% url 'criar_evento' %}" style="color: red;">Cadastrar Evento</a>
                 {% endif %}
             </div>

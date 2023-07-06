@@ -13,8 +13,8 @@
     }
     
     .pedido img {
-        width: 50px;
-        height: auto;
+        width: auto;
+        height: 130px;
         margin-right: 10px;
     }
     
@@ -38,26 +38,73 @@
         margin-top: 10px;
         margin-bottom: 20px;
     }
+
+    .imagem_pedido {
+        {% comment %} border-radius: 500px; {% endcomment %}
+    }
+    p {
+        font-size: 20px;
+        font-family:'Dancing Script', cursive;
+    }
+
+    .my-link {
+        color: #000;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .my-link:hover {
+        color: #ff0000;
+        text-decoration: underline;
+    }
+
+    .div_link {
+        background-color: yellow;
+        display: inline-block;
+        padding: 10px;
+        /* right: 0; */
+        width: 60px;
+        height: 40px;
+        border-radius: 10px;
+        /* border: solid; */
+        justify-items: center;
+    }
+
+    .div_link:hover{   
+        background-color: blue;
+    }
+
+    .my-link{
+        {% comment %} text-align: center; {% endcomment %}
+        text-decoration: none !important;
+        justify-content: center;
+    }
+
+    .my-link:hover{ 
+        color: black;
+    }
 </style>
 
 {% if pedidos %}
     {% for pedido in pedidos %}
         <div class="pedido">
-            <img src="{{ pedido.prato.foto.url }}" alt="">
+            <img class="imagem_pedido" src="{{ pedido.prato.foto.url }}" alt="">
             <div class="info">
-                <div class="nome">{{ pedido.prato.nome }}</div>
+                <div class="nome"> <h1>{{ pedido.prato.nome }}</h1></div>
                 <div class="username">{{ pedido.cliente.username }}</div>
                 <div class="data">{{ pedido.data_pedido }}</div>
                 <div class="data">{{ pedido.quantidade }}</div>
 
-                <a href="{% url "remover do carrinho" id=pedido.id %}"> excluir </a> |
-                <a href="{% url "editar do carrinho" id=pedido.id %}"> editar </a>
+                <p><a href="{% url "remover do carrinho" id=pedido.id %}">  excluir  </a> |
+                <a href="{% url "editar do carrinho" id=pedido.id %}"> editar </a></p>
             </div>
         </div>
         <hr>
     {% endfor %}
     
-    <a href="{% url "comprar_carrinho_cliente" %}">Pedir</a>
+    <div class="div_link">
+        <a class="my-link" href="{% url "comprar_carrinho_cliente" %}">Pedir</a>
+    </div>
 {% endif %}
 
 {% endblock %}
