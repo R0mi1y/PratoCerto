@@ -1,32 +1,111 @@
-{% extends 'base/base.html' %}
-{% load static %}
+<style>
+  .pedidos-container {
+    display: flex;
+  }
 
-{% block title %}Cozinha{% endblock %}
+  .coluna {
+    flex: 1;
+    margin-right: 20px;
+    padding: 10px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+  }
 
-{% block content %}
+  .pedido {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+  }
+
+  .pedido h3 {
+    margin-top: 0;
+  }
+
+  .pedido p {
+    margin: 0;
+  }
+
+  .pedido .pronto {
+    color: green;
+    font-weight: bold;
+  }
+
+  .pedido button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+</style>
+
+{% extends 'base/base.html' %} {% load static %} {% block title %}Cozinha{% endblock %} {% block content %}
 <h1>Cozinha</h1>
 
-{% for pedido in pedidos %}
-  <div class="pedido">
+<div class="pedidos-container">
+  <div class="coluna">
+    <h2>Pedidos pendentes do restaurante:</h2>
+    {% for pedido in pedidos_restaurante %}
+    <div class="pedido">
+      <h3>Pedido {{ pedido.id }}</h3>
+      <p>Status: {{ pedido.status }}</p>
+      <p>Mesa: {{ pedido.mesa }}</p>
+      <p>Prato: {{ pedido.prato.nome }}</p>
+      <p>Adicionais: {{ pedido.adicionais.all|join:", " }}</p>
+      <p>Quantidade: {{ pedido.quantidade }}</p>
 
-    <h3>Pedido {{ pedido.id }}</h3>
-    <p>Status: {{ pedido.status }}</p>
-    <p>Mesa: {{ pedido.mesa }}</p>
-    <p>Prato: {{ pedido.prato.nome }}</p>
-    <p>Adicionais: {{ pedido.adicionais.all|join:", " }}</p>
-    <p>Quantidade: {{ pedido.quantidade }}</p>
-    
-    {% if pedido.pronto %}
+      {% if pedido.pronto %}
       <p class="pronto">Pedido pronto para ser servido</p>
-    {% else %}
-      <form action="{% url 'pedido_pronto' pedido_id=pedido.id %}" method="POST">
+      {% else %}
+      <form
+        action="{% url 'pedido_pronto' pedido_id=pedido.id %}"
+        method="POST"
+      >
         {% csrf_token %}
         <button type="submit">Notificar garçom que está pronto</button>
       </form>
-    {% endif %}
-
+      {% endif %}
+    </div>
+    {% empty %}
+    <p>Nenhum pedido pendente do restaurante no momento.</p>
+    {% endfor %}
   </div>
-{% endfor %}
 
+  <div class="coluna">
+    <h2>Pedidos pendentes do site:</h2>
+    {% for pedido in pedidos_site %}
+    <div class="pedido">
+      <h3>Pedido {{ pedido.id }}</h3>
+      <p>Status: {{ pedido.status }}</p>
+      <p>Mesa: {{ pedido.mesa }}</p>
+      <p>Prato: {{ pedido.prato.nome }}</p>
+      <p>Adicionais: {{ pedido.adicionais.all|join:", " }}</p>
+      <p>Quantidade: {{ pedido.quantidade }}</p>
+
+      {% if pedido.pronto %}
+      <p class="pronto">Pedido pronto para ser servido</p>
+      {% else %}
+      <form
+        action="{% url 'pedido_pronto' pedido_id=pedido.id %}"
+        method="POST"
+      >
+        {% csrf_token %}
+        <button type="submit">Notificar garçom que está pronto</button>
+      </form>
+      {% endif %}
+    </div>
+    {% empty %}
+    <p>Nenhum pedido pendente do site no momento.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<script src="{% static "js/pedidos_cozinha.js" %}"></script>
 {% endblock %}
-{% block js %}{% endblock js %}

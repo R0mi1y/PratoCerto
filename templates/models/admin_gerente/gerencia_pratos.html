@@ -60,6 +60,7 @@
             <th>Preço</th>
             <th>Descrição</th>
             <th>Adicionais</th>
+            <th>Ingrredientes</th>
             <th>Comentários</th>
             <th>Ações</th>
         </tr>
@@ -78,6 +79,13 @@
                     {{ adicional.nome }}{% if not forloop.last %}, {% endif %}
                 {% empty %}
                     Sem adicionais
+                {% endfor %}
+            </td>
+            <td>
+                {% for ingrediente in prato.ingrediente.all %}
+                    {{ ingrediente.nome }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    Sem Ingredientes
                 {% endfor %}
             </td>
             <td>

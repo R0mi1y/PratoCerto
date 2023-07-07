@@ -70,8 +70,8 @@
             <td>{{ cliente.pontos }}</td>
             <td>{{ cliente.tipo_conta }}</td>
             <td class="actions">
-                <a href="/admin/{{ cliente.tipo_conta }}/editar/{{ cliente.pk }}">Editar</a>
-                <a href="/admin/{{ cliente.tipo_conta }}/deletar/{{ cliente.pk }}">Excluir</a>
+                <a href="{% url "editar_"|add:pg id=cliente.pk %}">Editar</a>
+                <a href="{% url "deletar_"|add:pg id=cliente.pk %}">Excluir</a>
             </td>
         </tr>
         {% endfor %}

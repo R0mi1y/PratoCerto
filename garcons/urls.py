@@ -16,4 +16,9 @@ urlpatterns = [
     # APIS
     path('get_pedidosPrato/<str:status>', apis.get_pedidoPrato, name='get_pedidosPrato'),
     path('get_pedidos/<str:status>', apis.get_pedidos, name='get_pedidos'),
+    # CRUD
+    path("cadastrar", views.criar_editar_garcom, name='cadastrar_garcom'),
+    path("editar/<int:id>", views.criar_editar_garcom, name='editar_garcom'),
+    path("gerenciar", views.gerenciar_garcons, name='gerenciar_garcons'),
+    path("deletar/<int:id>", views.deletar_garcom, name='deletar_garcom'),
 ]

@@ -43,10 +43,10 @@ class ClienteForm(forms.ModelForm):
         
 class ClienteFormAdmin(forms.ModelForm):
     telefone = forms.CharField(required=False)
-    foto = forms.ImageField(required=False)
-    cpf = forms.CharField(required=False)
-    email = forms.EmailField(required=False)
-    username = forms.CharField(required=False)
+    foto = forms.ImageField()
+    cpf = forms.CharField()
+    email = forms.EmailField()
+    username = forms.CharField()
 
     class Meta:
         model = Cliente

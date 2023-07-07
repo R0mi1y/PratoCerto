@@ -20,6 +20,14 @@ class Comentario(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     
     
+
+class Ingrediente(models.Model):
+    nome = models.CharField("Nome", max_length=40)
+    quantidade_estoque = models.PositiveIntegerField("Quantidade_Estoque")
+
+    def __str__(self):
+        return self.nome
+
 class Prato(models.Model):
     nome = models.CharField("Nome", max_length=40)
     disponivel = models.BooleanField("Disponível", default=False)
@@ -29,8 +37,8 @@ class Prato(models.Model):
     descricao = models.TextField("Descrição")
     adicional = models.ManyToManyField(Adicional, "adicionais")
     comentarios = models.ManyToManyField(Comentario, "comentarios", default=None)
-    
+    ingredientes = models.ManyToManyField(Ingrediente, "ingredientes")
+
     def __str__(self):
         return self.nome
     
-

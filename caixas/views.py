@@ -5,6 +5,11 @@ from pedidos.models import Pedido
 from django.utils import timezone
 from datetime import datetime
 from datetime import timedelta
+from rolepermissions.roles import assign_role
+from rolepermissions.decorators import has_role_decorator
+from .models import Caixa
+from .forms import CaixaForm
+from django.shortcuts import redirect
 
 def home(request):
     pedido = None
@@ -67,3 +72,57 @@ def historico_pedidos(request):
     }
 
     return render(request, 'models/caixas/historico.html', contexto)
+
+
+#  ============================ CAIXA CRUD ============================  #
+@has_role_decorator("admin")
+def deletar_caixa(request, id):
+    Caixa.objects.get(id=id).delete()
+    return render(
+        request, "models/admin_gerente/gerencia.html", {"clientes": Caixa.objects.all()}
+    )
+
+
+@has_role_decorator("admin")
+def gerenciar_caixas(request):
+    return render(
+        request,
+        "models/admin_gerente/gerencia.html",
+        {"clientes": Caixa.objects.all(), "pg": "caixa"},
+    )
+
+
+@has_role_decorator("admin")
+def criar_editar_caixa(request, id=None):
+    caixa = None
+
+    if id:
+        caixa = Caixa.objects.get(id=id)
+
+    if request.method == "POST":
+        if id:
+            garcom = Garcom.objects.get(id=id)
+            
+            garcom.password = make_password(request.POST.get("password"))
+            garcom.cpf = request.POST.get('cpf')
+            garcom.telefone = request.POST.get('telefone')
+            garcom.email = request.POST.get('email')
+            garcom.tipo_conta = "Garcom"
+            garcom.save()
+            
+            assign_role(garcom, "garcom")
+            
+            return redirect("home_admin")
+        form = CaixaForm(request.POST)
+        if form.is_valid():
+            caixa = form.save(commit=False)
+            caixa.tipo_conta = "Caixa"
+            caixa.save()
+            assign_role(caixa, "caixa")
+
+            return redirect("home_admin")
+    else:
+        form = CaixaForm(instance=caixa)
+
+    return render(request, "models/forms/form.html", {"form": form})
+

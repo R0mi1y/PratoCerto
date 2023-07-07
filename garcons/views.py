@@ -151,3 +151,63 @@ def editar_carrinho(request, id):
         'comentarios': pedidoPrato.prato.comentarios.all(),
     }
     return render(request, 'models/pedidos/fazer_pedido.html', context)
+
+
+
+
+#  ============================ GARCOM CRUD ============================  #
+@has_role_decorator("admin")
+def gerenciar_garcons(request):
+    return render(
+        request,
+        "models/admin_gerente/gerencia.html",
+        {"clientes": Garcom.objects.all(), "pg": "garcom"},
+    )
+
+
+@has_role_decorator("admin")
+def deletar_garcom(request, id):
+    Garcom.objects.get(id=id).delete()
+    return render(
+        request,
+        "models/admin_gerente/gerencia.html",
+        {"clientes": Garcom.objects.all()},
+    )
+
+
+@has_role_decorator("admin")
+def criar_editar_garcom(request, id=None):
+    garcom = None
+
+    if id:
+        garcom = Garcom.objects.get(id=id)
+
+    if request.method == "POST":
+        if id:
+            garcom = Garcom.objects.get(id=id)
+            
+            garcom.password = make_password(request.POST.get("password"))
+            garcom.cpf = request.POST.get('cpf')
+            garcom.telefone = request.POST.get('telefone')
+            garcom.email = request.POST.get('email')
+            garcom.tipo_conta = "Garcom"
+            garcom.save()
+            
+            assign_role(garcom, "garcom")
+            
+            return redirect("home_admin")
+        else:
+            form = GarcomForm(request.POST)
+            if form.is_valid():
+                print("É Validooooo")
+                garcom = form.save(commit=False)
+                garcom.tipo_conta = "Garcom"
+                garcom.save()
+                assign_role(garcom, "garcom")
+
+                return redirect("home_admin")
+    else:
+        form = GarcomForm(instance=garcom)
+
+    return render(request, "models/forms/form.html", {"form": form})
+

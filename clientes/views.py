@@ -18,15 +18,20 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.hashers import make_password
 from rolepermissions.roles import assign_role, get_user_roles
 from rolepermissions.decorators import has_permission_decorator, has_permission, has_role_decorator
+from django.utils import timezone
+from eventos.models import Evento
 
 
 @login_required
 def home(request):
-    # print(get_user_roles(request.user))
+    current_datetime = timezone.now()
 
-    data = {}
-    data["Categorias"] = AUX["Categorias"]
-    data["cliente"] = request.user
+    data = {
+        "Categorias":AUX["Categorias"],
+        "cliente": request.user,
+        "eventos": Evento.objects.filter(data_inicio__lte=current_datetime, data_termino__gte=current_datetime)
+    }
+    
     
     return render(request, "models/clientes/home.html", data)
 
@@ -39,6 +44,7 @@ def check_password_strength(password):
     except ValidationError as e:
         # A senha não atende aos requisitos
         return False
+
 
 def criar_usuario_cliente(request):
     if request.method == "POST":
@@ -59,8 +65,9 @@ def criar_usuario_cliente(request):
                     .extra_data["picture"]
                 )
             except:
-                messages.error(request, "Imagem não salva")
+                cliente.foto = "/media/system/default_perfil.png"
             cliente.save()
+            assign_role(cliente, "cliente")
         except Cliente.DoesNotExist:
             if form_cliente.is_valid():
                 cliente = form_cliente.save(commit=False)
@@ -70,12 +77,12 @@ def criar_usuario_cliente(request):
 
                 cliente.tipo_conta = "Cliente"
                 cliente.codigo_afiliado = gerar_aleatorio(cliente.username)
+                cliente.foto = "/media/system/default_perfil.png"
                 cliente.save()
+                assign_role(cliente, "cliente")
                 messages.success(request, "Cadastro realizado com sucesso!")
 
-        assign_role(cliente, "cliente")
-
-        return redirect("home")
+            return redirect("home")
 
     else:
         form_cliente = ClienteForm(instance=Cliente.objects.filter(username=request.user.username).first())
@@ -304,3 +311,46 @@ def mudar_foto(request):
         
     return redirect("perfil_cliente")
 
+
+#  ============================ CLIENTE CRUD ============================  #
+@has_role_decorator("admin")
+def editar_cliente(request, id):
+    cliente = Cliente.objects.get(id=id)
+    
+    if request.method == "POST":
+        try:
+            cliente = Cliente.objects.get(id=id)
+            cliente.username = request.POST.get('username')
+            cliente.cpf = request.POST.get('cpf')
+            cliente.telefone = request.POST.get('telefone')
+            cliente.email = request.POST.get('email')
+            cliente.tipo_conta = "Cliente"
+            cliente.codigo_afiliado = gerar_aleatorio(cliente.username)
+            cliente.foto = request.FILES.get("foto")
+            cliente.save()
+            
+            return redirect("gerenciar_clientes")
+        except:
+            form = ClienteFormAdmin(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+
+                return redirect("gerenciar_clientes")
+    else:
+        form = ClienteFormAdmin(instance=cliente)
+    return render(request, "models/forms/form.html", {"form": form, "cliente": cliente})
+
+
+@has_role_decorator("admin")
+def deletar_cliente(request, id):
+    Cliente.objects.get(id=id).delete()
+    return redirect("gerenciar_clientes")
+
+
+@has_role_decorator("admin")
+def gerenciar_clientes(request):
+    return render(
+        request,
+        "models/admin_gerente/gerencia.html",
+        {"clientes": Cliente.objects.filter(tipo_conta="Cliente"), "pg": "cliente"},
+    )

@@ -1,0 +1,75 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    img {
+        max-width: 100px;
+        max-height: 100px;
+    }
+
+    .actions {
+        white-space: nowrap;
+    }
+
+    .actions a {
+        margin-right: 10px;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .actions a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<h1>{{ cliente.0.tipo_conta }}</h1>
+
+<a href="{% url 'cadastrar_ingrediente'%}">Cadastrar</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Quantidade em estoque</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ingrediente in ingredientes %}
+        <tr>
+            <td>{{ ingrediente.nome }}</td>
+            <td>{{ ingrediente.quantidade_estoque }}</td>
+            <td class="actions">
+                <a href="{% url 'editar_ingrediente' ingrediente.id %}">Editar</a>
+                <a href="{% url 'deletar_ingrediente' ingrediente.id %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

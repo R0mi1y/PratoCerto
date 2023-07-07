@@ -9,6 +9,14 @@
 
 <section class="offer_section layout_padding-bottom">
     <div class="offer_container">
+      <div><!-- FAZER CARROUSEL -->
+        {% for evento in eventos %}
+        <h2>{{ evento.nome }}</h2>
+        <img src="{{ evento.foto.url }}" alt="">
+        <p>{{ evento.descricao }}</p>
+        {% endfor %} 
+      </div>
+      <h1 style="color:red;">CATEGORIAS</h1>
       <div class="container ">
         <div class="row">
         {% for categoria in Categorias %}

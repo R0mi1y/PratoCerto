@@ -15,4 +15,11 @@ urlpatterns = [
     path('endereco/deletar/<int:id_endereco>', views.deletar_endereco, name='deletar endereco'),
     path('endereco/editar/<int:id_endereco>', views.editar_endereco, name='editar endereco'),
     path("fazer_pedido/<str:id>", views.fazer_pedido, name="fazer_pedido_cliente"),
+    
+    path('mudar_foto', views.mudar_foto, name="mudar_foto"),
+    path('mudar_foto', views.editar_cliente, name="editar_perfil_cliente"),
+    
+    path("gerenciar", views.gerenciar_clientes, name='gerenciar_clientes'),
+    path("editar/<int:id>", views.editar_cliente, name='editar_cliente'),
+    path("deletar/<int:id>", views.deletar_cliente, name='deletar_cliente'),
 ]

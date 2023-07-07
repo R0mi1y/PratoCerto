@@ -58,3 +58,119 @@ def responder_comentario(request, id_prato, id_comentario):
         comentario.respostas.add(resposta)
     
     return redirect("/clientes/fazer_pedido/" + str(id_prato))
+
+
+#  ============================ PRATO CRUD ============================  #
+@has_role_decorator("admin")
+def criar_editar_prato(request, id=None):
+    prato = None
+
+    if id:
+        prato = Prato.objects.get(id=id)
+
+    if request.method == "POST":
+        form = PratoForm(request.POST, request.FILES, instance=prato)
+
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+    else:
+        form = PratoForm(instance=prato)
+
+    return render(request, "models/forms/form.html", {"form": form, "prato": prato})
+
+
+@has_role_decorator("admin")
+def gerenciar_pratos(request):
+    pratos = Prato.objects.all()
+    return render(
+        request,
+        "models/admin_gerente/gerencia_pratos.html",
+        {"pratos": pratos, "pg": "prato"},
+    )
+
+
+@has_role_decorator("admin")
+def deletar_prato(request, id):
+    Prato.objects.get(id=id).delete()
+    return redirect("gerenciar_prato")
+
+
+
+
+#  ============================ ADICIONAL CRUD ============================  #
+@has_role_decorator("admin")
+def criar_editar_adicional(request, id=None):
+    adicional = None
+
+    if id:
+        adicional = Adicional.objects.get(id=id)
+
+    if request.method == "POST":
+        form = AdicionalForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+    else:
+        form = AdicionalForm(instance=adicional)
+    return render(request, "models/forms/form.html", {"form": form, "adicional":adicional})
+
+
+@has_role_decorator("admin")
+def deletar_adicional(request, id):
+    Adicional.objects.get(id=id).delete()
+    return redirect("gerenciar_adicionais")
+
+
+
+
+
+@has_role_decorator("admin")
+def gerenciar_adicionais(request):
+    context = {
+        "adicionais": Adicional.objects.all(),
+        "pg": "adicional",
+    }
+
+    return render(request, "models/admin_gerente/gerencia_adicionais.html", context)
+
+
+
+
+
+
+
+#  ============================ INGREDIENTE CRUD ============================  #
+
+@has_role_decorator("admin")
+def criar_editar_ingrediente(request, id=None):
+    ingrediente = None
+
+    if id:
+        ingrediente = Ingrediente.objects.get(id=id)
+
+    if request.method == "POST":
+        form = IngredienteForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+    else:
+        form = IngredienteForm(instance=ingrediente)
+    return render(request, "models/forms/form.html", {"form": form, "ingrediente":ingrediente})
+
+
+@has_role_decorator("admin")
+def deletar_ingrediente(request, id):
+    Ingrediente.objects.get(id=id).delete()
+    return redirect("gerenciar_ingrediente")
+
+
+@has_role_decorator("admin")
+def gerenciar_ingredientes(request):
+    context = {
+        "ingredientes": Ingrediente.objects.all(),
+    }
+
+    return render(request, "models/admin_gerente/gerencia_ingredientes.html", context)
+
+

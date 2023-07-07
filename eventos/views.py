@@ -5,21 +5,18 @@ from .forms import EventoForm
 from rolepermissions.decorators import has_role_decorator
 
 def home(request):
-    # Sua lógica para recuperar eventos e informações do usuário
-    events = Evento.objects.all()  # Exemplo de recuperação de eventos usando um modelo Event
+    events = Evento.objects.all()  
     
     if events:
-        # Renderize o template com eventos e informações do usuário
         return render(request, 'models/eventos/eventos.html', {'events': events, 'user': request.user})
     else:
-        # Renderize o template sem eventos e informações do usuário
         return render(request, 'models/eventos/eventos.html', {'user': request.user})
 
 
 @has_role_decorator("admin")
 def criar_evento(request):
     if request.method == 'POST':
-        form = EventoForm(request.POST)
+        form = EventoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('home_eventos')

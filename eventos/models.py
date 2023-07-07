@@ -8,5 +8,7 @@ class Evento(models.Model):
     data_inicio = models.DateField(null=True, default=None)
     data_termino = models.DateField(null=True, default=None)
     descricao = models.TextField()
+    foto = models.ImageField(null=False, upload_to="media/")
+    
     def __str__(self):
         return self.nome

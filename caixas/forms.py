@@ -7,6 +7,9 @@ class CaixaForm(forms.ModelForm):
     class Meta:
         model = Caixa
         fields = ['username', 'email', 'telefone', 'cpf', 'password']
+        widgets = {
+            'password':forms.PasswordInput(),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

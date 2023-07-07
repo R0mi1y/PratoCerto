@@ -56,7 +56,7 @@ textarea::placeholder {
           <div class="row">
             <div class="col-md-6">
               <div class="form_container">
-                <form method="POST" class="form_container" action="">
+                <form method="POST" class="form_container" action="" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
                   <div class="btn_box">
@@ -70,21 +70,41 @@ textarea::placeholder {
             <div class="col-md-6">
               <div class="map_container ">
                 <div id="googleMap">
-                    <div class="imagem-quadrada">
-                        {% if prato.foto %}
-                            <img src="{{ prato.foto.url }}" alt="Imagem do Prato">
-                        {% elif cliente.foto %}
-                        <img src="{{ cliente.foto.url }}" alt="Imagem do Prato">
-                        {% elif adicional.foto %}
-                            <img src="{{ adicional.foto.url }}" alt="Imagem do Prato">
-                        {% else %}
-                            <p>Nenhuma imagem disponível.</p>
-                        {% endif %}
+                  <div class="imagem-quadrada">
+                    <div id="preview">
+                      {% if prato.foto %}
+                      <img src="{{ prato.foto.url }}" alt="Imagem do Prato">
+                      {% elif cliente.foto %}
+                      <img src="{{ cliente.foto.url }}" alt="Imagem do Prato">
+                      {% elif adicional.foto %}
+                      <img src="{{ adicional.foto.url }}" alt="Imagem do Prato">
+                      {% else %}
+                      <p>Nenhuma imagem disponível.</p>
+                      {% endif %}
                     </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+      <script>
+        document.getElementById('upload').addEventListener('change', function(e) {
+          var file = e.target.files[0];
+          var reader = new FileReader();
+        
+          reader.onload = function(e) {
+            var image = document.createElement('img');
+            image.src = e.target.result;
+            let image_div = document.getElementById('preview');
+            image_div.innerHTML = '';
+            image_div.appendChild(image);
+          };
+        
+          reader.readAsDataURL(file);
+        });
+
+        
+      </script>
 {% endblock content %}
