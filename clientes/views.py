@@ -22,7 +22,6 @@ from django.utils import timezone
 from eventos.models import Evento
 
 
-@login_required
 def home(request):
     current_datetime = timezone.now()
 

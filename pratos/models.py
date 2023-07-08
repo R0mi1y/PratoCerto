@@ -24,7 +24,9 @@ class Comentario(models.Model):
 class Ingrediente(models.Model):
     nome = models.CharField("Nome", max_length=40)
     quantidade_estoque = models.PositiveIntegerField("Quantidade_Estoque")
-
+    categoria = models.CharField("Categoria", max_length= 50 )
+    unidade_medida = models.CharField(max_length=50)
+    
     def __str__(self):
         return self.nome
 
@@ -42,3 +44,19 @@ class Prato(models.Model):
     def __str__(self):
         return self.nome
     
+
+
+class Receita(models.Model):
+    prato = models.OneToOneField('Prato', on_delete=models.CASCADE, null=True)
+    ingredientes_disponiveis = models.BooleanField('ingredientes_disponiveis', default=False)
+    def __str__(self):
+        return f"Receita do {self.prato.nome}"
+
+
+class IngredienteReceita(models.Model):
+    receita = models.ForeignKey(Receita, on_delete=models.CASCADE)
+    ingrediente = models.ForeignKey(Ingrediente, on_delete=models.CASCADE)
+    quantidade = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.receita} - {self.ingrediente}: {self.quantidade} {self.ingrediente.unidade_medida}"

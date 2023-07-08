@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from rolepermissions.decorators import has_role_decorator
 
 
-@login_required
 def template_categoria(request, categoria):
     data = {}
     data["pratos"] = Prato.objects.filter(categoria=categoria, disponivel=True)
@@ -21,7 +20,6 @@ def template_categoria(request, categoria):
     return render(request, "models/pratos/lista_pratos.html", data)
 
 
-@login_required
 def template_prato(request, id):
     data = {
         'prato' : Prato.objects.get(id=id)
@@ -71,12 +69,13 @@ def criar_editar_prato(request, id=None):
     if request.method == "POST":
         form = PratoForm(request.POST, request.FILES, instance=prato)
 
-        if form.is_valid():
-            form.save()
+        if form.is_valid() :
+            prato = form.save(commit=False)  # Salvar o prato sem enviar ao banco de dados ainda
+            prato.save()
+
             return redirect("home")
     else:
         form = PratoForm(instance=prato)
-
     return render(request, "models/forms/form.html", {"form": form, "prato": prato})
 
 
@@ -174,3 +173,41 @@ def gerenciar_ingredientes(request):
     return render(request, "models/admin_gerente/gerencia_ingredientes.html", context)
 
 
+@has_role_decorator("admin")
+def gerenciar_estoque(request):
+
+    ingredientes = Ingrediente.objects.all()
+    return render(request, 'models/admin_gerente/estoque.html', {'ingredientes': ingredientes})
+
+
+@has_role_decorator("admin")
+def atualizar_quantidade(request, ingrediente_id):
+    ingrediente = Ingrediente.objects.get(id=ingrediente_id)
+    if request.method == 'POST':
+        quantidade = int(request.POST['quantidade'])
+        ingrediente.quantidade_estoque = quantidade
+        ingrediente.save()
+    return redirect('gerenciar_estoque')
+
+
+# ============ CRUD RECEITAS =========== #
+@has_role_decorator("admin")
+def gerenciar_receitas(request):
+    pass
+
+
+
+def criar_editar_receitas(request, id=None):
+    receita = None
+
+    if id:
+        receita = Receita.objects.get(id=id)
+    
+    if request.method == "POST":
+        form = ReceitaForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("cadastrar_prato")
+    else:
+        ingredientes = Ingrediente.objects.all()
+    return render(request, "models/pratos/prato_receita_form.html", {"ingredientes":ingredientes})

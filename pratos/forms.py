@@ -1,5 +1,5 @@
 from django import forms
-from .models import Adicional, Prato, Ingrediente
+from .models import Adicional, Prato, Ingrediente, Receita, IngredienteReceita
 
 class PratoForm(forms.ModelForm):
     adicional = forms.ModelMultipleChoiceField(
@@ -7,14 +7,21 @@ class PratoForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )
-    ingrediente = forms.ModelMultipleChoiceField(
-        queryset=Ingrediente.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
+
+    receita = forms.ModelChoiceField(
+        queryset=Receita.objects.all(),
+        required=False
     )
+
     class Meta:
         model = Prato
-        fields = ["nome", "disponivel", "categoria", "preco", "foto", "adicional", "ingrediente", "descricao"]
+        fields = ["nome", "disponivel", "categoria", "preco", "foto", "adicional", "receita","descricao"]
+
+
+class IngredienteReceitaForm(forms.ModelForm):
+    class Meta:
+        model = IngredienteReceita
+        fields = ['ingrediente', 'quantidade']
 
 
 class AdicionalForm(forms.ModelForm):
@@ -37,8 +44,10 @@ class IngredienteForm(forms.ModelForm):
     
     class Meta:
         model = Ingrediente
-        fields = ['nome', 'quantidade_estoque']
+        fields = ['nome', 'quantidade_estoque', 'categoria', 'unidade_medida']
         labels = {
             'nome': 'Nome',
             'quantidade_estoque': 'Quantidade em Estoque',
+            'categoria': 'Categoria',
+            'unidade_medida': 'Unidade de Medida',
         }

@@ -1,8 +1,8 @@
-{% extends 'base/base.html' %}
-{% load static %}
-
-{% block content %}
-    <style type = 'text/css'>
+    {% extends 'base/base.html' %}
+    {% load static %}
+    
+    {% block content %}
+    <style type='text/css'>
         .box-link {
             background-color: #f2f2f2;
             border: 1px solid #ddd;
@@ -12,76 +12,79 @@
             text-decoration: none;
             color: #333;
             transition: background-color 0.3s;
-          }
-          
-          .box-link:hover {
+        }
+    
+        .box-link:hover {
             background-color: #ddd;
-          }
-          #pedidoPratos {
+        }
+    
+        #pedidoPratos {
             width: 200px;
             background-color: #f1f1f1;
             border: 1px solid #ccc;
             border-radius: 4px;
             padding: 10px;
-          }
-          
-          #pedidoPratos h2 {
+        }
+    
+        #pedidoPratos h2 {
             font-size: 16px;
             margin: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid #ccc;
-          }
-          
-          
+        }
     </style>
-
-  <h1>Caixa de Restaurante</h1>
-  
-  <h2>Realizar Pagamento</h2>
-  <form method="POST">
-    {% csrf_token %}
-    <label for="pedido_id">ID do Pedido:</label>
-    <input type="text" name="pedido_id">
-    <br>
-    <label for="valor_pago">Valor Pago:</label>
-    <input type="text" name="valor_pago">
-    <br>
-    <button type="submit">Realizar Pagamento</button>
-  </form>
-
-  <br><br><br>
-  <div class="box-link">
-    <a href="{% url "historico_pedidos" %}">Historico de Pedidos</a></br>
-  </div>
-
-  <h1>Pedidos</h1>
-  <div id="pedidoPratos">
-    <h2>Pedidos</h2>
-  </div>
-
-  <h2>Buscar Pedido</h2>
-  <form method="GET">
-      <label for="pedido_id">ID do Pedido:</label>
-      <input type="text" name="pedido_id">
-      <br>
-      <button type="submit">Buscar Pedido</button>
+    
+    <h1>Caixa de Restaurante</h1>
+    
+    <h2>Realizar Pagamento</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="pedido_id">ID do Pedido:</label>
+        <input type="text" name="pedido_id">
+        <br>
+        <label for="valor_pago">Valor Pago:</label>
+        <input type="text" name="valor_pago">
+        <br>
+        <button type="submit">Realizar Pagamento</button>
+    </form>
+    
+    {% if troco %}
+        <h3>Troco: R$ {{ troco }}</h3>
+    {% endif %}
+    
+    <br><br><br>
+    <div class="box-link">
+        <a href="{% url "historico_pedidos" %}">Histórico de Pedidos</a><br>
+    </div>
+    
+    <h1>Pedidos</h1>
+    <div id="pedidoPratos">
+        <h2>Pedidos</h2>
+    </div>
+    
+    <h2>Buscar Pedido</h2>
+    <form method="GET">
+        <label for="pedido_id">ID do Pedido:</label>
+        <input type="text" name="pedido_id">
+        <br>
+        <button type="submit">Buscar Pedido</button>
     </form>
     
     {% if pedido %}
-    <h2>Dados do Pedido</h2>
-    <p>ID: {{ pedido.id }}</p>
-    <p>Cliente: {{ pedido.cliente }}</p>
-    <p>Mesa: {{ pedido.mesa.numero }}</p>
-    <p>Status: {{ pedido.status }}</p>
-    <p>Total: R$ {{ pedido.total }}</p>
-    <p>Taxa de Entrega: R$ {{ pedido.taxa_entrega }}</p>
-    <p>Desconto: R$ {{ pedido.desconto }}</p>
-    <p>Local de Retirada: {{ pedido.local_retirada }}</p>
-    <p>Método de Pagamento: {{ pedido.metodo_pagamento }}</p>
-    <p>Endereço: {{ pedido.endereco }}</p>
+        <h2>Dados do Pedido</h2>
+        <p>ID: {{ pedido.id }}</p>
+        <p>Cliente: {{ pedido.cliente }}</p>
+        <p>Mesa: {{ pedido.mesa.numero }}</p>
+        <p>Status: {{ pedido.status }}</p>
+        <p>Total: R$ {{ pedido.total }}</p>
+        <p>Taxa de Entrega: R$ {{ pedido.taxa_entrega }}</p>
+        <p>Desconto: R$ {{ pedido.desconto }}</p>
+        <p>Local de Retirada: {{ pedido.local_retirada }}</p>
+        <p>Método de Pagamento: {{ pedido.metodo_pagamento }}</p>
+        <p>Endereço: {{ pedido.endereco }}</p>
     {% endif %}
-
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="{% static "js/pedidos_caixa.js" %}"></script>
     {% endblock %}
+    

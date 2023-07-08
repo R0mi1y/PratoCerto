@@ -5,7 +5,51 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<style>
+  
+        .kitchen-notifications {
+            background-color: #f2f2f2;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            position: fixed; top: 80px; right: 20px;
+        }
 
+        .kitchen-notifications h2 {
+            color: #333;
+        }
+
+        .kitchen-notifications .notification {
+            background-color: #ffcc00;
+            color: #333;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .kitchen-notifications .notification p {
+            margin: 0;
+        }
+
+        .kitchen-notifications .notification .order {
+            font-weight: bold;
+        }
+
+        .kitchen-notifications .notification .pratos {
+            margin-top: 5px;
+        }
+
+        .kitchen-notifications .notification .prato {
+            margin-bottom: 5px;
+        }
+</style>
+
+<div class="kitchen-notifications">
+  <h2>Notificações do Pedido</h2>
+  <div class="notification" id="pedidoPratos">
+      <p>Não há notificações da cozinha no momento.</p>
+  </div>
+</div>
 
 <section class="offer_section layout_padding-bottom">
     <div class="offer_container">
@@ -16,6 +60,7 @@
         <p>{{ evento.descricao }}</p>
         {% endfor %} 
       </div>
+
       <h1 style="color:red;">CATEGORIAS</h1>
       <div class="container ">
         <div class="row">
@@ -94,4 +139,5 @@
       </div>
     </div>
   </section>
+
 {% endblock %}

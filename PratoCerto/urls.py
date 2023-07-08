@@ -4,9 +4,6 @@ from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
 
-def redirect_to_login(request):
-    return redirect('account_login')
-
 urlpatterns = [
     path('admin_django/', admin.site.urls),
     path('cozinhas/', include('cozinhas.urls')),
@@ -19,5 +16,4 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('admin/', include('admin_gerente.urls')),
     path('', include('main.urls')),
-    path('', redirect_to_login),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
