@@ -1,23 +1,12 @@
-from django.contrib.auth.hashers import make_password
 from django.contrib import messages
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from clientes.models import Cliente
-from clientes.forms import ClienteFormAdmin
-from pratos.models import Prato
-from pratos.forms import PratoForm, AdicionalForm
-from cozinhas.forms import CozinhaForm
-from cozinhas.models import Cozinha
-from garcons.forms import GarcomForm
-from garcons.models import Garcom
-from caixas.forms import CaixaForm
-from caixas.models import Caixa
 from pedidos.models import *
 from pedidos.forms import *
 from rolepermissions.roles import assign_role
 from rolepermissions.decorators import has_role_decorator
 from .forms import AdminForm
-from clientes.views import gerar_aleatorio
+from PratoCerto.settings import AUX
 
 
 # Create your views here.
@@ -59,5 +48,15 @@ def home(request):
     return redirect("home_cliente")
 
 
+def ver_recomendacoes(request):
+    
+    
+    return redirect("models/admin_gerente/gerencia_recomendacoes.html")
 
 
+def deletar_recomendacao(request):
+    pass
+
+
+def add_recomendacao(request):
+    pass
