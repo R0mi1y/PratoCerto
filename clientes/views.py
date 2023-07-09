@@ -317,27 +317,17 @@ def mudar_foto(request):
 #  ============================ CLIENTE CRUD ============================  #
 @has_role_decorator("admin")
 def editar_cliente(request, id):
-    cliente = Cliente.objects.get(id=id)
+    cliente = None
+    
+    if id:
+        cliente = Cliente.objects.get(id=id)
     
     if request.method == "POST":
-        try:
-            cliente = Cliente.objects.get(id=id)
-            cliente.username = request.POST.get('username')
-            cliente.cpf = request.POST.get('cpf')
-            cliente.telefone = request.POST.get('telefone')
-            cliente.email = request.POST.get('email')
-            cliente.tipo_conta = "Cliente"
-            cliente.codigo_afiliado = gerar_aleatorio(cliente.username)
-            cliente.foto = request.FILES.get("foto")
-            cliente.save()
-            
-            return redirect("gerenciar_clientes")
-        except:
-            form = ClienteFormAdmin(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
+        form = ClienteFormAdmin(request.POST, request.FILES, instance=cliente)
+        if form.is_valid():
+            form.save()
 
-                return redirect("gerenciar_clientes")
+            return redirect("gerenciar_clientes")
     else:
         form = ClienteFormAdmin(instance=cliente)
     return render(request, "models/forms/form.html", {"form": form, "cliente": cliente})

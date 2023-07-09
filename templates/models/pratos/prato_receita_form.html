@@ -46,11 +46,17 @@
   <div class="container">
     <div class="heading_container">
       <h2>Formulário</h2>
+      <br>
+      <br>
+      <hr>
       <form action="{% url "cadastrar_receita" %}" method="POST">
         {% csrf_token %}
+        <label for="nome_receita"><h1>Nome da receita</h1></label>
+        <input type="text" maxlength="50" id="nome_receita" name="nome_receita">
           {% for ingrediente in ingredientes %}
-          <input type="checkbox" value="{{ ingrediente.pk }}" name="ingredientes">{{ ingrediente }}
-          {{ ingrediemte.unidade_medida }}<input type="number" name="quantidade_{{ ingrediente.pk }}" id="">
+          <input type="checkbox" value="{{ ingrediente.pk }}" name="item_{{ ingrediente.pk }}"> <label for="id_ingrediente_{{ ingrediente.pk }}"><h2>{{ ingrediente }}</h2></label><br>
+          <label for="id_qnt_{{ ingrediente.pk }}">{{ ingrediente.unidade_medida }}</label><input id="id_qnt_{{ ingrediente.pk }}" type="number" id="id_ingrediente_{{ ingrediente.pk }}" name="quantidade_{{ ingrediente.pk }}" id="">
+          <hr>
           {% endfor %}
           <input type="submit" value="cadastrar">
       </form>

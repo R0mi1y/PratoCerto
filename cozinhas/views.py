@@ -2,6 +2,8 @@ from django.shortcuts import redirect, render, get_object_or_404
 from pedidos.models import PedidoPrato
 from rolepermissions.roles import assign_role
 from rolepermissions.decorators import has_role_decorator
+from .models import *
+from .forms import *
 
 def home(request):
     pedidos_restaurante = PedidoPrato.objects.filter(status='Pendente local')
@@ -46,7 +48,7 @@ def criar_editar_cozinha(request, id=None):
         cozinha = Cozinha.objects.get(id=id)
 
     if request.method == "POST":
-        form = CozinhaForm(request.POST)
+        form = CozinhaForm(request.POST, instance=cozinha)
         if form.is_valid():
             caixa = form.save(commit=False)
             caixa.tipo_conta = "Cozinha"

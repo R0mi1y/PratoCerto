@@ -64,6 +64,7 @@
         <tr>
             <th>Ingrediente</th>
             <th>Quantidade</th>
+            <th>Unidade de Medida</th>
             <th>Categoria</th>
             <th>Atualizar</th>
         </tr>
@@ -73,6 +74,7 @@
         <tr>
             <td>{{ ingrediente.nome }}</td>
             <td>{{ ingrediente.quantidade_estoque }}</td>
+            <td>{{ ingrediente.unidade_medida}}</td>
             <td>{{ ingrediente.categoria }}</td>
             <td>
                 <form method="post" action="{% url 'atualizar_quantidade' ingrediente.id %}">

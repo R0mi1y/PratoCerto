@@ -72,6 +72,11 @@ def criar_editar_prato(request, id=None):
         if form.is_valid() :
             prato = form.save(commit=False)  # Salvar o prato sem enviar ao banco de dados ainda
             prato.save()
+            
+            if request.POST.get('receita'):
+                receita = Receita.objects.get(id=request.POST.get('receita'))
+                receita.prato = prato
+                receita.save()
 
             return redirect("home")
     else:
@@ -106,7 +111,7 @@ def criar_editar_adicional(request, id=None):
         adicional = Adicional.objects.get(id=id)
 
     if request.method == "POST":
-        form = AdicionalForm(request.POST, request.FILES)
+        form = AdicionalForm(request.POST, request.FILES, instance=adicional)
         if form.is_valid():
             form.save()
             return redirect("home")
@@ -133,12 +138,6 @@ def gerenciar_adicionais(request):
 
     return render(request, "models/admin_gerente/gerencia_adicionais.html", context)
 
-
-
-
-
-
-
 #  ============================ INGREDIENTE CRUD ============================  #
 
 @has_role_decorator("admin")
@@ -149,7 +148,7 @@ def criar_editar_ingrediente(request, id=None):
         ingrediente = Ingrediente.objects.get(id=id)
 
     if request.method == "POST":
-        form = IngredienteForm(request.POST, request.FILES)
+        form = IngredienteForm(request.POST, request.FILES, instance=ingrediente)
         if form.is_valid():
             form.save()
             return redirect("home")
@@ -206,13 +205,17 @@ def deletar_receita(request, id):
     
 def criar_receita(request):    
     if request.method == "POST":
-        receita = Receita.objects.create()
-        print("================================")
-        print(request.POST.get("ingredientes"))
-        print("================================")
-        for i in request.POST.get("ingredientes"):
-            ingrediente = Ingrediente.objects.get(id=i)
-            IngredienteReceita.objects.create(ingrediente=ingrediente, quantidade=request.POST.get("quantidade_" + i), receita=receita)
+        receita = Receita.objects.create(nome=request.POST.get('nome_receita'))
+        
+        for item_name in request.POST:
+            if 'item_' in item_name:
+                item_id = item_name.replace('item_','')
+                
+                IngredienteReceita.objects.create(
+                    ingrediente=Ingrediente.objects.get(pk=item_id),
+                    receita=receita,
+                    quantidade=float(request.POST.get('quantidade_' + item_id))
+                )
         
         return redirect('home_admin')
     else:

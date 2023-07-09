@@ -47,10 +47,11 @@ class Prato(models.Model):
 
 
 class Receita(models.Model):
+    nome = models.CharField(max_length=50)
     prato = models.OneToOneField('Prato', on_delete=models.CASCADE, null=True)
     ingredientes_disponiveis = models.BooleanField('ingredientes_disponiveis', default=False)
     def __str__(self):
-        return f"Receita do {self.prato.nome}"
+        return f"Receita do {self.nome}"
 
 
 class IngredienteReceita(models.Model):

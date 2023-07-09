@@ -6,9 +6,10 @@
 {% load static %}
 <!-- prettier-ignore -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
-    <title>Login 10</title>
+    <title>Login PratoCerto</title>
+    <link rel="icon" href="{% static "images/icons/logo-icon.png" %}"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
@@ -18,7 +19,7 @@
 
     <link rel="stylesheet" href="{% static "css/style_login.css"%}">
   </head>
-  <body class="img js-fullheight">
+  <body class="img js-fullheight" style="background-image: url({% static "images/hero-bg.png"%}); background-size: cover; background-position-x: bottom; background-repeat: no-repeat;">
     <!-- style="height:100%;background-image: url({% static "images/hero-bg.png"%});" -->
     <section>
       <div class="container mt-6">
@@ -72,7 +73,7 @@
                         </label>
                       </div> -->
                       <div class="w-20 text-md-right">
-                        <a href="/accounts/password/reset/" style="user-select: none; color: #1fb4ff">Esqueceu sua senha?</a>
+                        <a href="/accounts/password/reset/" style="user-select: none; color: #181818">Esqueceu sua senha?</a>
                       </div>
                     </div>
                     <div class="d-md-flex">
@@ -80,7 +81,7 @@
                         <p style="user-select: none; color: #eeeeee">Precisando de uma conta?</p>
                       </div>
                       <div class="w-30 text-md-right">
-                        <a href="/clientes/register" style="user-select: none; color: #1fb4ff;">Registre-se</a>
+                        <a href="/clientes/register" style="user-select: none; color: #181818;">Registre-se</a>
                       </div>
                     </div>
                     {% if redirect_field_value %}

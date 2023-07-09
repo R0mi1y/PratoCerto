@@ -64,6 +64,9 @@ textarea::placeholder {
           </div>
         </div>
       </div>
+      {% if prato.foto %}
+      <img src="{{prato.foto.url}}" alt="">
+      {% endif %}
     </div>
   </section>
 <script>

@@ -183,29 +183,15 @@ def criar_editar_garcom(request, id=None):
         garcom = Garcom.objects.get(id=id)
 
     if request.method == "POST":
-        if id:
-            garcom = Garcom.objects.get(id=id)
-            
-            garcom.password = make_password(request.POST.get("password"))
-            garcom.cpf = request.POST.get('cpf')
-            garcom.telefone = request.POST.get('telefone')
-            garcom.email = request.POST.get('email')
+        form = GarcomForm(request.POST, instance=garcom)
+        if form.is_valid():
+            print("É Validooooo")
+            garcom = form.save(commit=False)
             garcom.tipo_conta = "Garcom"
             garcom.save()
-            
             assign_role(garcom, "garcom")
-            
-            return redirect("home_admin")
-        else:
-            form = GarcomForm(request.POST)
-            if form.is_valid():
-                print("É Validooooo")
-                garcom = form.save(commit=False)
-                garcom.tipo_conta = "Garcom"
-                garcom.save()
-                assign_role(garcom, "garcom")
 
-                return redirect("home_admin")
+            return redirect("home_admin")
     else:
         form = GarcomForm(instance=garcom)
 
