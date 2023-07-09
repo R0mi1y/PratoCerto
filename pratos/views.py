@@ -196,18 +196,25 @@ def gerenciar_receitas(request):
     pass
 
 
+def editar_receita(request, id): 
+    pass
 
-def criar_editar_receitas(request, id=None):
-    receita = None
 
-    if id:
-        receita = Receita.objects.get(id=id)
+def deletar_receita(request, id): 
+    pass
     
+    
+def criar_receita(request):    
     if request.method == "POST":
-        form = ReceitaForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect("cadastrar_prato")
+        receita = Receita.objects.create()
+        print("================================")
+        print(request.POST.get("ingredientes"))
+        print("================================")
+        for i in request.POST.get("ingredientes"):
+            ingrediente = Ingrediente.objects.get(id=i)
+            IngredienteReceita.objects.create(ingrediente=ingrediente, quantidade=request.POST.get("quantidade_" + i), receita=receita)
+        
+        return redirect('home_admin')
     else:
         ingredientes = Ingrediente.objects.all()
     return render(request, "models/pratos/prato_receita_form.html", {"ingredientes":ingredientes})

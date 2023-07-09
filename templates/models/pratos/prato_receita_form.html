@@ -1,6 +1,7 @@
-<!-- home.html -->
-{% extends 'base/base.html' %} {% load static %} {% block title %}Form{%
-endblock %} {% block content %}
+{% extends 'base/base.html' %} 
+{% load static %} 
+{% block title %}Form{% endblock %} 
+{% block content %}
 <style>
   .imagem-quadrada {
     width: 100%; /* Defina a largura desejada */
@@ -45,6 +46,15 @@ endblock %} {% block content %}
   <div class="container">
     <div class="heading_container">
       <h2>Formulário</h2>
+      <form action="{% url "cadastrar_receita" %}" method="POST">
+        {% csrf_token %}
+          {% for ingrediente in ingredientes %}
+          <input type="checkbox" value="{{ ingrediente.pk }}" name="ingredientes">{{ ingrediente }}
+          {{ ingrediemte.unidade_medida }}<input type="number" name="quantidade_{{ ingrediente.pk }}" id="">
+          {% endfor %}
+          <input type="submit" value="cadastrar">
+      </form>
+
     </div>
     <div class="row">
       <div class="col-md-6">

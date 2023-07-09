@@ -48,7 +48,8 @@
 </style>
 <h1>{{ cliente.0.tipo_conta }}</h1>
 
-<a href="{% url 'cadastrar_'|add:pg %}">Cadastrar</a>
+<a href="{% url 'cadastrar_prato' %}">Cadastrar Prato</a>
+<a href="{% url 'cadastrar_receita' %}">Cadastrar Receita</a>
 
 <table>
     <thead>
@@ -98,6 +99,9 @@
             <td class="actions">
                 <a href="{% url 'editar_prato' prato.id %}">Editar</a>
                 <a href="{% url 'deletar_prato' prato.id %}">Excluir</a>
+                {% if prato.receita %}
+                <a href="{% url 'editar_receita' id=prato.receita.pk %}">Editar Receita</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

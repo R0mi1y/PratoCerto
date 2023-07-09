@@ -34,7 +34,9 @@
                     <h6>
                         R$ {{prato.preco}}
                     </h6>
-                    {% if has_cliente_role %}
+                    {% if has_admin_role %}
+                      <a href="{% url 'editar_prato' id=prato.id %}" class="btn btn-primary">
+                    {% elif has_cliente_role %}
                       <a href="{% url "fazer_pedido_cliente" id=prato.id %}">
                     {% elif has_garcom_role %}
                       <a href="{% url "fazer_pedido_garcom" id=prato.id %}">

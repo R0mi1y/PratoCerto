@@ -7,6 +7,7 @@ from django.contrib import messages
 from garcons.models import Garcom
 from clientes.models import Cliente
 from django.contrib.auth.decorators import login_required, permission_required
+from rolepermissions.checkers import has_role
 
 # Create your views here.
 def home(request):
@@ -14,15 +15,15 @@ def home(request):
         if not request.user.email or request.user.email == "":
             return redirect("cadastrar_cliente")
         else:
-            if request.user.tipo_conta == "Cliente":
+            if has_role(request.user, "cliente"):
                 return redirect("home_cliente")
-            elif request.user.tipo_conta == "Garcom":
+            elif has_role(request.user, "garcom"):
                 return redirect("home_garcom")
-            elif request.user.tipo_conta == "Caixa":
+            elif has_role(request.user, "caixa"):
                 return redirect("home_caixa")
-            elif request.user.tipo_conta == "Admin":
+            elif has_role(request.user, "admin"):
                 return redirect("home_admin")
-            elif request.user.tipo_conta == "Cozinha":
+            elif has_role(request.user, "cozinha"):
                 return redirect("home_cozinha")    
             else:
                 return HttpResponse(request.user.tipo_conta)

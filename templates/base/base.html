@@ -71,7 +71,7 @@
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
           <a class="navbar-brand" href="index.html">
-              <a style="color:white;" href="{% if has_garcom_role %}{% url "home_garcom" %}{% elif has_cozinha_role %}{% url "home_cozinha" %}{% elif has_caixa_role %}{% url "home_cliente" %}{% else %}{% url "home_cliente" %}{% endif %}">
+              <a style="color:white;" href="{% if has_admin_role %}{% url "home_admin" %}{% elif has_garcom_role %}{% url "home_garcom" %}{% elif has_cozinha_role %}{% url "home_cozinha" %}{% elif has_caixa_role %}{% url "home_cliente" %}{% else %}{% url "home_cliente" %}{% endif %}">
                 <span>
                     <h1 style="color: red;">
                         Prato Certo

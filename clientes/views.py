@@ -50,7 +50,9 @@ def criar_usuario_cliente(request):
         form_cliente = ClienteForm(request.POST)
 
         try:
+            print("Recuperando usuario...")
             cliente = Cliente.objects.get(username=request.POST.get("username"))
+            print("Usuario Recuperado!")
             cliente.password = make_password(request.POST.get("password"))
             cliente.cpf = request.POST.get('cpf')
             cliente.telefone = request.POST.get('telefone')
@@ -68,6 +70,7 @@ def criar_usuario_cliente(request):
             cliente.save()
             assign_role(cliente, "cliente")
         except Cliente.DoesNotExist:
+            print("Usuario não encontrado, realizando cadastro!")
             if form_cliente.is_valid():
                 cliente = form_cliente.save(commit=False)
 

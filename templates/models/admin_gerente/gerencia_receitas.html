@@ -1,0 +1,24 @@
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Lista de Pratos{% endblock %}
+
+{% block content %}
+<style>
+    img {
+        width: 200px;
+        height: auto;
+    }
+</style>
+    <h1>Lista de Pratos</h1>
+    <h2>{{ Categoria }}</h2>
+
+    <div class="filters-content">
+        <div class="row grid">
+        {% for receita in receitas %}
+            
+        {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

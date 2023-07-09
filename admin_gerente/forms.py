@@ -15,8 +15,7 @@ class AdminForm(forms.ModelForm):
         
         return make_password(data)
     
-
-class RecomendacoesForm(forms.ModelForm):
-    prato = forms.ChoiceField(
-        choices=Prato.objects.all(),
-    )
+# class RecomendacoesForm(forms.ModelForm):
+#     prato = forms.ChoiceField(
+#         choices=Prato.objects.all(),
+#     )

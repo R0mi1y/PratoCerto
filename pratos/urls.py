@@ -32,5 +32,8 @@ urlpatterns = [
 
 
     # Receita
+    path("receitas/cadastrar", views.criar_receita, name="cadastrar_receita"),
+    path("receitas/editar/<int:id>", views.editar_receita, name="editar_receita"),
+    path("receitas/deletar/<int:id>", views.deletar_receita, name="deletar_receita"),
     
 ]
