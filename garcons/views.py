@@ -120,6 +120,12 @@ def servir_pedido(request, pedido_prato_id):
     # Alterar o status do PedidoPrato para "sendo servido"
     pedido_prato.status = "servido"
     pedido_prato.save()
+    
+    pedido = pedido_prato.pedido
+    if len(PedidoPrato.objects.filter(pedido=pedido).exclude(status="servido")) == 0:
+        pedido.status = "Pendente local"
+        pedido.save()
+    
     return redirect("home_garcom")
 
 
@@ -137,16 +143,16 @@ def editar_carrinho(request, id):
     pedidoPrato = PedidoPrato.objects.get(id=id)
     
     if request.method == "POST":
-        form = PedidoPratoForm(request.POST, prato_id=pedidoPrato.prato.pk, instance=pedidoPrato)
+        form = PedidoPratoGarcomForm(request.POST, prato_id=pedidoPrato.prato.pk, instance=pedidoPrato)
         if form.is_valid():
             pedidoPrato = form.save(commit=False)
             pedidoPrato.cliente = cliente
             pedidoPrato.save()
             
-            return redirect("ver_carrinho_cliente")
+            return redirect("ver_carrinho_garcom")
         
     context = {
-        'prato_form' : PedidoPratoForm(instance=pedidoPrato, prato_id=pedidoPrato.prato.pk),
+        'prato_form' : PedidoPratoGarcomForm(instance=pedidoPrato, prato_id=pedidoPrato.prato.pk),
         'prato'      : pedidoPrato.prato,
         'comentarios': pedidoPrato.prato.comentarios.all(),
     }

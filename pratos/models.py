@@ -7,7 +7,7 @@ class Adicional(models.Model):
     nome = models.CharField("Nome", max_length=40)
     descricao = models.TextField("Descrição")
     preco = models.DecimalField("Preco", max_digits=10, decimal_places=2)
-    foto = models.ImageField("Imagem_do_prato", default=None, null=True, upload_to="pratos/")
+    foto = models.ImageField("Imagem_do_prato", default=None, null=True, upload_to="pratos/%Y/%m/%d/")
     
     def __str__(self):
         return self.nome + " R$ " + str(self.preco)

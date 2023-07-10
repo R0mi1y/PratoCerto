@@ -6,8 +6,9 @@
 
 {% block content %}
 <style>
-  
+        
         .kitchen-notifications {
+            
             background-color: #f2f2f2;
             padding: 20px;
             margin-top: 20px;
@@ -47,7 +48,7 @@
 <div class="kitchen-notifications">
   <h2>Notificações do Pedido</h2>
   <div class="notification" id="pedidoPratos">
-      <p>Não há notificações da cozinha no momento.</p>
+      <p>Não há pedidos feitos no momemto.</p>
   </div>
 </div>
 
@@ -139,5 +140,17 @@
       </div>
     </div>
   </section>
+
+
+  <script>
+    function toggleDiv() {
+        var notificationDiv = document.getElementById('notificationDiv');
+        if (notificationDiv.style.display === 'none') {
+            notificationDiv.style.display = 'block';
+        } else {
+            notificationDiv.style.display = 'none';
+        }
+    }
+</script>
 
 {% endblock %}

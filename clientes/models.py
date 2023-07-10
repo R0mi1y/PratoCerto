@@ -7,7 +7,7 @@ from django.db.models.signals import pre_save, post_save
 class Cliente(AbstractUser):
     telefone = models.CharField(max_length=20)
     cpf = models.CharField(max_length=20, null=True)
-    foto = models.ImageField(default=None, null=True, upload_to="media/")
+    foto = models.ImageField(default=None, null=True, upload_to="media/%Y/%m/%d/")
     codigo_afiliado = models.CharField(max_length=255, null=False)
     pontos = models.IntegerField("Pontos de afiliado", default=0)
     tipo_conta = models.CharField(max_length=20, default="Cliente")

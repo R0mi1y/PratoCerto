@@ -1,7 +1,4 @@
-<!-- base.html -->
-{% load static %}
-{% load decorators %}
-
+ <!-- CSS -->
 <style>
   .notification_link .fa-bell {
     color: white; 
@@ -11,6 +8,11 @@
     color: orange; 
   }
 </style>
+
+
+<!-- base.html -->
+{% load static %}
+{% load decorators %}
 
 <!DOCTYPE html>
 <html>
@@ -112,6 +114,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url "gerenciar_adicionais" %}">Gerenciar Adicionais</a>
                     </li> 
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url "gerenciar_mesas" %}">Gerenciar Mesas</a>
+                    </li>
                      <li class="nav-item">
                         <a class="nav-link" href="{% url "gerenciar_ingrediente" %}">Gerenciar Ingredientes</a>
                     </li>
@@ -120,9 +125,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/accounts/logout">Sair</a>
                     </li>
                 {% elif has_cliente_role %}
                     <li class="nav-item">
@@ -140,18 +142,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url "perfil_cliente" %}">Perfil</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/accounts/logout">Sair</a>
-                    </li>
                 {% elif has_garcom_role %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url "home_garcom" %}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url "ver_pedidos_garcom" %}">pedidos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/accounts/logout">Sair</a>
                     </li>
                 {% elif has_cozinha_role %}
                     <li class="nav-item">
@@ -160,9 +156,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/accounts/logout">Sair</a>
-                    </li>
                 {% elif has_caixa_role %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url "home" %}">Home</a>
@@ -170,26 +163,29 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/accounts/logout">Sair</a>
-                    </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url "account_login" %}">Login</a>
+                      <a class="nav-link" href="{% url "account_login" %}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url "cadastrar_cliente" %}">Cadastre-se</a>
+                      <a class="nav-link" href="{% url "cadastrar_cliente" %}">Cadastre-se</a>
                     </li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="/accounts/logout">Sair</a>
+                  </li>
                 {% endif %}
             </ul>
             <div class="user_option">
 
-            {% if has_admin_role or has_cliente_role %}
-            
-            <a class="notification_link" href="#" >
+            {% if has_admin_role %}
+            {% elif has_cliente_role %}
+    
+            <a class="notification_link" href="#" onclick="toggleDiv()" >
               <i class="fa fa-bell" aria-hidden="true"></i>
             </a>
-
+              
             <a href="{% url "perfil_cliente" %}" class="user_link">
                 <i class="fa fa-user" aria-hidden="true"></i>
             </a>

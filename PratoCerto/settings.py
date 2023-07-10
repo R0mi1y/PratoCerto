@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django_cron",
     "main",
     "admin_gerente",
+    "pagamentos",
     #  Django all-auth
     "allauth",
     "allauth.account",
@@ -192,3 +193,5 @@ AUX = {
     'frete_entrega':8,
 }
 
+MERCADOPAGO_PUBLIC_KEY = 'sua_chave_pública_do_mercadopago'
+MERCADOPAGO_ACCESS_TOKEN = 'seu_token_de_acesso_do_mercadopago'

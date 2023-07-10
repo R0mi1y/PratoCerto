@@ -1,5 +1,6 @@
 {% extends "account/email/base_message.txt" %}
 {% load i18n %}
+{% load static %}
 
 {% block content %}{% autoescape off %}{% blocktrans %}You are receiving this e-mail because you or someone else has requested a
 password for your user account. However, we do not have any record of a user
@@ -9,4 +10,4 @@ This mail can be safely ignored if you did not request a password reset.
 
 If it was you, you can sign up for an account using the link below.{% endblocktrans %}
 
-{{ signup_url }}{% endautoescape %}{% endblock %}
+localhost:8000{% url "cadastrar_cliente" %}{% endautoescape %}{% endblock %}

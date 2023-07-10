@@ -18,7 +18,7 @@ def criar_editar_admin(request, id=None):
         admin = Cliente.objects.get(tipo_conta="admin", id=id)
 
     if request.method == "POST":
-        form = AdminForm(request.POST)
+        form = AdminForm(request.POST, instance=admin)
 
         if form.is_valid():
             cliente = form.save(commit=False)

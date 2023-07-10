@@ -78,3 +78,31 @@ def criar_reserva(request):
 
 def ver_pedido(request, id):
     return render(request, "models/pedidos/ver_pedido.html", {"pedido": Pedido.objects.get(id=id)})
+
+# ================================ CRUD MESA =================================
+
+def gerenciar_mesas(request):
+    return render(request, "models/admin_gerente/gerencia_mesas.html", {"mesas": Mesa.objects.all()})
+    
+    
+def criar_editar_mesas(request, id=None):
+    mesa = None
+    
+    if id:
+        mesa = Mesa.objects.get(id=id)
+        
+    if request.method == "POST":
+        form = MesaForm(request.POST, instance=mesa)
+        
+        if form.is_valid():
+            form.save()
+            return redirect("gerenciar_mesas")
+    else:
+        form = MesaForm(instance=mesa)
+        
+    return render(request, "models/forms/form.html", {"form": form})
+
+
+def deletar_mesas(request, id):
+    Mesa.objects.get(pk=id).delete()
+    return redirect("gerenciar_mesas")

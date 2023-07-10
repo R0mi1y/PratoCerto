@@ -1,0 +1,78 @@
+<!-- payment_form.html -->
+<html>
+<head>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script>
+        const publicKey = 'sua_chave_pública_do_mercadopago';
+        Mercadopago.setPublishableKey(publicKey);
+        Mercadopago.getIdentificationTypes();
+    </script>
+</head>
+<body>
+    <h1>Formulário de Pagamento</h1>
+
+    <form id="payment-form" action="{% url 'process_payment' %}" method="POST">
+        <div>
+            <label for="cardholderName">Nome no cartão:</label>
+            <input type="text" id="cardholderName" name="cardholderName" required>
+        </div>
+        <div>
+            <label for="cardNumber">Número do cartão:</label>
+            <input type="text" id="cardNumber" name="cardNumber" required>
+        </div>
+        <div>
+            <label for="cardExpirationMonth">Mês de expiração:</label>
+            <input type="text" id="cardExpirationMonth" name="cardExpirationMonth" required>
+        </div>
+        <div>
+            <label for="cardExpirationYear">Ano de expiração:</label>
+            <input type="text" id="cardExpirationYear" name="cardExpirationYear" required>
+        </div>
+        <div>
+            <label for="securityCode">Código de segurança:</label>
+            <input type="text" id="securityCode" name="securityCode" required>
+        </div>
+        <div>
+            <label for="cardholderEmail">Email:</label>
+            <input type="email" id="cardholderEmail" name="cardholderEmail" required>
+        </div>
+        <div>
+            <button type="submit">Realizar Pagamento</button>
+        </div>
+        <div>
+            <label for="paymentMethod">Método de Pagamento:</label>
+            <select id="paymentMethod" name="payment_method_id">
+                <option value="visa">Cartão de Crédito (Visa)</option>
+                <option value="mastercard">Cartão de Crédito (Mastercard)</option>
+                {% comment %} <option value="boleto">Boleto Bancário</option> {% endcomment %}
+            </select>
+        </div>
+    </form>
+
+    <script>
+        var cardForm = document.getElementById('payment-form');
+
+        cardForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            Mercadopago.createToken(cardForm, function (result, error) {
+                if (error) {
+                    console.error(error);
+                } else {
+                    var token = result.id;
+
+                    // Adicionar o token ao formulário antes de enviar para o servidor
+                    var tokenInput = document.createElement('input');
+                    tokenInput.setAttribute('type', 'hidden');
+                    tokenInput.setAttribute('name', 'token');
+                    tokenInput.setAttribute('value', token);
+                    cardForm.appendChild(tokenInput);
+
+                    // Enviar o formulário ao servidor
+                    cardForm.submit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

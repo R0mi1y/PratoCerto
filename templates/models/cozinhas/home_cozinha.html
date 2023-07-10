@@ -1,6 +1,7 @@
 <style>
   .pedidos-container {
     display: flex;
+    flex-wrap: wrap;
   }
 
   .coluna {
@@ -44,9 +45,34 @@
     border-radius: 3px;
     cursor: pointer;
   }
+
+  /* Estilos para o estoque e receitas */
+  .espaco {
+    height: 20px;
+  }
+
+  .estoque {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+  }
+
+  .estoque h2,
+  .estoque h5 {
+    margin-top: 0;
+  }
+
+  .estoque .coluna {
+    display: flex;
+    justify-content: space-between;
+  }
 </style>
 
-{% extends 'base/base.html' %} {% load static %} {% block title %}Cozinha{% endblock %} {% block content %}
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Cozinha{% endblock %}
+{% block content %}
 <h1>Cozinha</h1>
 
 <div class="pedidos-container">
@@ -64,10 +90,7 @@
       {% if pedido.pronto %}
       <p class="pronto">Pedido pronto para ser servido</p>
       {% else %}
-      <form
-        action="{% url 'pedido_pronto' pedido_id=pedido.id %}"
-        method="POST"
-      >
+      <form action="{% url 'pedido_pronto' pedido_id=pedido.id %}" method="POST">
         {% csrf_token %}
         <button type="submit">Notificar garçom que está pronto</button>
       </form>
@@ -92,10 +115,7 @@
       {% if pedido.pronto %}
       <p class="pronto">Pedido pronto para ser servido</p>
       {% else %}
-      <form
-        action="{% url 'pedido_pronto' pedido_id=pedido.id %}"
-        method="POST"
-      >
+      <form action="{% url 'pedido_pronto' pedido_id=pedido.id %}" method="POST">
         {% csrf_token %}
         <button type="submit">Notificar garçom que está pronto</button>
       </form>
@@ -104,6 +124,37 @@
     {% empty %}
     <p>Nenhum pedido pendente do site no momento.</p>
     {% endfor %}
+  </div>
+</div>
+
+<div class="espaco"></div>
+
+<div class="pedidos-container">
+  <div class="coluna">
+    <div class="estoque">
+      <h2>Estoque de Ingredientes</h2>
+      <div class="coluna">
+        <div>
+          <h5>Ingredientes</h5>
+          {% for ingrediente in ingredientes %}
+          <p>{{ ingrediente.nome }}</p>
+          {% endfor %}
+        </div>
+        <div>
+          <h5>Quantidade em estoque</h5>
+          {% for ingrediente in ingredientes %}
+              <p>{{ingrediente.quantidade_estoque}} {{ ingrediente.unidade_medida }}</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="coluna">
+    <div class="receitas">
+      <h2>Receitas</h2>
+      <!-- Conteúdo das receitas aqui -->
+    </div>
   </div>
 </div>
 

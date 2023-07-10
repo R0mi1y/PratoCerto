@@ -1,19 +1,13 @@
-from django.contrib.auth import get_user_model, authenticate
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from .forms import *
-from django.contrib import messages
-from garcons.models import Garcom
-from clientes.models import Cliente
-from django.contrib.auth.decorators import login_required, permission_required
 from rolepermissions.checkers import has_role
 
 # Create your views here.
 def home(request):
     if request.user.is_authenticated:
         if not request.user.email or request.user.email == "":
-            return redirect("cadastrar_cliente")
+            return redirect("editar_cliente_cliente")
         else:
             if has_role(request.user, "cliente"):
                 return redirect("home_cliente")
@@ -29,3 +23,8 @@ def home(request):
                 return HttpResponse(request.user.tipo_conta)
     else:
         return redirect("home_cliente")
+    
+def reset_sucess(request):
+    msm = "Senha redefinida com sucesso."
+    
+    return HttpResponseRedirect("/accounts/login/?msm=" + msm)

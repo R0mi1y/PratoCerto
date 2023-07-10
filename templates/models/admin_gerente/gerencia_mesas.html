@@ -1,0 +1,74 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<style>
+
+    h1 {
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    img {
+        max-width: 100px;
+        max-height: 100px;
+    }
+
+    .actions {
+        white-space: nowrap;
+    }
+
+    .actions a {
+        margin-right: 10px;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .actions a:hover {
+        text-decoration: underline;
+    }
+</style>
+<section class="book_section layout_padding">
+<h1>{{ cliente.0.tipo_conta }}</h1>
+
+<a href="{% url 'cadastrar_mesa' %}">cadastrar</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Numero</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mesa in mesas %}
+        <tr>
+            <td>{{ mesa.numero }}</td>
+            <td>{{ mesa.status }}</td>
+            <td class="actions">
+                <a href="{% url "editar_mesa" id=mesa.pk %}">Editar</a>
+                <a href="{% url "deletar_mesa" id=mesa.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</section>
+
+{% endblock %}

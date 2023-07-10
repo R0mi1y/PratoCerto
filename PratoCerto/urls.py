@@ -14,6 +14,7 @@ urlpatterns = [
     path('pratos/', include('pratos.urls')),
     path('eventos/', include('eventos.urls')),
     path('accounts/', include('allauth.urls')),
+    path('pagamentos/', include('pagamentos.urls')),
     path('admin/', include('admin_gerente.urls')),
     path('', include('main.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

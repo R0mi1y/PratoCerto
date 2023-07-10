@@ -40,13 +40,50 @@ class ClienteForm(forms.ModelForm):
                 raise forms.ValidationError("Código do indicador inválido.")
 
         return indicador
+    
+    
+    
+class ClienteFormEditar(forms.ModelForm):
+    foto = forms.ImageField(widget=forms.FileInput(attrs={
+        "accept": "image/*",
+    }), required=False)
+    
+    class Meta:
+        model = Cliente
+        fields = ["telefone", "cpf", "email", "foto"]
+
+        widgets = {
+            "password": forms.PasswordInput(
+                attrs={"autocomplete": "new-password", "class": "custom-class"}
+            ),
+        }
+        
+    def clean_password(self):
+        data = self.cleaned_data["password"]
+        
+        return make_password(data)
+    
+        
+    def clean_indicador(self):
+        indicador = self.cleaned_data.get("indicador")
+
+        if indicador and indicador != "":
+            try:
+                Cliente.objects.get(codigo_afiliado=indicador).pontos += AUX["pontos"][
+                    "indicação"
+                ]
+                self.cleaned_data["pontos"] += AUX["pontos"]["indicado"]
+            except Cliente.DoesNotExist:
+                raise forms.ValidationError("Código do indicador inválido.")
+
+        return indicador
+        
+        
         
 class ClienteFormAdmin(forms.ModelForm):
     telefone = forms.CharField(required=False)
-    foto = forms.ImageField()
-    cpf = forms.CharField()
-    email = forms.EmailField()
-    username = forms.CharField()
+    foto = forms.ImageField(required=False)
+    cpf = forms.CharField(required=False)
 
     class Meta:
         model = Cliente

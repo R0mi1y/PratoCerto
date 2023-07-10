@@ -1,3 +1,4 @@
+// FUNÇÃO DE VER E ESCONDER SENHA
 const togglePassword = document.querySelector(".toggle-password");
 const passwordField = document.querySelector(togglePassword.getAttribute("toggle"));
 
@@ -7,6 +8,7 @@ togglePassword.addEventListener("click", function () {
   togglePassword.classList.toggle("fa-eye-slash");
 });
 
+// FUNÇÃO DE CARREGAMENTO DA PAGINA
 document.getElementById("loginButton").addEventListener("click", function (event) {
   event.preventDefault();
   var usernameInput = document.getElementById("username-field");
@@ -21,3 +23,4 @@ document.getElementById("loginButton").addEventListener("click", function (event
     }, 3500);
   }
 });
+

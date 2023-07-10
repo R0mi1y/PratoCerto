@@ -333,6 +333,31 @@ def editar_cliente(request, id):
     return render(request, "models/forms/form.html", {"form": form, "cliente": cliente})
 
 
+@login_required
+def editar_cliente_cliente(request):
+    cliente = request.user
+    
+    if request.method == "POST":
+        form = ClienteFormEditar(request.POST, request.FILES, instance=cliente)
+        if form.is_valid():
+            cliente = form.save()
+            assign_role(cliente, "cliente")
+            user = authenticate(request, username=cliente.username, password=cliente.password)
+
+            if user is not None:
+                # Realizar o login do cliente autenticado
+                login(request, user)
+                
+                return redirect("adicionar endereco")
+            else:
+                # Tratar caso as credenciais sejam inválidas
+                return redirect('account_login')  # Redirecionar para a página de login novamente
+                
+    else:
+        form = ClienteFormEditar(instance=cliente)
+    return render(request, "models/forms/form.html", {"form": form, "cliente": cliente})
+
+
 @has_role_decorator("admin")
 def deletar_cliente(request, id):
     Cliente.objects.get(id=id).delete()

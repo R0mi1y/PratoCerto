@@ -20,15 +20,9 @@
     <link rel="stylesheet" href="{% static "css/style_login.css"%}">
   </head>
   <body class="img js-fullheight" style="background-image: url({% static "images/hero-bg.png"%}); background-size: cover; background-position-x: bottom; background-repeat: no-repeat;">
-    <!-- style="height:100%;background-image: url({% static "images/hero-bg.png"%});" -->
     <section>
       <div class="container mt-6">
-        <!-- <div class="row justify-content-center">
-          <div class="col-md-6 text-center mb-5">
-            <h2 class="heading-section">Login</h2>
-          </div>
-        </div> -->
-        <div class="row justify-content-center ftco-section">
+        <div class="row justify-content-center">
           <div class="col-md-6 col-lg-4">
             <!-- Pop-up de carregamento -->
                 <div class="loading-overlay" id="loadingOverlay">
@@ -65,13 +59,6 @@
                     </div>
 
                     <div class="form-group d-md-flex">
-                      <!-- <div class="w-50">
-                        <label class="checkbox-wrap checkbox-primary"
-                          >Lembrar de mim
-                          <input name="remember" type="checkbox" checked />
-                          <span class="checkmark"></span>
-                        </label>
-                      </div> -->
                       <div class="w-20 text-md-right">
                         <a href="/accounts/password/reset/" style="user-select: none; color: #181818">Esqueceu sua senha?</a>
                       </div>
@@ -96,13 +83,6 @@
                           <img style="width: 25px" src="/static/images/icons/pesquisa.png">
                           <span class="mr-2 px-2 py-2 ml-md-1" style="font-family: 'Inter', sans-serif;">Google</span>
                         </button>
-                      <!-- <button
-                        type="button"
-                        class="px-2 py-2 ml-md-1 rounded"
-                        onclick="window.location.href='/clientes/register'"
-                      >
-                        <span class="ion-logo-google mr-2 px-2 py-2 ml-md-1 rounded">Cadastre-se</span>
-                      </button> -->
                     </form>
                   </div>
                 </div>
@@ -112,6 +92,13 @@
         </div>
       </div>
     </section>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const msm = urlParams.get('msm');
+      if (msm) {
+        alert(msm);
+      }
+    </script>
     
     <script src="{% static "js/js_bootstrap/bootstrap.js"%}"></script>
     <script src="{% static "js/js_bootstrap/custom.js"%}"></script>

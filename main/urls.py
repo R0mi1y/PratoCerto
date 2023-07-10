@@ -19,5 +19,6 @@ from django.urls import path
 
 urlpatterns = [
     path("", views.home ,name="home"),
+    path("reset/sucess", views.reset_sucess ,name="account_reset_password_from_key_done")
     # path("teste", criar)
 ]
