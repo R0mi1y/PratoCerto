@@ -1,48 +1,85 @@
-{% extends 'base/base.html' %}
-{% load static %}
-
-{% block title %}Home{% endblock %}
-
-{% block content %}
-
-{% comment %} <div class="kitchen-notifications">
+{% extends 'base/base.html' %} 
+{% load static %} 
+{% block title %} Home
+{% endblock %} 
+{% block content %} 
+{% comment %}
+<div class="kitchen-notifications">
   <h2>Notificações do Pedido</h2>
   <div class="notification" id="pedidoPratos">
-      <p>Não há pedidos feitos no momemto.</p>
+    <p>Não há pedidos feitos no momemto.</p>
   </div>
-</div> {% endcomment %}
+</div>
+{% endcomment %}
 
-<section class="offer_section layout_padding-bottom">
-    <div class="offer_container">
-      <!-- <div>
-        {% for evento in eventos %}
-        <h2>{{ evento.nome }}</h2>
+<section class="container">
+  <div class="my-carousel-section">
+    <div class="my-carousel-container">
+      {% for evento in eventos %}
+      <div class="my-carousel-item">
         <img src="{{ evento.foto.url }}" alt="">
-        <p>{{ evento.descricao }}</p>
-        {% endfor %} 
-      </div> -->
+        <div class="my-carousel-item-text">
+          <h5>{{ evento.nome }}</h5>
+          <p>{{ evento.descricao }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+  
 
-      <h1 style="color:red;">CATEGORIAS</h1>
-      <div class="container ">
-        <div class="row">
-          {% for categoria in Categorias %}
-            <div class="card">
-              <div class="card-body">
-                <div class="login-wrap p-0">
-                  <h3 class="text-center">Boas-vindas!</h3>
-                  <p class="text-center mb-4"> Faça o login em sua conta</p>
-                  <div class="image-container">
-                    <img src="{% static 'img/' %}{{ categoria.0 }}.jpeg" alt="Descrição da imagem">
-                  </div>
-                  
-                  
+<section class="offer_section">
+  <div class="offer_container">
+    <h1 style="text-align: center; font-family: 'Belanosima', sans-serif; color: #181818">CATEGORIAS</h1>
+    <div class="container">
+      <div class="row">
+        {% for categoria in Categorias %}
+            <div class="card-body">
+              <div class="p-0">
+                    <div class="image-container">
+                      <img
+                        src="{% static 'img/' %}{{ categoria.0 }}.jpeg"
+                        alt="Descrição da imagem"
+                      />
+                    </div>
+                    <div class="card-body">
+                      <h6 style="font-size: 1.8rem; font-weight: bold; font-family:'Dancing Script', cursive;">
+                        <a class="button-category" href="/pratos/categoria/{{ categoria.0 }}">
+                          <span style=" color:#181818">{{ categoria.1 }}</span>
+                        </a>
+                      </h6>
+                    </div>
+              </div>
+            </div>
+        {% endfor %}
+        <!-- CARDS  -->
+        <!-- {% for categoria in Categorias %}
+        <div class="card">
+          <div class="card-teste">
+            <div class="card-body">
+              <div class="login-wrap p-0">
+                    <div class="image-container">
+                      <img
+                        src="{% static 'img/' %}{{ categoria.0 }}.jpeg"
+                        alt="Descrição da imagem"
+                      />
+                    </div>
+                <div style=" color: #eeeeee">
+                  <h6 style="font-size: 1.6rem; font-family:'Dancing Script', cursive;">
+                    <span>{{ categoria.1 }}</span>
+                  </h6>
+                  <a class="button-category" href="/pratos/categoria/{{ categoria.0 }}">
+                    ver categoria
+                  </a>
                 </div>
               </div>
             </div>
-          {% endfor %}
+          </div>
+        </div>
+        {% endfor %} -->
 
-
-          <!-- {% for categoria in Categorias %}
+        <!-- {% for categoria in Categorias %}
             <div class="col-md-6">
               <div class="box ">
                 <div class="img-box">
@@ -62,21 +99,44 @@
               </div>
             </div>
             {% endfor %} -->
-        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
+<script>
+ 
+  function startCarousel() {
+    const carouselItems = document.querySelectorAll(".my-carousel-item");
+    const totalItems = carouselItems.length;
+    let currentIndex = 0;
 
-  <script>
-    function toggleDiv() {
-        var notificationDiv = document.getElementById('notificationDiv');
-        if (notificationDiv.style.display === 'none') {
-            notificationDiv.style.display = 'block';
-        } else {
-            notificationDiv.style.display = 'none';
-        }
+    function showItem(index) {
+      carouselItems.forEach((item, i) => {
+        item.style.display = i === index ? "flex" : "none";
+      });
     }
+
+
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % totalItems;
+      showItem(currentIndex);
+    }, 3000);
+
+    showItem(currentIndex);
+  }
+  startCarousel();
+
+
+
+  function toggleDiv() {
+    var notificationDiv = document.getElementById("notificationDiv");
+    if (notificationDiv.style.display === "none") {
+      notificationDiv.style.display = "block";
+    } else {
+      notificationDiv.style.display = "none";
+    }
+  }
 </script>
 
 {% endblock %}

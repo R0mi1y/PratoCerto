@@ -24,10 +24,10 @@
         background-color: #f2f2f2;
     }
 
-    img {
+    /*img {
         max-width: 100px;
         max-height: 100px;
-    }
+    }*/
 
     .actions {
         white-space: nowrap;
@@ -42,41 +42,48 @@
     .actions a:hover {
         text-decoration: underline;
     }
+    .content{
+        margin-top: 10px;
+    }
 </style>
-<section class="book_section layout_padding">
+<section class="book_section">
 <h1>{{ cliente.0.tipo_conta }}</h1>
 
 <a href="{% url 'cadastrar_'|add:pg %}">cadastrar</a>
 
-<table>
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Telefone</th>
-            <th>CPF</th>
-            <th>Código Afiliado</th>
-            <th>Pontos de Afiliado</th>
-            <th>Tipo de Conta</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for cliente in clientes %}
-        <tr>
-            <td>{{ cliente.username }}</td>
-            <td>{{ cliente.telefone }}</td>
-            <td>{{ cliente.cpf }}</td>
-            <td>{{ cliente.codigo_afiliado }}</td>
-            <td>{{ cliente.pontos }}</td>
-            <td>{{ cliente.tipo_conta }}</td>
-            <td class="actions">
-                <a href="{% url "editar_"|add:pg id=cliente.pk %}">Editar</a>
-                <a href="{% url "deletar_"|add:pg id=cliente.pk %}">Excluir</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="content">
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>CPF</th>
+                    <th>Código Afiliado</th>
+                    <th>Pontos de Afiliado</th>
+                    <th>Tipo de Conta</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.username }}</td>
+                    <td>{{ cliente.telefone }}</td>
+                    <td>{{ cliente.cpf }}</td>
+                    <td>{{ cliente.codigo_afiliado }}</td>
+                    <td>{{ cliente.pontos }}</td>
+                    <td>{{ cliente.tipo_conta }}</td>
+                    <td class="actions">
+                        <a href="{% url "editar_"|add:pg id=cliente.pk %}">Editar</a>
+                        <a href="{% url "deletar_"|add:pg id=cliente.pk %}">Excluir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 </section>
 
 {% endblock %}

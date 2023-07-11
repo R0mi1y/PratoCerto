@@ -7,6 +7,7 @@
   .notification_link:hover .fa-bell {
     color: orange; 
   }
+
 </style>
 
 
@@ -43,11 +44,14 @@
 
   <!-- Custom styles for this template -->
   <link  rel="stylesheet"  href="{% static "css/style.css"%}"/>
-    <link rel="stylesheet" href="{% static "css/style_login.css"%}">
+  <!-- <link rel="stylesheet" href="{% static "css/style_login.css"%}"> -->
+  <link rel="stylesheet" href="{% static "css/nav.css"%}">
   <!-- responsive style -->
   <link href="{% static "css/index.css"%}" rel="stylesheet" />
 
+
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Belanosima&family=Dancing+Script&family=Inter&display=swap');
     p {
         font-family:Times, Times New Roman, serif;
     }
@@ -64,32 +68,162 @@
 {% has_role user 'cozinha' as has_cozinha_role %}
 {% has_role user 'caixa' as has_caixa_role %}
 
-<body class="img js-fullheight" style="background-image: url({% static "images/img1.png"%}); background-size: cover; background-position-x: bottom; background-repeat: no-repeat;">
-  <section>
-    <div class="container mt-6">
-      <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-          <!-- Pop-up de carregamento -->
-              <!-- <div class="loading-overlay" id="loadingOverlay">
-                <div class="loading-spinner">
-                  <img style="width: 45px;" src="/static/images/icons/icon-loading.png">
+<body class="img js-fullheight" >
+  <header >
+    <section class="container">
+            <nav class="fixed-top">
+              <div id="kyu-logo">
+                <img src="{% static "images/icons/logo.png"%}" />
+              </div>
+      
+              <div class="nav-menu">
+                {% if user.is_authenticated %}
+                <div class="dropdown">
+                  
+                  <ul class="dropdown-menu" style="">
+                    {% if has_admin_role %}
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_prato" %}">Prato</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_recomendacoes" %}">Recomendações</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "create_superuser" %}">Admin</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_garcons" %}">Garçom</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_caixas" %}">Caixa</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_cozinhas" %}">Cozinha</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_clientes" %}">Clientes</a>
+                      </li>
+                    {% elif has_cliente_role %}
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "home_cliente" %}">Home</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "criar reserva" %}">criar reserva</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "ver_pedidos_cliente" %}">pedidos</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "perfil_cliente" %}">Perfil</a>
+                      </li>
+                    {% elif has_garcom_role %}
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "home_garcom" %}">Home</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "ver_pedidos_garcom" %}">pedidos</a>
+                      </li>
+                    {% elif has_cozinha_role %}
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "home_cozinha" %}">Home</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                      </li>
+                    {% elif has_caixa_role %}
+                      <li class="nav-item">
+                          <a onclick="loadingPage()"class="nav-link" href="{% url "home" %}">Home</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                  
                 </div>
-              </div> -->
-          <!-- Pop-up de carregamento -->
+                {% endif %}
+                <ul>
+                  {% if has_admin_role %}
+                  <li class="nav-item">
+                      <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_adicionais" %}">Adicionais</a>
+                  </li> 
+                  <li class="nav-item">
+                    <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_mesas" %}">Mesas</a>
+                  </li>
+                   <li class="nav-item">
+                      <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_ingrediente" %}">Ingredientes</a>
+                  </li>
+                  <li class="nav-item">
+                    <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_estoque" %}">Estoque de Ingredientes</a>
+                  </li>
+                  <li class="nav-item">
+                      <a onclick="loadingPagetwo()" class="nav-link" href="{% url 'home_eventos' %}">Eventos</a>
+                  </li>
+                {% endif %}
+                </ul>
+                {% if has_admin_role %}
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  GERENCIAR
+                </button>
+                {% endif %}
 
+                
+                <ul>
+                  {% if not user.is_authenticated %}
+                  <li class="nav-item">
+                    <a  onclick="loadingPage()" class="nav-link" href="{% url "account_login" %}">Login</a>
+                  </li>
+                  <li class="nav-item">
+                    <a onclick="loadingPage()" class="nav-link" href="{% url "cadastrar_cliente" %}">Cadastre-se</a>
+                  </li>
+                  {% endif %}
+                </ul>
+                <ul>
+                  {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="performLogout()">Sair</a>
+                    </li>
+                    <form id="logoutForm" method="post" action="{% url 'account_logout' %}">
+                      {% csrf_token %}
+                    </form>
+                  {% endif %}
+                </ul>
+              </div>
+                  <div id="mobile-menu-btn">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+            </nav>
+    </section>
+  </header>
 
-        </div>
+  <!-- Pop-up de carregamento -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+      <img style="width: 45px;" src="/static/images/icons/icon-loading.png">
+    </div>
+  </div>
+  <!-- Pop-up de carregamento -->
+
+  <section  class="content">
+      <div class="container">
+          {% block content %}{% endblock %}
       </div>
-    </div>
   </section>
+  
 
-  <!-- <section class="food_section layout_padding">
-    <div class="container" >
-        {% block content %}{% endblock %}
-    </div>
-  </section> -->
-
-  <!-- <footer class="footer_section">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 300">
+    <path
+      fill="#181818"
+      fill-opacity="1"
+      d="M0,128L30,154.7C60,181,120,235,180,234.7C240,235,300,181,360,170.7C420,160,480,192,540,213.3C600,235,660,245,720,234.7C780,224,840,192,900,176C960,160,1020,160,1080,176C1140,192,1200,224,1260,224C1320,224,1380,192,1410,176L1440,160L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"
+    ></path>
+  </svg>
+  <footer class="footer_section">
     <div class="container">
       <div class="row">
         <div class="col-md-4 footer-col">
@@ -167,7 +301,57 @@
         </p>
       </div>
     </div>
-  </footer> -->
+  </footer>
   <script src="{% static "js/main.js"%}"></script>
+  <script src="{% static "js/home.js"%}"></script>
+  <script src="{% static "js_bootstrap/bootstrap.js"%}"></script>
+  <script>
+      // FUNÇÃO DE CARREGAMENTO DA PAGINA
+    function loadingPage() {
+      var links = document.querySelectorAll('.dropdown-menu a');
+  
+      for (var i = 0; i < links.length; i++) {
+        links[i].onclick = function (event) {
+          event.preventDefault();
+          var loadingOverlay = document.getElementById('loadingOverlay');
+          loadingOverlay.style.display = 'block';
+  
+          setTimeout(function () {
+            window.location.href = event.target.href;
+          }, 1000);
+        };
+      }
+    }
+    loadingPage();
+
+    // FUNÇÃO DE CARREGAMENTO DA PAGINA
+    function loadingPagetwo() {
+      var links = document.querySelectorAll('.nav-item a');
+  
+      for (var i = 0; i < links.length; i++) {
+        links[i].onclick = function (event) {
+          event.preventDefault();
+          var loadingOverlay = document.getElementById('loadingOverlay');
+          loadingOverlay.style.display = 'block';
+  
+          setTimeout(function () {
+            window.location.href = event.target.href;
+          }, 1000);
+        };
+      }
+    }
+    loadingPagetwo();
+
+    function performLogout() {
+      var form = document.getElementById('logoutForm');
+      var loadingOverlay = document.getElementById('loadingOverlay');
+      loadingOverlay.style.display = 'block'; // Exibe a animação de carregamento
+    
+      setTimeout(function() {
+        form.submit(); // Envia o formulário de logout após um tempo de espera
+      }, 1200); // Tempo de espera em milissegundos (por exemplo, 2000ms = 2 segundos)
+    }
+
+  </script>
 </body>
 </html>

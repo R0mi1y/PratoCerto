@@ -55,22 +55,6 @@ document.getElementById("loginButton").addEventListener("click", function (event
 });
 
 
-// FUNÇÃO DE CARREGAMENTO DA PAGINA
-// document.getElementById("loginButton").addEventListener("click", function (event) {
-//   event.preventDefault();
-//   var usernameInput = document.getElementById("username-field");
-//   var passwordInput = document.getElementById("password-field");
-
-//   if (usernameInput.value && passwordInput.value) {
-//     var loadingOverlay = document.getElementById("loadingOverlay");
-//     loadingOverlay.style.display = "block";
-
-//     setTimeout(function () {
-//       document.getElementById("loginForm").submit();
-//     }, 3500);
-//   }
-// });
-
 function validatePasswordForm(){
     var senha1 = document.getElementById("password-field1").value;
     var senha2 = document.getElementById("password-field2").value;
@@ -105,6 +89,7 @@ function validatePasswordForm(){
       }, tempoExibicao2);
     }
 };
+
 
 
 

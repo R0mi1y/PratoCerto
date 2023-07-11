@@ -1,72 +1,76 @@
-<!-- home.html -->
-{% extends 'base/base.html' %}
-{% load static %}
-
-{% block title %}Criar Pedido{% endblock %}
-
+<!-- prettier-ignore -->
+{% load i18n %}
+{% load account socialaccount %}
 {% block content %}
-<style>
-    .form-container {
-        background-color: white;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-            width: 400px;
-            margin: 0 auto;
-        }
-        
-        .form-container h2 {
-            color: red;
-            text-align: center;
-        }
-        
-        .form-container form {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .form-container label {
-            margin-bottom: 10px;
-        }
-        
-        .form-container input[type="text"],
-        .form-container input[type="email"],
-        .form-container input[type="password"],
-        .form-container textarea {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        
-        .form-container input[type="submit"] {
-            background-color: yellow;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .form-container input[type="submit"]:hover {
-            background-color: gold;
-        }
-        
-        
-    </style>
-    
-    <div class="form-container">
-        <h2>Formulário</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% for field in form_cliente %}
-                {{ field.label }}
-                {{ field }}
-                {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            {% endfor %}
-            
-            <input type="submit" value="Enviar">
-        </form>
-    </div>
-{% endblock content %} 
+<!-- prettier-ignore -->
+{% load static %}
+<!-- prettier-ignore -->
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Formulário de Cadastro</title>
+    <link rel="icon" href="{% static "images/icons/logo-icon.png" %}"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <link rel="stylesheet" href="{% static "css/style_login.css"%}">
+  </head>
+  <body class="img js-fullheight" style="background-image: url({% static "images/img1.png"%}); background-size: cover; background-position-x: bottom; background-repeat: no-repeat;">
+    <section>
+      <div class="container mt-6">
+        <div class="row justify-content-center">
+          <div class="col-md-6 col-lg-4">
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-spinner">
+                <img style="width: 45px;" src="/static/images/icons/icon-loading.png">
+                </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <div class="login-wrap p-0">
+                  <h3 class="text-center">Formulário de Cadastro</h3>
+                  <p class="text-center mb-4"> Preencha os campos e cadastre-se</p>
+                  <form id="loginForm" enctype="multipart/form-data" method="POST" class="signin-form">
+                    {% csrf_token %}
+                    {% for field in form_cliente %}
+                        <div class="form-group">
+                            {{ field }}
+                        </div>
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    </div>
+                    <div class="form-group">
+                      <button id="loginButton" type="submit" class="form-control btn btn-primary submit px-3">
+                        Cadastrar
+                      </button>
+                    </div>
+                    <hr style="background-color: #91202d">
+                    <div class="d-md-flex justify-content-center">
+                        <div>
+                            <a href="/accounts/login/" style="color: #181818;">Voltar ao Login</a>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="{% static "js/main.js"%}"></script>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const msm = urlParams.get('msm');
+      if (msm) {
+        alert(msm);
+      }
+    </script>
+  </body>
+</html>
+{% endblock %}
