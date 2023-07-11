@@ -5,7 +5,9 @@ from django.contrib.auth.hashers import make_password
 
 
 class ClienteForm(forms.ModelForm):
-    indicador = forms.CharField(max_length=20, required=False)
+    indicador = forms.CharField(max_length=20, required=False, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Código de quem te indicou'}
+    ))
     pontos = forms.CharField(
         max_length=20, required=False, widget=forms.HiddenInput(attrs={"class": ""}),
         label="",
@@ -17,8 +19,20 @@ class ClienteForm(forms.ModelForm):
 
         widgets = {
             "password": forms.PasswordInput(
-                attrs={"autocomplete": "new-password", "class": "custom-class"}
+                attrs={"autocomplete": "new-password", "class": "form-control", "placeholder":"Senha"}
             ),
+            "email": forms.EmailInput(
+                attrs={"autocomplete": "new-email", "class": "form-control", "placeholder":"Email"}
+            ),
+            "telefone" : forms.TextInput(
+                attrs={"class": "form-control", "placeholder":"Telefone"}
+            ),
+            "cpf" : forms.TextInput(
+                attrs={"class": "form-control", "placeholder":"CPF"}
+            ),
+            "username" : forms.TextInput(
+                attrs={"class": "form-control", "placeholder":"Seu Nome"}
+            )
         }
         
     def clean_password(self):

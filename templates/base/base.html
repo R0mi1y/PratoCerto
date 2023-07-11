@@ -1,5 +1,5 @@
  <!-- CSS -->
-<style>
+ <style>
   .notification_link .fa-bell {
     color: white; 
   }
@@ -39,13 +39,12 @@
   <!-- nice select  -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
   <!-- font awesome style -->
-  <link  rel="stylesheet" href="{% static "css/font-awesome.min.css"%}" />
+  <link href="{% static "css/font-awesome.min.css"%}" rel="stylesheet" />
 
   <!-- Custom styles for this template -->
-  <link  rel="stylesheet"  href="{% static "css/style.css"%}"/>
-    <link rel="stylesheet" href="{% static "css/style_login.css"%}">
+  <link href="{% static "css/style.css"%}" rel="stylesheet" />
   <!-- responsive style -->
-  <link href="{% static "css/index.css"%}" rel="stylesheet" />
+  <link href="{% static "css/responsive.css"%}" rel="stylesheet" />
 
   <style>
     p {
@@ -64,110 +63,284 @@
 {% has_role user 'cozinha' as has_cozinha_role %}
 {% has_role user 'caixa' as has_caixa_role %}
 
-<body class="img js-fullheight" style="background-image: url({% static "images/img1.png"%}); background-size: cover; background-position-x: bottom; background-repeat: no-repeat;">
-  <section>
-    <div class="container mt-6">
-      <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-          <!-- Pop-up de carregamento -->
-              <!-- <div class="loading-overlay" id="loadingOverlay">
-                <div class="loading-spinner">
-                  <img style="width: 45px;" src="/static/images/icons/icon-loading.png">
-                </div>
-              </div> -->
-          <!-- Pop-up de carregamento -->
-
-
-        </div>
-      </div>
+<body class="sub_page">
+  <div class="hero_area">
+    <div class="bg-box">
+      <img src="{% static "images/hero-bg.jpg"%}" alt="">
     </div>
-  </section>
-
-  <!-- <section class="food_section layout_padding">
-    <div class="container" >
-        {% block content %}{% endblock %}
-    </div>
-  </section> -->
-
-  <!-- <footer class="footer_section">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4 footer-col">
-          <div class="footer_contact">
-            <h4>
-              Contate nos
-            </h4>
-            <div class="contact_link_box">
-              <a href="">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="index.html">
+              <a style="color:white;" href="{% if has_admin_role %}{% url "home_admin" %}{% elif has_garcom_role %}{% url "home_garcom" %}{% elif has_cozinha_role %}{% url "home_cozinha" %}{% elif has_caixa_role %}{% url "home_cliente" %}{% else %}{% url "home_cliente" %}{% endif %}">
                 <span>
-                  Localização
+                    <h1 style="color: red;">
+                        Prato Certo
+                    </h1>
                 </span>
-              </a>
-              <a href="">
-                <i class="fa fa-phone" aria-hidden="true"></i>
-                <span>
-                  Ligue +01 1234567890
-                </span>
-              </a>
-              <a href="">
-                <i class="fa fa-envelope" aria-hidden="true"></i>
-                <span>
-                  exemplo@gmail.com
-                </span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 footer-col">
-          <div class="footer_detail">
-            <a href="" class="footer-logo">
-              Prato Certo
             </a>
-            <p>
-              PratoCerto, O sabor que você procura, servido com excelência!
-            </p>
-            <div class="footer_social">
-              <a href="">
-                <i class="fa fa-facebook" aria-hidden="true"></i>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav  mx-auto ">
+
+                {% if has_admin_role %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "gerenciar_prato" %}">Gerenciar prato</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "gerenciar_recomendacoes" %}">Gerenciar recomendacoes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "create_superuser" %}">Criar Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "gerenciar_garcons" %}">Gerenciar garcom</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "gerenciar_caixas" %}">Gerenciar caixa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "gerenciar_cozinhas" %}">Gerenciar cozinha</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "gerenciar_clientes" %}">Gerenciar clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "gerenciar_adicionais" %}">Gerenciar Adicionais</a>
+                    </li> 
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url "gerenciar_mesas" %}">Gerenciar Mesas</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url "gerenciar_ingrediente" %}">Gerenciar Ingredientes</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url "gerenciar_estoque" %}">Estoque de Ingredientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                    </li>
+                {% elif has_cliente_role %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "home_cliente" %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "criar reserva" %}">criar reserva</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "ver_pedidos_cliente" %}">pedidos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "perfil_cliente" %}">Perfil</a>
+                    </li>
+                {% elif has_garcom_role %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "home_garcom" %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "ver_pedidos_garcom" %}">pedidos</a>
+                    </li>
+                {% elif has_cozinha_role %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "home_cozinha" %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                    </li>
+                {% elif has_caixa_role %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "home" %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url "account_login" %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url "cadastrar_cliente" %}">Cadastre-se</a>
+                    </li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="/accounts/logout">Sair</a>
+                  </li>
+                {% endif %}
+            </ul>
+            <div class="user_option">
+
+            {% if has_admin_role %}
+            {% elif has_cliente_role %}
+    
+            <a class="notification_link" href="#" " >
+              <i class="fa fa-bell" aria-hidden="true"></i>
+            </a>
+              
+            <a href="{% url "perfil_cliente" %}" class="user_link">
+                <i class="fa fa-user" aria-hidden="true"></i>
+            </a>
+            {% endif %}
+            {% if not has_admin_role %}
+            {% if has_garcom_role or has_cliente_role %}
+            <a class="cart_link" href="{% if has_cliente_role %}{% url "ver carrinho cliente" %}{% elif has_garcom_role %}{% url "ver_carrinho_garcom" %}{% endif %}">
+                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                  <g>
+                    <g>
+                      <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                   c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                    </g>
+                  </g>
+                  <g>
+                    <g>
+                      <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                   C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                   c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                   C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                    </g>
+                  </g>
+                  <g>
+                    <g>
+                      <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                   c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                    </g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                </svg>
               </a>
-              <a href="">
-                <i class="fa fa-twitter" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-linkedin" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-instagram" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-pinterest" aria-hidden="true"></i>
-              </a>
+              {% endif %}
+              {% endif %}
             </div>
           </div>
-        </div>
-        <div class="col-md-4 footer-col">
-          <h4>
-            Horário de abertura
-          </h4>
-          <p>
-            Todos os dias
-          </p>
-          <p>
-            9.00 Am 23.00 Pm
-          </p>
-        </div>
+        </nav>
       </div>
-      <div class="footer-info">
-        <p>
-          &copy; <span id="displayYear"></span> All Rights Reserved By
-          <a href="https://html.design/">Free Html Templates</a><br><br>
-          &copy; <span id="displayYear"></span> Distributed By
-          <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
-        </p>
-      </div>
-    </div>
-  </footer> -->
-  <script src="{% static "js/main.js"%}"></script>
-</body>
+    </header>
+    <!-- end header section -->
+  </div>
+  
+  <section class="food_section layout_padding">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+  </section>
+      
+      <footer class="footer_section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 footer-col">
+              <div class="footer_contact">
+                <h4>
+                  Contate nos
+                </h4>
+                <div class="contact_link_box">
+                  <a href="">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    <span>
+                      Localização
+                    </span>
+                  </a>
+                  <a href="">
+                    <i class="fa fa-phone" aria-hidden="true"></i>
+                    <span>
+                      Ligue +01 1234567890
+                    </span>
+                  </a>
+                  <a href="">
+                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                    <span>
+                      exemplo@gmail.com
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 footer-col">
+              <div class="footer_detail">
+                <a href="" class="footer-logo">
+                  Prato Certo
+                </a>
+                <p>
+                  PratoCerto, O sabor que você procura, servido com excelência!
+                </p>
+                <div class="footer_social">
+                  <a href="">
+                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                  </a>
+                  <a href="">
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                  </a>
+                  <a href="">
+                    <i class="fa fa-linkedin" aria-hidden="true"></i>
+                  </a>
+                  <a href="">
+                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                  </a>
+                  <a href="">
+                    <i class="fa fa-pinterest" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 footer-col">
+              <h4>
+                Horário de abertura
+              </h4>
+              <p>
+                Todos os dias
+              </p>
+              <p>
+                9.00 Am 23.00 Pm
+              </p>
+            </div>
+          </div>
+          <div class="footer-info">
+            <p>
+              &copy; <span id="displayYear"></span> All Rights Reserved By
+              <a href="https://html.design/">Free Html Templates</a><br><br>
+              &copy; <span id="displayYear"></span> Distributed By
+              <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+            </p>
+          </div>
+        </div>
+      </footer>
+      <script src="{% static "js/main.js"%}"></script>
+    </body>
 </html>

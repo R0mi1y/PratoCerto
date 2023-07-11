@@ -77,11 +77,14 @@
     }
 </style>
 <div class="form-container">
-    <form action="" method="post">
+    <form id="form_pedido" action="" method="post">
         {% csrf_token %}
         {{ form }}
-        
-        <input type="submit" value="Comprar">
+        {% if has_garcom_role %}
+            <input id="btn_pedido" type="submit" value="Comprar">
+        {% else %}
+            <input id="btn_pedido" type="button" onclick="submitForm()" value="Comprar">
+        {% endif %}
     </form>
     {% for pedido in pedidos %}
     <p>{{ pedido.prato }}</p>
@@ -89,6 +92,61 @@
     {% endfor %}
     <a href="{% url "adicionar endereco" %}">adicionar endereço</a>
 </div>
+<script>
+    var enderecoRadios = document.querySelectorAll('input[type="radio"][name="endereco"]');
 
+for (var i = 0; i < enderecoRadios.length; i++) {
+  enderecoRadios[i].checked = false;
+  enderecoRadios[i].disabled = true;
+}
+
+document.getElementById("id_local_retirada").addEventListener("change", function() {
+  if (this.value === "restaurante") {
+    for (var i = 0; i < enderecoRadios.length; i++) {
+      enderecoRadios[i].checked = false;
+      enderecoRadios[i].disabled = true;
+    }
+  } else {
+    for (var i = 0; i < enderecoRadios.length; i++) {
+      enderecoRadios[i].checked = false;
+      enderecoRadios[i].disabled = false;
+    }
+  }
+});
+
+function submitForm(){
+    let local_retirada = document.getElementById("id_local_retirada");
+    
+    let form = document.getElementById("form_pedido");
+    if(local_retirada.value == "restaurante") {
+        var radioInput = document.createElement('input');
+
+        radioInput.setAttribute('type', 'radio');
+        radioInput.setAttribute('name', 'endereco');
+        radioInput.setAttribute('value', null);
+        radioInput.setAttribute('checked', true);
+        radioInput.setAttribute('display', "none");
+
+        form.appendChild(radioInput);
+        form.submit()
+    } else {
+        for (var i = 0; i < enderecoRadios.length; i++) {
+            enderecoRadios[i].disabled = false;
+            if(enderecoRadios[i].checked == true) {
+                if(document.getElementById("id_metodo_pagamento").value != ''){
+                    form.submit();
+                    return;
+                } else {
+                    alert("Selecione o método de pagamento!");
+                    return;
+                }
+
+            }
+        }
+        alert("Selecione um endereço!");
+    }
+
+}
+</script>
 {% comment %} <div class="_6qQnMm"><div class="+8JojR">Novo Endereço</div><form><div class="FjAbyn"><div class="U+ue2m"><div class="M7ul5X"><div class="VBEzJh S550Wl"><div class="+QLhYo"><div class="VumFUt">Nome Completo</div><input class="_4TB5gZ" type="text" placeholder="Nome Completo" autocomplete="name" maxlength="50" value=""></div></div><div class="upIqg6"></div><div class="VBEzJh oadHXi"><div class="+QLhYo"><div class="VumFUt">Número de Telefone</div><input class="_4TB5gZ" type="text" placeholder="Número de Telefone" autocomplete="user-address-phone" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh mUJpLQ"><div class="+QLhYo"><div class="VumFUt">CEP</div><input class="_4TB5gZ" type="text" placeholder="CEP" autocomplete="postal-code" maxlength="9" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh Vo0kRt"><div class="+QLhYo"><div class="VumFUt">Estado - Cidade</div><input class="_4TB5gZ" readonly="" type="text" placeholder="Estado - Cidade" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh NHI4eE"><div class="+QLhYo"><div class="VumFUt">Bairro</div><input class="_4TB5gZ" type="text" placeholder="Bairro" maxlength="30" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh HC4rnd"><div class="+QLhYo"><div class="VumFUt">Rua / Avenida</div><input class="_4TB5gZ" type="text" placeholder="Rua / Avenida" maxlength="150" value=""></div></div><div class="upIqg6"></div><div class="VBEzJh _2Lm+me"><div class="+QLhYo"><div class="VumFUt">Número</div><input class="_4TB5gZ" type="text" placeholder="Número" maxlength="5" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh qnrlZg"><div class="+QLhYo"><div class="VumFUt">Complemento</div><input class="_4TB5gZ" type="text" placeholder="Complemento" maxlength="30" value=""></div></div></div><div class="S2LL9g"><div class="_5W-GdV">Salvar Como:</div><div class="n17c0S"><div class="_0jt5tH"><span class="MR8NHz">Casa</span></div><div class="_0jt5tH"><span class="MR8NHz">Trabalho</span></div></div></div><div class="_9m40T7"><label class="VQRLw-"><input class="QAVe-Q" type="checkbox"><div class="tcK1ox"></div>Definir como endereço padrão</label></div></div><div class="KKsTzS"><button class="MzDiRI _9q6Q2s _9+tJoA">Cancelar</button><button class="_9q6Q2s _3B7lBt">Enviar</button></div></div></form></div> {% endcomment %}
 {% endblock %}

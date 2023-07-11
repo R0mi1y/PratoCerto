@@ -42,7 +42,7 @@ import decimal
 #     }
     
 #     return render(request, 'models/caixas/home_caixa.html', contexto)
-
+from django.shortcuts import redirect
 
 def home(request):
     pedido = None
@@ -61,10 +61,20 @@ def home(request):
             troco = decimal.Decimal(valor_pago) - pedido.total
             troco = round(troco, 2)
 
+            # Define o valor de 'troco' na sessão
+            request.session['troco'] = str(troco)
+
+            # Redireciona para a mesma página para limpar os valores anteriores
+            return redirect('home')
+
     elif request.method == 'GET':
         pedido_id = request.GET.get('pedido_id')
         if pedido_id:
             pedido = get_object_or_404(Pedido, id=pedido_id)
+
+        # Remove o valor de 'troco' da sessão
+        if 'troco' in request.session:
+            del request.session['troco']
 
     contexto = {
         'pedido': pedido,
@@ -72,6 +82,7 @@ def home(request):
     }
 
     return render(request, 'models/caixas/home_caixa.html', contexto)
+
 
 
 

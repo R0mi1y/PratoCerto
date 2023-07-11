@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from clientes.models import Cliente
-from pratos.models import Prato
+from pratos.models import *
 from pedidos.models import Mesa, Pedido, PedidoPrato
 from pedidos.forms import GarcomPedidoForm
 from PratoCerto.settings import AUX
@@ -46,6 +46,12 @@ def fazer_pedido(request, id):
                 pedidoPrato.cliente = Cliente.objects.get(cpf=pedidoPrato.nome_cliente)
                 pedidoPrato.nome_cliente = pedidoPrato.cliente.username
                 
+            pedidoPrato.save()
+            
+            for id in request.POST.getlist("adicional"):
+                adicional = Adicional.objects.get(id=id)
+                pedidoPrato.adicional.add(adicional)
+            
             pedidoPrato.save()
 
             return redirect("home_garcom")

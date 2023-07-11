@@ -8,5 +8,6 @@ urlpatterns = [
     
     path("recomendacoes", views.ver_recomendacoes, name="gerenciar_recomendacoes"),
     path("recomendacoes/deletar/<int:id>", views.deletar_recomendacao, name="deletar_recomendacoes"),
+    path("recomendacoes/adicionar", views.add_recomendacao, name="adicionar_recomendacoes"),
     path("recomendacoes/adicionar/<int:id>", views.add_recomendacao, name="adicionar_recomendacoes"),
 ]
