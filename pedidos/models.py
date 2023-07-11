@@ -57,6 +57,7 @@ class Pedido(models.Model):
     cliente = models.ForeignKey(
         Cliente, on_delete=models.CASCADE, null=True,
     )
+    id_pagamento = models.CharField(max_length=100, default="")
 
 
 class PedidoPrato(models.Model):

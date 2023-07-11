@@ -3,10 +3,12 @@ from django.shortcuts import redirect, render
 from clientes.models import Cliente
 from pedidos.models import *
 from pedidos.forms import *
+from pratos.models import *
 from rolepermissions.roles import assign_role
 from rolepermissions.decorators import has_role_decorator
 from .forms import AdminForm
 from PratoCerto.settings import AUX
+from main.models import Referencia
 
 
 # Create your views here.
@@ -44,19 +46,32 @@ def remover_carrinho(request, id):
     return redirect("ver carrinho")
 
 
+@has_role_decorator("admin")
 def home(request):
     return redirect("home_cliente")
 
 
+@has_role_decorator("admin")
+def deletar_recomendacao(request, id):
+    Referencia.objects.filter(chave="recomendacoes", valor=str(id)).delete()
+    return redirect("gerenciar_recomendacoes")
+    
+    
+@has_role_decorator("admin")
+def add_recomendacao(request, id=None):
+    if id:
+        Referencia.objects.create(chave="recomendacoes", valor=id)
+    return redirect("gerenciar_recomendacoes")
+
+
+@has_role_decorator("admin")
 def ver_recomendacoes(request):
+    id_pratos = Referencia.objects.filter(chave="recomendacoes")
     
+    recomendados = []
+    [recomendados.append(int(i.valor)) for i in id_pratos]
     
-    return render(request, "models/admin_gerente/gerencia_recomendacoes.html", {})
-
-
-def deletar_recomendacao(request):
-    pass
-
-
-def add_recomendacao(request):
-    pass
+    print(recomendados)
+        
+    pratos = Prato.objects.all()
+    return render(request, "models/admin_gerente/set_pratos_recomendacoes.html",{"pratos":pratos, "recomendados":recomendados})

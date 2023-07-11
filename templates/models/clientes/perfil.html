@@ -42,7 +42,7 @@
     </style>
     <div class="profile-container">
         <div class="profile-picture">
-            <img src="{{ cliente.foto }}" alt="Foto do Cliente">
+            <img src="{{ cliente.foto.url }}" alt="Foto do Cliente">
             <a href="{% url "editar_cliente_cliente" %}">Editar perfil</a>
         </div>
         <h1>Perfil do Cliente: {{ cliente.username }}</h1>

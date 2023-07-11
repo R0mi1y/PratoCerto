@@ -6,7 +6,11 @@ from django.contrib.auth.hashers import make_password
 
 class ClienteForm(forms.ModelForm):
     indicador = forms.CharField(max_length=20, required=False, widget=forms.TextInput(
+<<<<<<< HEAD
         attrs={'class': 'form-control', 'placeholder': 'Código de Indicação (Opcional)'}
+=======
+        attrs={'class': 'form-control', 'placeholder': 'Código de quem te indicou'}
+>>>>>>> ccad9915a5966fbe37a5a6e79b8b4814d46c5cc8
     ))
     pontos = forms.CharField(
         max_length=20, required=False, widget=forms.HiddenInput(attrs={"class": ""}),

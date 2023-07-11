@@ -21,16 +21,22 @@ from rolepermissions.decorators import has_permission_decorator, has_permission,
 from django.utils import timezone
 from eventos.models import Evento
 from pagamentos.views import pagar_pedido
+from main.models import Referencia
 
 def home(request):
     current_datetime = timezone.now()
-
+    id_pratos = Referencia.objects.filter(chave="recomendacoes")
+    
+    recomendados = []
+    
+    [recomendados.append(Prato.objects.get(id=i.valor)) for i in id_pratos]
+    
     data = {
         "Categorias":AUX["Categorias"],
         "cliente": request.user,
-        "eventos": Evento.objects.filter(data_inicio__lte=current_datetime, data_termino__gte=current_datetime)
+        "eventos": Evento.objects.filter(data_inicio__lte=current_datetime, data_termino__gte=current_datetime),
+        "recomendados":recomendados
     }
-    
     
     return render(request, "models/clientes/home.html", data)
 
@@ -137,7 +143,7 @@ def remover_carrinho(request, id):
     pedido = get_object_or_404(PedidoPrato, id=id, cliente=cliente)
     pedido.delete()
     
-    return redirect("ver_carrinho_cliente")
+    return redirect("ver carrinho cliente")
 
 
 @login_required
@@ -168,30 +174,44 @@ def comprar_carrinho(request):
     pedidosPrato = PedidoPrato.objects.filter(cliente=cliente, status="no Carrinho")
     
     if request.method == "POST":
-        if cliente.tipo_conta == "Cliente":
-            form = PedidoForm(request.POST)
-        if form.is_valid():
-            pedido = form.save(commit=False)
-            pedido.cliente = cliente
-            total = 0
-            if pedido.local_retirada == "entrega":
-                pedido.taxa_entrega = settings.AUX["frete_entrega"]
-                total += pedido.taxa_entrega
-            else:
-                pedido.taxa_entrega = 0
-                
+        if request.POST.get('endereco') != 'null':
+            pedido = Pedido(
+                metodo_pagamento=request.POST.get('metodo_pagamento'),
+                endereco=Endereco.objects.filter(pk=request.POST.get('endereco')).first(),
+                local_retirada=request.POST.get('local_retirada')
+                )
+        else:
+            pedido = Pedido(
+                metodo_pagamento=request.POST.get('metodo_pagamento'),
+                local_retirada=request.POST.get('local_retirada')
+                )
+        
+        pedido.cliente = cliente
+        total = 0
+        if pedido.local_retirada == "entrega":
+            pedido.taxa_entrega = settings.AUX["frete_entrega"]
+            total += pedido.taxa_entrega
+        else:
+            pedido.taxa_entrega = 0
             
-            for pedidoPrato in pedidosPrato:
-                total += pedidoPrato.prato.preco * pedidoPrato.quantidade
-                pedidoPrato.status = "Pendente"
-                pedidoPrato.pedido = pedido
-                
-            pedido.total = total
-            pedido.save()
+        for pedidoPrato in pedidosPrato:
+            total += pedidoPrato.prato.preco * pedidoPrato.quantidade
+            pedidoPrato.status = "Pago"
+            pedidoPrato.pedido = pedido
             
-            [pedidoPrato.save() for pedidoPrato in pedidosPrato]
-            
+        pedido.total = total
+        
+        if len(PedidoPrato.objects.filter(pedido=pedido).exclude(status="Pago")) == 0:
+            pedido.status = "Pago"
+        
+        pedido.save()
+        [pedidoPrato.save() for pedidoPrato in pedidosPrato]
+        
+        if pedido.local_retirada == 'entrega' and pedido.metodo_pagamento != 'dinheiro':
             return pagar_pedido(request, pedido)
+        return redirect("home_cliente")
+                
+                
 
     context = {
         "pedidos": pedidosPrato,
@@ -289,6 +309,13 @@ def fazer_pedido(request, id):
             pedidoPrato = pedidoPrato_form.save(commit=False)
             pedidoPrato.cliente = cliente
             pedidoPrato.nome_cliente = cliente.username
+            
+            pedidoPrato.save()
+            
+            for id in request.POST.getlist("adicional"):
+                adicional = Adicional.objects.get(pk=id)
+                pedidoPrato.adicional.add(adicional)
+            
             pedidoPrato.save()
 
             return redirect("home")

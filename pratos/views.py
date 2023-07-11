@@ -71,6 +71,11 @@ def criar_editar_prato(request, id=None):
 
         if form.is_valid() :
             prato = form.save(commit=False)  # Salvar o prato sem enviar ao banco de dados ainda
+            
+            prato.save()
+            for id in request.POST.getlist("adicional"):
+                adicional = Adicional.objects.get(id=id)
+                prato.adicional.add(adicional)
             prato.save()
             
             if request.POST.get('receita'):

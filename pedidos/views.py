@@ -19,6 +19,10 @@ def fazer_pedido(request, id):
                 pedidoPrato = pedidoPrato_form.save(commit=False)
                 pedidoPrato.cliente = cliente
                 pedidoPrato.nome_cliente = cliente.username
+                
+                for id in request.POST.getlist("adicional"):
+                    adicional = Adicional.objects.get(id=id)
+                    pedidoPrato.adicional.add(adicional)
                 pedidoPrato.save()
 
                 return redirect("home")
@@ -37,7 +41,6 @@ def fazer_pedido(request, id):
             return render(request, "models/garcons/fazer_pedido.html", context)
     else:
         msm = "Você precisa estar logado para fazer um pedido!"
-        print(msm)
     
         return HttpResponseRedirect("/accounts/login/?msm=" + msm)
 

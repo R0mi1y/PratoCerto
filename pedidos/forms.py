@@ -13,20 +13,20 @@ class PedidoForm(forms.ModelForm):
             super().__init__(*args, **kwargs)
 
             self.fields["endereco"] = forms.ModelMultipleChoiceField(
+                required=False,
                 queryset=Endereco.objects.filter(cliente=cliente),
+                widget=forms.RadioSelect,
             )
         except:
             super().__init__(*args, **kwargs)
             pass
 
-
     class Meta:
         model = Pedido
         fields = ["local_retirada", 'metodo_pagamento', "endereco"]
         
-        
-class GarcomPedidoForm(forms.ModelForm):
 
+class GarcomPedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
         fields = ["mesa"]
