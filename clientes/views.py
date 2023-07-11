@@ -20,7 +20,7 @@ from rolepermissions.roles import assign_role, get_user_roles
 from rolepermissions.decorators import has_permission_decorator, has_permission, has_role_decorator
 from django.utils import timezone
 from eventos.models import Evento
-
+from pagamentos.views import pagar_pedido
 
 def home(request):
     current_datetime = timezone.now()
@@ -191,7 +191,7 @@ def comprar_carrinho(request):
             
             [pedidoPrato.save() for pedidoPrato in pedidosPrato]
             
-            return redirect("ver_pedidos_cliente")
+            return pagar_pedido(request, pedido)
 
     context = {
         "pedidos": pedidosPrato,

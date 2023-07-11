@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "admin_gerente",
     "pagamentos",
     #  Django all-auth
+    # "django-mercadopago",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -149,7 +150,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/accounts/login"
+LOGOUT_REDIRECT_URL = "/clientes/home"
 
 AUTH_USER_MODEL = 'clientes.Cliente'
 
@@ -193,5 +194,7 @@ AUX = {
     'frete_entrega':8,
 }
 
-MERCADOPAGO_PUBLIC_KEY = 'sua_chave_pública_do_mercadopago'
-MERCADOPAGO_ACCESS_TOKEN = 'seu_token_de_acesso_do_mercadopago'
+MERCADOPAGO_PUBLIC_KEY = 'APP_USR-326c2bff-a67f-4770-9ccd-776903e6d0e3'
+MERCADOPAGO_ACCESS_TOKEN = 'APP_USR-8515733821352415-071017-afdf49c9dc9534924d638a36c82b40b3-1336869796'
+CLIENT_SECRET = 'IrN5iz3nCojihjJ5nS1DFYotdUt2h77X'
+CLIENT_ID = '8515733821352415'

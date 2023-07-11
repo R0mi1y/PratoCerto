@@ -41,7 +41,18 @@ class AdicionalForm(forms.ModelForm):
         }
 
 class IngredienteForm(forms.ModelForm):
-    
+    UNIDADES_DE_MEDIDA = [
+        ('g', 'Grama'),
+        ('kg', 'Quilograma'),
+        ('ml', 'Mililitro'),
+        ('l', 'Litro'),
+        ('cc', 'Colher de Chá'),
+        ('cs', 'Colher de Sopa'),
+        ('xíc', 'Xícara'),
+    ]
+
+    unidade_medida = forms.ChoiceField(choices=UNIDADES_DE_MEDIDA)
+
     class Meta:
         model = Ingrediente
         fields = ['nome', 'quantidade_estoque', 'categoria', 'unidade_medida']

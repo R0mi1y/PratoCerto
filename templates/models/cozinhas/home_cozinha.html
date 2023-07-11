@@ -67,6 +67,8 @@
     display: flex;
     justify-content: space-between;
   }
+
+
 </style>
 
 {% extends 'base/base.html' %}
@@ -143,20 +145,52 @@
         <div>
           <h5>Quantidade em estoque</h5>
           {% for ingrediente in ingredientes %}
-              <p>{{ingrediente.quantidade_estoque}} {{ ingrediente.unidade_medida }}</p>
+              <p>{{ingrediente.quantidade_estoque}} {{ ingrediente.unidade_medida }} </p>
           {% endfor %}
         </div>
       </div>
     </div>
   </div>
-
   <div class="coluna">
     <div class="receitas">
       <h2>Receitas</h2>
-      <!-- Conteúdo das receitas aqui -->
+      {% for receita in receitas %}
+        <div class="nome-receita">
+          <h5>
+            <span class="icone-mais">+</span>
+            {{ receita.nome }}
+          </h5>
+        </div>
+        <div class="ingredientes" style="display: none;">
+          {{ receita.IngredienteReceita }}
+          <ul>
+            {% for ingrediente_receita in receita.ingredientereceita_set.all %}
+              <li>
+                {{ ingrediente_receita.ingrediente.nome }}
+                {{ ingrediente_receita.quantidade }} {% if ingrediente_receita.quantidade == 1 %}unidade{% else %}unidades{% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
     </div>
   </div>
+  
 </div>
+<script>
+  // Adiciona um listener de evento para cada nome de receita
+  document.querySelectorAll('.nome-receita').forEach(function(nomeReceita) {
+  nomeReceita.addEventListener('click', function() {
+    // Encontra o elemento irmão que contém os ingredientes
+    var ingredientes = nomeReceita.nextElementSibling;
+    // Alterna a exibição dos ingredientes ao clicar no nome da receita
+    ingredientes.style.display = (ingredientes.style.display === 'none') ? 'block' : 'none';
+    // Alterna o ícone entre "+" e "-"
+    var icone = nomeReceita.querySelector('.icone-mais');
+    icone.textContent = (icone.textContent === '+') ? '-' : '+';
+  });
+});
 
-<script src="{% static "js/pedidos_cozinha.js" %}"></script>
+</script>
+
 {% endblock %}

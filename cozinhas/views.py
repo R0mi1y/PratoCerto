@@ -4,15 +4,22 @@ from rolepermissions.roles import assign_role
 from rolepermissions.decorators import has_role_decorator
 from .models import *
 from .forms import *
-from pratos.models import Ingrediente
+from pratos.models import Ingrediente, Receita, IngredienteReceita
+
+
+
 def home(request):
     pedidos_restaurante = PedidoPrato.objects.filter(status='Pendente local')
     pedidos_site = PedidoPrato.objects.filter(status='Pendente')
     ingredientes = Ingrediente.objects.all()
+    receitas = Receita.objects.all()
+    ingredientes_receita = IngredienteReceita.objects.all()
     contexto = {
         'pedidos_restaurante': pedidos_restaurante,
         'pedidos_site': pedidos_site,
-        'ingredientes': ingredientes
+        'ingredientes': ingredientes,
+        'receitas': receitas,
+        'ingredientes_receita': ingredientes_receita,
     }
     
     return render(request, 'models/cozinhas/home_cozinha.html', contexto)

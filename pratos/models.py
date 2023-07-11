@@ -39,12 +39,10 @@ class Prato(models.Model):
     descricao = models.TextField("Descrição")
     adicional = models.ManyToManyField(Adicional, "adicionais")
     comentarios = models.ManyToManyField(Comentario, "comentarios", default=None)
-    ingredientes = models.ManyToManyField(Ingrediente, "ingredientes")
 
     def __str__(self):
         return self.nome
     
-
 
 class Receita(models.Model):
     nome = models.CharField(max_length=50)

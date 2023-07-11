@@ -4,36 +4,42 @@ from .models import *
 from pratos.models import Prato, Comentario
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 
-@login_required
 def fazer_pedido(request, id):
-    cliente = request.user
-    prato = Prato.objects.get(id=id)
+    if request.user.is_authenticated:
+        cliente = request.user
+        prato = Prato.objects.get(id=id)
 
-    if request.method == "POST":
-        pedidoPrato_form = PedidoPratoForm(request.POST, prato_id=id)
+        if request.method == "POST":
+            pedidoPrato_form = PedidoPratoForm(request.POST, prato_id=id)
 
-        if pedidoPrato_form.is_valid():
-            pedidoPrato = pedidoPrato_form.save(commit=False)
-            pedidoPrato.cliente = cliente
-            pedidoPrato.nome_cliente = cliente.username
-            pedidoPrato.save()
+            if pedidoPrato_form.is_valid():
+                pedidoPrato = pedidoPrato_form.save(commit=False)
+                pedidoPrato.cliente = cliente
+                pedidoPrato.nome_cliente = cliente.username
+                pedidoPrato.save()
 
-            return redirect("home")
+                return redirect("home")
+        else:
+            prato_form = PedidoPratoForm(prato_id=id)
+
+        context = {
+            "prato_form": prato_form,
+            "prato": prato,
+            "comentarios": prato.comentarios.all(),
+        }
+
+        if request.user.tipo_conta == "Cliente":
+            return render(request, "models/pedidos/fazer_pedido.html", context)
+        elif request.user.tipo_conta == "Garcom":
+            return render(request, "models/garcons/fazer_pedido.html", context)
     else:
-        prato_form = PedidoPratoForm(prato_id=id)
-
-    context = {
-        "prato_form": prato_form,
-        "prato": prato,
-        "comentarios": prato.comentarios.all(),
-    }
-
-    if request.user.tipo_conta == "Cliente":
-        return render(request, "models/pedidos/fazer_pedido.html", context)
-    elif request.user.tipo_conta == "Garcom":
-        return render(request, "models/garcons/fazer_pedido.html", context)
+        msm = "Você precisa estar logado para fazer um pedido!"
+        print(msm)
+    
+        return HttpResponseRedirect("/accounts/login/?msm=" + msm)
 
 
 @login_required

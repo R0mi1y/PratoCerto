@@ -31,6 +31,45 @@
                   </div>
                 </div>
                 <!-- Pop-up de carregamento -->
+                <!-- Pop-up PERSONALIZADO-->
+                <!-- <div class="pop-nevesfg-background" id="popOverlay">
+                  <div class="pop-nevesfg-overlay">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="login-wrap p-0">
+                            <div class="card2">
+                              <div class="row justify-content-center img-man">
+                                  <img style="width: 185px"src="/static/images/icons/man-icon.png"/>
+                              </div>
+                            </div>
+                          <h3 class="text-center" style="color: #91202d"><b>Recupere a sua Senha</b></h3>
+                            <form method="POST" action="{% url 'account_reset_password' %}" class="password_reset">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input class="form-control" type="email" name="email" placeholder="Seu Endereço de e-mail" autocomplete="email" required="" id="id_email" wfd-id="id1">
+                                </div>
+                                <div class="form-group justify-content-center">
+                                    <button id="loginButton" type="submit" class="form-control btn btn-primary submit px-3">
+                                        Recuperar Senha
+                                    </button>
+                                </div>
+                                <div class="d-md-flex jcc">
+                                    <div class="w-20 ">
+                                      <button id="closeOverlayButton" type="submit" class="form-control btn btn-primary submit px-3">
+                                        fechar
+                                      </button>
+                                    </div>
+                                </div>
+                                {% if redirect_field_value %}
+                                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                                {% endif %}
+                            </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+                <!-- Pop-up PERSONALIZADO -->
             <div class="card">
               <div class="card-body">
                 <div class="login-wrap p-0">
@@ -57,7 +96,7 @@
                         Entrar
                       </button>
                     </div>
-
+                    <span id="senhaErro" class="error-message"></span>
                     <div class="form-group d-md-flex">
                       <div class="w-20 text-md-right">
                         <a href="/accounts/password/reset/" style="user-select: none; color: #181818">Esqueceu sua senha?</a>
@@ -92,6 +131,7 @@
         </div>
       </div>
     </section>
+    <script src="{% static "js/main.js"%}"></script>
     <script>
       const urlParams = new URLSearchParams(window.location.search);
       const msm = urlParams.get('msm');
@@ -99,11 +139,6 @@
         alert(msm);
       }
     </script>
-    
-    <script src="{% static "js/js_bootstrap/bootstrap.js"%}"></script>
-    <script src="{% static "js/js_bootstrap/custom.js"%}"></script>
-    <script src="{% static "js/js_bootstrap/jquery-3.4.1.min.js"%}"></script>
-    <script src="{% static "js/main.js"%}"></script>
   </body>
 </html>
 {% endblock %}

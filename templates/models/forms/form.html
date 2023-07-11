@@ -64,11 +64,13 @@ textarea::placeholder {
           </div>
         </div>
       </div>
-      {% if prato.foto %}
+      <div class="imagem-quadrada">
+        {% if prato.foto %}
         <img src="{{prato.foto.url}}" alt="">
-      {% elif cliente.foto %}
+        {% elif cliente.foto %}
         <img src="{{cliente.foto.url}}" alt="">
-      {% endif %}
+        {% endif %}
+      </div>
     </div>
   </section>
 <script>
@@ -87,5 +89,4 @@ textarea::placeholder {
     reader.readAsDataURL(file);
   });
 </script>
-
 {% endblock content %}

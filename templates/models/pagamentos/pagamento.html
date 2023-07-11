@@ -1,78 +1,84 @@
-<!-- payment_form.html -->
 <html>
 <head>
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <script>
-        const publicKey = 'sua_chave_pública_do_mercadopago';
-        Mercadopago.setPublishableKey(publicKey);
-        Mercadopago.getIdentificationTypes();
-    </script>
+  <script src="https://sdk.mercadopago.com/js/v2">
+  </script>
 </head>
 <body>
-    <h1>Formulário de Pagamento</h1>
-
-    <form id="payment-form" action="{% url 'process_payment' %}" method="POST">
-        <div>
-            <label for="cardholderName">Nome no cartão:</label>
-            <input type="text" id="cardholderName" name="cardholderName" required>
-        </div>
-        <div>
-            <label for="cardNumber">Número do cartão:</label>
-            <input type="text" id="cardNumber" name="cardNumber" required>
-        </div>
-        <div>
-            <label for="cardExpirationMonth">Mês de expiração:</label>
-            <input type="text" id="cardExpirationMonth" name="cardExpirationMonth" required>
-        </div>
-        <div>
-            <label for="cardExpirationYear">Ano de expiração:</label>
-            <input type="text" id="cardExpirationYear" name="cardExpirationYear" required>
-        </div>
-        <div>
-            <label for="securityCode">Código de segurança:</label>
-            <input type="text" id="securityCode" name="securityCode" required>
-        </div>
-        <div>
-            <label for="cardholderEmail">Email:</label>
-            <input type="email" id="cardholderEmail" name="cardholderEmail" required>
-        </div>
-        <div>
-            <button type="submit">Realizar Pagamento</button>
-        </div>
-        <div>
-            <label for="paymentMethod">Método de Pagamento:</label>
-            <select id="paymentMethod" name="payment_method_id">
-                <option value="visa">Cartão de Crédito (Visa)</option>
-                <option value="mastercard">Cartão de Crédito (Mastercard)</option>
-                {% comment %} <option value="boleto">Boleto Bancário</option> {% endcomment %}
-            </select>
-        </div>
-    </form>
-
-    <script>
-        var cardForm = document.getElementById('payment-form');
-
-        cardForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            Mercadopago.createToken(cardForm, function (result, error) {
-                if (error) {
-                    console.error(error);
-                } else {
-                    var token = result.id;
-
-                    // Adicionar o token ao formulário antes de enviar para o servidor
-                    var tokenInput = document.createElement('input');
-                    tokenInput.setAttribute('type', 'hidden');
-                    tokenInput.setAttribute('name', 'token');
-                    tokenInput.setAttribute('value', token);
-                    cardForm.appendChild(tokenInput);
-
-                    // Enviar o formulário ao servidor
-                    cardForm.submit();
-                }
+  <div id="paymentBrick_container">
+  </div>
+  <script>
+  const mp = new MercadoPago({{ PUBLIC_KEY }}, {
+    locale: 'pt-BR'
+  });
+  const bricksBuilder = mp.bricks();
+    const renderPaymentBrick = async (bricksBuilder) => {
+      const settings = {
+        initialization: {
+          /*
+            "amount" é a quantia total a pagar por todos os meios de pagamento com exceção da Conta Mercado Pago e Parcelas sem cartão de crédito, que têm seus valores de processamento determinados no backend através do "preferenceId"
+          */
+          amount: 1000
+          preferenceId: "{{ PREFERENCE_ID }}",
+          payer: {
+            firstName: "Ediel",
+            lastName: "Romily",
+            email: "Edielromily123@gmail.com",
+          },
+        },
+        customization: {
+          visual: {
+            style: {
+              theme: "default",
+          },
+          paymentMethods: {
+            creditCard: "all",
+										debitCard: "all",
+										bankTransfer: "all",
+										atm: "all"
+          },
+          installments: 1,
+        },
+        callbacks: {
+          onReady: () => {
+            /*
+             Callback chamado quando o Brick está pronto.
+             Aqui, você pode ocultar seu site, por exemplo.
+            */
+          },
+          onSubmit: ({ selectedPaymentMethod, formData }) => {
+            // callback chamado quando há click no botão de envio de dados
+            return new Promise((resolve, reject) => {
+              fetch("/process_payment", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+              })
+                .then((response) => response.json())
+                .then((response) => {
+                  // receber o resultado do pagamento
+                  resolve();
+                })
+                .catch((error) => {
+                  // manejar a resposta de erro ao tentar criar um pagamento
+                  reject();
+                });
             });
-        });
-    </script>
+          },
+          onError: (error) => {
+            // callback chamado para todos os casos de erro do Brick
+            console.error(error);
+          },
+        },
+      };
+      window.paymentBrickController = await bricksBuilder.create(
+        "payment",
+        "paymentBrick_container",
+        settings
+      );
+    };
+    renderPaymentBrick(bricksBuilder);
+  </script>
 </body>
 </html>

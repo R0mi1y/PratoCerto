@@ -17,4 +17,9 @@ urlpatterns = [
     path('pagamentos/', include('pagamentos.urls')),
     path('admin/', include('admin_gerente.urls')),
     path('', include('main.urls')),
+    # path(
+    #     r'pago_recibido/(?P<pk>.*)$',
+    #     order.OrderPaidView.as_view(),
+    #     name='payment_received',
+    # ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

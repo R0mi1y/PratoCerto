@@ -51,7 +51,7 @@ def home(request):
 def ver_recomendacoes(request):
     
     
-    return redirect("models/admin_gerente/gerencia_recomendacoes.html")
+    return render(request, "models/admin_gerente/gerencia_recomendacoes.html", {})
 
 
 def deletar_recomendacao(request):

@@ -50,8 +50,8 @@
 
 <a href="{% url 'cadastrar_prato' %}">Cadastrar Prato</a>
 <a href="{% url 'cadastrar_receita' %}">Cadastrar Receita</a>
-
 <table>
+                    
     <thead>
         <tr>
             <th>Nome</th>
@@ -67,6 +67,7 @@
         </tr>
     </thead>
     <tbody>
+        
         {% for prato in pratos %}
         <tr>
             <td>{{ prato.nome }}</td>
@@ -107,5 +108,4 @@
         {% endfor %}
     </tbody>
 </table>
-
 {% endblock %}
