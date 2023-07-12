@@ -63,7 +63,6 @@
             background-color: gray;
             border-radius: 10px;
             border: 1px solid #90816A;
-            {% comment %} opacity: 0; {% endcomment %}
             animation-name: fade-in-out;
             animation-duration: 5s;
             animation-fill-mode: forwards;
@@ -86,34 +85,5 @@
             <input type="submit" value="Adicionar">
         </form>
     </div>
-    <script>
-        document.getElementById("id_cep").addEventListener("change", function() {
-            var cep = this.value.replace(/\D/g, "");
-            
-            if (cep.length === 8) {
-                // Faz a chamada à API para obter os dados do CEP
-                fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.erro) {
-                        console.log("CEP não encontrado");
-                        return;
-                    }
-                    console.log(data)
-                    
-                    // Preenche os campos do formulário com os dados retornados
-                    document.getElementById("id_estado_cidade").value = `${data.uf}, ${data.localidade}`;
-                    document.getElementById("id_bairro").value = data.bairro;
-                    document.getElementById("id_rua").value = data.logradouro;
-                    if (document.getElementById("id_telefone").value == ''){
-                        document.getElementById("id_telefone").value = data.ddd;
-                    }
-                })
-                .catch(error => {
-                    console.log("Erro ao obter dados do CEP:", error);
-                });
-            }
-        });
-    </script>
     
     {% endblock content %}

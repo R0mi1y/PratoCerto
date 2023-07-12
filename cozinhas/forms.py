@@ -8,7 +8,11 @@ class CozinhaForm(forms.ModelForm):
         model = Cozinha
         fields = ['username', 'email', 'telefone', 'cpf', 'password']
         widgets = {
-            'password': forms.PasswordInput()
+            'password': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Senha'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email'}),
+            'cpf': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'cpf'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'telefone'}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'username'}),
         }
 
     def __init__(self, *args, **kwargs):

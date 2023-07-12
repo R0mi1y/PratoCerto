@@ -234,7 +234,7 @@ def adicionar_endereco(request):
     else:
         form = EnderecoForm()
     
-    return render(request, 'models/forms/form.html', {'form': form})
+    return render(request, 'models/forms/form.html', {'form': form, "titulo":"Cadastro de Endereço"})
 
 
 @has_role_decorator("cliente")
@@ -294,7 +294,7 @@ def editar_endereco(request, id_endereco):
     else:
         form = EditarEnderecoForm(instance=endereco)
 
-    return render(request, 'models/clientes/add_endereco.html', {'form': form})
+    return render(request, 'models/forms/form.html', {'form': form, "titulo":"Editar Endereço"})
 
 
 @has_role_decorator("cliente")
@@ -357,7 +357,7 @@ def editar_cliente(request, id):
             return redirect("gerenciar_clientes")
     else:
         form = ClienteFormAdmin(instance=cliente)
-    return render(request, "models/forms/form.html", {"form": form, "cliente": cliente})
+    return render(request, "models/forms/form.html", {"form": form, "cliente": cliente, "titulo":"Editar Cliente"})
 
 
 @login_required
@@ -382,7 +382,7 @@ def editar_cliente_cliente(request):
                 
     else:
         form = ClienteFormEditar(instance=cliente)
-    return render(request, "models/forms/form.html", {"form": form, "cliente": cliente})
+    return render(request, "models/forms/form.html", {"form": form, "cliente": cliente, "titulo":"Editar Cliente"})
 
 
 @has_role_decorator("admin")

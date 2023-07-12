@@ -169,5 +169,5 @@ def criar_editar_caixa(request, id=None):
     else:
         form = CaixaForm(instance=caixa)
 
-    return render(request, "models/forms/form.html", {"form": form})
+    return render(request, "models/forms/form.html", {"form": form, "titulo":"Cadastro do Caixa"})
 

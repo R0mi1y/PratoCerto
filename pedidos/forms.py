@@ -19,17 +19,37 @@ class PedidoForm(forms.ModelForm):
             )
         except:
             super().__init__(*args, **kwargs)
-            pass
+        
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.widgets.Input):
+                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['placeholder'] = field_name
+                
 
     class Meta:
         model = Pedido
         fields = ["local_retirada", 'metodo_pagamento', "endereco"]
+        widgets = {
+            "local_retirada": forms.Select(
+                attrs={'class': 'form-control', 'placeholder': 'Local de retirada'}
+            ),
+            "metodo_pagamento": forms.Select(
+                attrs={'class': 'form-control', 'placeholder': 'Método de pagamento'}
+            ),
+            "endereco": forms.Select(
+                attrs={'class': 'form-control', 'placeholder': 'Endereço'}
+            ),
+        }
         
 
 class GarcomPedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
         fields = ["mesa"]
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["mesa"].widget.attrs["class"] = "form-control"        
 
 
 class PedidoPratoForm(forms.ModelForm):
@@ -39,7 +59,10 @@ class PedidoPratoForm(forms.ModelForm):
 
         self.fields["adicional"] = forms.ModelMultipleChoiceField(
             queryset=Prato.objects.get(pk=prato_id).adicional,
-            widget=forms.CheckboxSelectMultiple,
+            widget=forms.CheckboxSelectMultiple(
+                attrs={
+                    "class": "form-control",
+                    }),
             required=False,
         )
 
@@ -93,10 +116,15 @@ class ReservaForm(forms.ModelForm):
                     (hora_atual.strftime("%H:%M"), hora_atual.strftime("%H:%M"))
                 )
                 hora_atual += delta
-            self.fields["horario"] = forms.ChoiceField(choices=horarios_choices)
+            self.fields["horario"] = forms.ChoiceField(
+                choices=horarios_choices,
+                widget=forms.Select(attrs={'class': 'form-control'})
+            )
+
         else:
             self.fields["horario"].widget = forms.HiddenInput(attrs={'required': False, 'value':"00:00"})
             self.fields["horario"].label = ''
+            
         # Choices de data
         data_inicio = datetime.now().date()
         data_fim = data_inicio + timedelta(days=(AUX["data_limite_reserva"]-1))
@@ -105,7 +133,14 @@ class ReservaForm(forms.ModelForm):
         while data_atual <= data_fim:
             datas_choices.append((data_atual, data_atual.strftime("%d/%m/%Y")))
             data_atual += timedelta(days=1)
-        self.fields["data_reserva"] = forms.ChoiceField(choices=datas_choices)
+        self.fields["data_reserva"] = forms.ChoiceField(choices=datas_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+        
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.widgets.Input):
+                field.widget.attrs['class'] = 'form-control'
+                
+        self.fields["observacao"].widget.attrs['placeholder'] = 'Ex: Festa de aniversário, reuniões de negócios, comemorações familiares, etc..'
+        self.fields["observacao"].widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = Reserva
@@ -118,14 +153,6 @@ class ReservaForm(forms.ModelForm):
             "preco_total",
             "observacao",
         ]
-        widgets = {
-            "observacao": forms.Textarea(
-                attrs={
-                    "rows": 3,
-                    "placeholder": "Ex: Festa de aniversário, reuniões de negócios, comemorações familiares, etc.",
-                }
-            ),
-        }
         
     def clean_horario(self):
         data = self.cleaned_data["horario"]
@@ -137,4 +164,9 @@ class ReservaForm(forms.ModelForm):
 class MesaForm(forms.ModelForm):
     class Meta:
         model = Mesa
-        fields = '__all__'
+        fields = ['numero', 'status']
+        widgets = {
+            'numero': forms.TextInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+        }
+                

@@ -207,5 +207,5 @@ def criar_editar_garcom(request, id=None):
     else:
         form = GarcomForm(instance=garcom)
 
-    return render(request, "models/forms/form.html", {"form": form})
+    return render(request, "models/forms/form.html", {"form": form, "titulo":"Formulário de Garçom"})
 

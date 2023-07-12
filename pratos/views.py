@@ -86,7 +86,7 @@ def criar_editar_prato(request, id=None):
             return redirect("home")
     else:
         form = PratoForm(instance=prato)
-    return render(request, "models/forms/form.html", {"form": form, "prato": prato})
+    return render(request, "models/forms/form.html", {"form": form, "prato": prato, "titulo":"Formulário de Prato"})
 
 
 @has_role_decorator("admin")
@@ -122,7 +122,7 @@ def criar_editar_adicional(request, id=None):
             return redirect("home")
     else:
         form = AdicionalForm(instance=adicional)
-    return render(request, "models/forms/form.html", {"form": form, "adicional":adicional})
+    return render(request, "models/forms/form.html", {"form": form, "adicional":adicional, "titulo":"Formulário do Adicional"})
 
 
 @has_role_decorator("admin")
@@ -159,7 +159,7 @@ def criar_editar_ingrediente(request, id=None):
             return redirect("home")
     else:
         form = IngredienteForm(instance=ingrediente)
-    return render(request, "models/forms/form.html", {"form": form, "ingrediente":ingrediente})
+    return render(request, "models/forms/form.html", {"form": form, "ingrediente":ingrediente, "titulo":"Formulário do ingrediente"})
 
 
 @has_role_decorator("admin")

@@ -33,7 +33,7 @@ def criar_editar_admin(request, id=None):
     else:
         form = AdminForm(instance=admin)
 
-    return render(request, "models/forms/form.html", {"form": form})
+    return render(request, "models/forms/form.html", {"form": form, "titulo":"Criar conta Admin"})
 
 
 @has_role_decorator("admin")

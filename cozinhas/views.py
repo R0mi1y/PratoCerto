@@ -67,4 +67,4 @@ def criar_editar_cozinha(request, id=None):
     else:
         form = CozinhaForm(instance=cozinha)
 
-    return render(request, "models/forms/form.html", {"form": form})
+    return render(request, "models/forms/form.html", {"form": form, "titulo":"Formulário da Cozinha"})

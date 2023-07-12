@@ -8,7 +8,11 @@ class CaixaForm(forms.ModelForm):
         model = Caixa
         fields = ['username', 'email', 'telefone', 'cpf', 'password']
         widgets = {
-            'password':forms.PasswordInput(),
+            'password':forms.PasswordInput(attrs={'class': 'form-control'}),
+            'username':forms.TextInput(attrs={'class': 'form-control'}),
+            'email':forms.EmailInput(attrs={'class': 'form-control'}),
+            'cpf':forms.TextInput(attrs={'class': 'form-control'}),
+            'telefone':forms.TextInput(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):

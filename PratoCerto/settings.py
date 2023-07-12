@@ -180,6 +180,8 @@ AUX = {
         ("sobremesas", "Sobremesas"),
         ("bebidas", "Bebidas"),
         ("especiais_chef", "Especiais do Chef"),
+        ("frutos_do_mar", "Frutos do mar"),
+        ("vegetariano", "Vegetariano"),
     ],
     "pontos": {
         "indicação": 20,

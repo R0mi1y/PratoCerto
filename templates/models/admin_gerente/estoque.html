@@ -67,9 +67,11 @@
             <th>Unidade de Medida</th>
             <th>Categoria</th>
             <th>Atualizar</th>
+            <th>Ações</th>
         </tr>
     </thead>
     <tbody>
+        <a href="{% url "cadastrar_ingrediente" %}">Cadastrar ingrediente</a>
         {% for ingrediente in ingredientes %}
         <tr>
             <td>{{ ingrediente.nome }}</td>
@@ -82,6 +84,10 @@
                     <input type="number" name="quantidade" value="{{ ingrediente.quantidade }}">
                     <button type="submit">Atualizar</button>
                 </form>
+            </td>
+            <td class="actions">
+                <a href="{% url 'editar_ingrediente' ingrediente.id %}">Editar</a>
+                <a href="{% url 'deletar_ingrediente' ingrediente.id %}">Excluir</a>
             </td>
         </tr>
         {% endfor %}

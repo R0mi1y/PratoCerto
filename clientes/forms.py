@@ -6,16 +6,10 @@ from django.contrib.auth.hashers import make_password
 
 class ClienteForm(forms.ModelForm):
     indicador = forms.CharField(max_length=20, required=False, widget=forms.TextInput(
-<<<<<<< HEAD
-        attrs={'class': 'form-control', 'placeholder': 'Código de Indicação (Opcional)'}
-=======
-        attrs={'class': 'form-control', 'placeholder': 'Código de quem te indicou'}
->>>>>>> ccad9915a5966fbe37a5a6e79b8b4814d46c5cc8
-    ))
-    pontos = forms.CharField(
-        max_length=20, required=False, widget=forms.HiddenInput(attrs={"class": ""}),
-        label="",
+            attrs={'class': 'form-control', 'placeholder': 'Código de Indicação (Opcional)'}
+        )
     )
+    pontos = forms.CharField(required=False, widget=forms.HiddenInput())
 
     class Meta:
         model = Cliente
@@ -36,7 +30,7 @@ class ClienteForm(forms.ModelForm):
             ),
             "username" : forms.TextInput(
                 attrs={"class": "form-control", "placeholder":"Seu Nome"}
-            )
+            ),
         }
         
     def clean_password(self):
@@ -64,18 +58,27 @@ class ClienteForm(forms.ModelForm):
 class ClienteFormEditar(forms.ModelForm):
     foto = forms.ImageField(widget=forms.FileInput(attrs={
         "accept": "image/*",
+        'class': "form-control",
     }), required=False)
     
     class Meta:
         model = Cliente
         fields = ["telefone", "cpf", "email", "foto"]
-
         widgets = {
-            "password": forms.PasswordInput(
-                attrs={"autocomplete": "new-password", "class": "custom-class"}
+            "email": forms.EmailInput(
+                attrs={'class': 'form-control', 'placeholder':'Email'}
             ),
+            "telefone" : forms.TextInput(
+                attrs={"class": "form-control", "placeholder":"Telefone"}
+            ),
+            "cpf" : forms.TextInput(
+                attrs={"class": "form-control", "placeholder":"CPF"}
+            ),
+            "foto" : forms.FileInput(
+                attrs={"class": "form-control", "placeholder":"Foto"}
+            )
         }
-        
+
     def clean_password(self):
         data = self.cleaned_data["password"]
         
@@ -99,9 +102,15 @@ class ClienteFormEditar(forms.ModelForm):
         
         
 class ClienteFormAdmin(forms.ModelForm):
-    telefone = forms.CharField(required=False)
-    foto = forms.ImageField(required=False)
-    cpf = forms.CharField(required=False)
+    telefone = forms.CharField(required=False, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Telefone'}
+    ))
+    foto = forms.ImageField(required=False, widget=forms.FileInput(
+        attrs={'class': 'form-control', 'placeholder': 'Foto'}
+    ))
+    cpf = forms.CharField(required=False, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'CPF'}
+    ))
 
     class Meta:
         model = Cliente
@@ -114,6 +123,14 @@ class ClienteFormAdmin(forms.ModelForm):
 
 
 class EnderecoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.widgets.Input):
+                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['placeholder'] = field_name
+                
     padrao = forms.BooleanField(widget=forms.CheckboxInput, required=False)
 
     class Meta:
@@ -133,6 +150,14 @@ class EnderecoForm(forms.ModelForm):
 
 
 class EditarEnderecoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.widgets.Input):
+                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['placeholder'] = field_name
+                
     class Meta:
         model = Endereco
         fields = [

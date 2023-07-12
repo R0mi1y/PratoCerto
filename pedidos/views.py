@@ -109,7 +109,7 @@ def criar_editar_mesas(request, id=None):
     else:
         form = MesaForm(instance=mesa)
         
-    return render(request, "models/forms/form.html", {"form": form})
+    return render(request, "models/forms/form.html", {"form": form, "titulo":"Formulário da Mesa"})
 
 
 def deletar_mesas(request, id):

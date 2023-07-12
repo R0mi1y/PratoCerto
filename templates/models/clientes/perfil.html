@@ -42,7 +42,9 @@
     </style>
     <div class="profile-container">
         <div class="profile-picture">
+            {% if cliente.foto %}
             <img src="{{ cliente.foto.url }}" alt="Foto do Cliente">
+            {% endif %}
             <a href="{% url "editar_cliente_cliente" %}">Editar perfil</a>
         </div>
         <h1>Perfil do Cliente: {{ cliente.username }}</h1>

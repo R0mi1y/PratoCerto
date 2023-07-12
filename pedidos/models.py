@@ -13,6 +13,10 @@ class Mesa(models.Model):
         "Status da mesa",
         max_length=20,
         default="disponível",
+        choices=[
+            ("disponível", "Disponível"),
+            ("indisponível", "Indisponível"),
+        ]
     )
 
     def __str__(self):

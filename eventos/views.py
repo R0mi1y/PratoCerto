@@ -23,7 +23,9 @@ def criar_evento(request):
     else:
         form = EventoForm()
     
-    context = {'form': form}
+    context = {'form': form, 
+               "titulo":"Cadastro de Eventos"
+               }
     return render(request, 'models/forms/form.html', context)
 
 
@@ -50,4 +52,4 @@ def editar_evento(request, evento_id):
     else:
         form = EventoForm(instance=evento)
     
-    return render(request, 'models/forms/form.html', {'form': form, 'evento': evento})
+    return render(request, 'models/forms/form.html', {'form': form, 'evento': evento, "titulo":"Cadastro de Eventos", "titulo":"Editar Evento"})

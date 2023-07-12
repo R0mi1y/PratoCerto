@@ -28,37 +28,46 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <link rel="shortcut icon" href="{% static "images/favicon.png"%}" type="">
-
+  <link rel="icon" href="{% static "images/icons/logo-icon.png" %}"/>
+  
   <title>{% block titulo %} PratoCerto {% endblock titulo %} </title>
-
+  
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css"%}" />
-
+  
   <!--owl slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
   <!-- nice select  -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
   <!-- font awesome style -->
   <link href="{% static "css/font-awesome.min.css"%}" rel="stylesheet" />
-
+  
   <!-- Custom styles for this template -->
   <link  rel="stylesheet"  href="{% static "css/style.css"%}"/>
+  
   <!-- <link rel="stylesheet" href="{% static "css/style_login.css"%}"> -->
   <link rel="stylesheet" href="{% static "css/nav.css"%}">
+  
+  
+  {% block head %}
   <!-- responsive style -->
   <link href="{% static "css/index.css"%}" rel="stylesheet" />
-
-
+  {% endblock head %}
+  
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Belanosima&family=Dancing+Script&family=Inter&display=swap');
     p {
-        font-family:Times, Times New Roman, serif;
+      font-family:Times, Times New Roman, serif;
     }
-
+    
     label {
-        font-family:Apple Chancery, cursive;
+      font-family:Apple Chancery, cursive;
     }
+    
+    option {
+      color: black;
+      background-color: #eee;
+    } 
   </style>
 </head>
 
@@ -83,62 +92,25 @@
                   <ul class="dropdown-menu" style="">
                     {% if has_admin_role %}
                       <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_prato" %}">Prato</a>
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_prato" %}">Pratos</a>
                       </li>
                       <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_recomendacoes" %}">Recomendações</a>
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_garcons" %}">Garçons</a>
                       </li>
                       <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "create_superuser" %}">Admin</a>
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_caixas" %}">Caixas</a>
                       </li>
                       <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_garcons" %}">Garçom</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_caixas" %}">Caixa</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_cozinhas" %}">Cozinha</a>
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_cozinhas" %}">Cozinhas</a>
                       </li>
                       <li class="nav-item">
                           <a onclick="loadingPage()" onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_clientes" %}">Clientes</a>
                       </li>
-                    {% elif has_cliente_role %}
                       <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "home_cliente" %}">Home</a>
-                      </li>
+                        <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_adicionais" %}">Adicionais</a>
+                      </li> 
                       <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "criar reserva" %}">criar reserva</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "ver_pedidos_cliente" %}">pedidos</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "perfil_cliente" %}">Perfil</a>
-                      </li>
-                    {% elif has_garcom_role %}
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "home_garcom" %}">Home</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "ver_pedidos_garcom" %}">pedidos</a>
-                      </li>
-                    {% elif has_cozinha_role %}
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "home_cozinha" %}">Home</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
-                      </li>
-                    {% elif has_caixa_role %}
-                      <li class="nav-item">
-                          <a onclick="loadingPage()"class="nav-link" href="{% url "home" %}">Home</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                        <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_mesas" %}">Mesas</a>
                       </li>
                     {% endif %}
                   </ul>
@@ -148,47 +120,92 @@
                 <ul>
                   {% if has_admin_role %}
                   <li class="nav-item">
-                      <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_adicionais" %}">Adicionais</a>
-                  </li> 
-                  <li class="nav-item">
-                    <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_mesas" %}">Mesas</a>
-                  </li>
-                   <li class="nav-item">
-                      <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_ingrediente" %}">Ingredientes</a>
+                    <a onclick="loadingPagetwo()" class="nav-link" href="{% url 'home_eventos' %}">Eventos</a>
                   </li>
                   <li class="nav-item">
-                    <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_estoque" %}">Estoque de Ingredientes</a>
+                    <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_recomendacoes" %}">Recomendações</a>
                   </li>
                   <li class="nav-item">
-                      <a onclick="loadingPagetwo()" class="nav-link" href="{% url 'home_eventos' %}">Eventos</a>
+                      <a onclick="loadingPage()" class="nav-link" href="{% url "create_superuser" %}">Criar Admin</a>
                   </li>
+                  <li class="nav-item">
+                    <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_estoque" %}">Estoque</a>
+                  </li>
+                {% elif has_cliente_role %}
+                  <li class="nav-item">
+                      <a onclick="loadingPage()" class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                  </li>
+                  <li class="nav-item">
+                      <a onclick="loadingPage()" class="nav-link" href="{% url "criar reserva" %}">criar reserva</a>
+                  </li>
+                  <li class="nav-item">
+                      <a onclick="loadingPage()" class="nav-link" href="{% url "ver_pedidos_cliente" %}">pedidos</a>
+                  </li>
+                  <li class="nav-item">
+                      <a onclick="loadingPage()" class="nav-link" href="{% url "perfil_cliente" %}">Perfil</a>
+                  </li>
+                  {% elif has_garcom_role %}
+                    <li class="nav-item">
+                        <a onclick="loadingPage()" class="nav-link" href="{% url "home_garcom" %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="loadingPage()" class="nav-link" href="{% url "ver_pedidos_garcom" %}">pedidos</a>
+                    </li>
+                  {% elif has_cozinha_role %}
+                    <li class="nav-item">
+                        <a onclick="loadingPage()" class="nav-link" href="{% url "home_cozinha" %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="loadingPage()" class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                    </li>
+                  {% elif has_caixa_role %}
+                    <li class="nav-item">
+                        <a onclick="loadingPage()"class="nav-link" href="{% url "home" %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="loadingPage()" class="nav-link" href="{% url 'home_eventos' %}"> Eventos</a>
+                    </li>
                 {% endif %}
-                </ul>
-                {% if has_admin_role %}
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  GERENCIAR
-                </button>
-                {% endif %}
+              </ul>
+              {% if has_admin_role %}
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                GERENCIAR
+              </button>
+              {% endif %}
 
                 
-                <ul>
-                  {% if not user.is_authenticated %}
-                  <li class="nav-item">
-                    <a  onclick="loadingPage()" class="nav-link" href="{% url "account_login" %}">Login</a>
-                  </li>
-                  <li class="nav-item">
-                    <a onclick="loadingPage()" class="nav-link" href="{% url "cadastrar_cliente" %}">Cadastre-se</a>
-                  </li>
-                  {% endif %}
-                </ul>
-                <ul>
-                  {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="performLogout()">Sair</a>
+              <ul>
+                {% if not user.is_authenticated %}
+                <li class="nav-item">
+                  <a  onclick="loadingPage()" class="nav-link" href="{% url "account_login" %}">Login</a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="loadingPage()" class="nav-link" href="{% url "cadastrar_cliente" %}">Cadastre-se</a>
+                </li>
+                {% endif %}
+              </ul>
+              <ul>
+                {% if user.is_authenticated %}
+                <li>
+                  <a class="nav-link" href="#" onclick="performLogout()">Sair</a>
+                </li>
+                <form id="logoutForm" method="post" action="{% url 'account_logout' %}">
+                  {% csrf_token %}
+                </form>
+                {% endif %}
+                {% if has_admin_role %}
+                  {% elif has_cliente_role %}
+                    <li>
+                      <a href="{% url "ver carrinho cliente" %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="35" fill="white" viewBox="0 -960 960 960" width="48"><path d="M286.788-81Q257-81 236-102.212q-21-21.213-21-51Q215-183 236.212-204q21.213-21 51-21Q317-225 338-203.788q21 21.213 21 51Q359-123 337.788-102q-21.213 21-51 21Zm400 0Q657-81 636-102.212q-21-21.213-21-51Q615-183 636.212-204q21.213-21 51-21Q717-225 738-203.788q21 21.213 21 51Q759-123 737.788-102q-21.213 21-51 21ZM235-741l110 228h288l125-228H235Zm-30-60h589.074q22.964 0 34.945 21Q841-759 829-738L694-495q-11 19-28.559 30.5Q647.881-453 627-453H324l-56 104h491v60H277q-42 0-60.5-28t.5-63l64-118-152-322H51v-60h117l37 79Zm140 288h288-288Z"/></svg>
+                      </a>
                     </li>
-                    <form id="logoutForm" method="post" action="{% url 'account_logout' %}">
-                      {% csrf_token %}
-                    </form>
+                  {% elif has_garcom_role %}
+                    <li>
+                      <a href="{% url "ver carrinho cliente" %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="35" fill="white" viewBox="0 -960 960 960" width="48"><path d="M286.788-81Q257-81 236-102.212q-21-21.213-21-51Q215-183 236.212-204q21.213-21 51-21Q317-225 338-203.788q21 21.213 21 51Q359-123 337.788-102q-21.213 21-51 21Zm400 0Q657-81 636-102.212q-21-21.213-21-51Q615-183 636.212-204q21.213-21 51-21Q717-225 738-203.788q21 21.213 21 51Q759-123 737.788-102q-21.213 21-51 21ZM235-741l110 228h288l125-228H235Zm-30-60h589.074q22.964 0 34.945 21Q841-759 829-738L694-495q-11 19-28.559 30.5Q647.881-453 627-453H324l-56 104h491v60H277q-42 0-60.5-28t.5-63l64-118-152-322H51v-60h117l37 79Zm140 288h288-288Z"/></svg>
+                      </a>
+                    </li>
                   {% endif %}
                 </ul>
               </div>

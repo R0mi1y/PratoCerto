@@ -14,6 +14,13 @@ class PedidoPratoForm(forms.ModelForm):
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
+        
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.widgets.Input):
+                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['placeholder'] = field_name
+                
+        self.fields.widget["observacao"].attrs = 'Ex: tirar a cebola, maionese à parte etc.'
 
         if prato_id:
             self.fields["prato"].initial = prato_id
@@ -23,12 +30,7 @@ class PedidoPratoForm(forms.ModelForm):
         model = PedidoPrato
         fields = ["quantidade", "prato", "adicional", "observacao"]
         widgets = {
-            "observacao": forms.Textarea(
-                attrs={
-                    "rows": 3,
-                    "placeholder": "Ex: tirar a cebola, maionese à parte etc.",
-                }
-            ),
+            "quantidade": forms.NumberInput(attrs={"min": 1}),
         }
 
 
@@ -42,6 +44,13 @@ class PedidoPratoGarcomForm(forms.ModelForm):
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
+        
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.widgets.Input):
+                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['placeholder'] = field_name
+                
+        self.fields.widget["observacao"].attrs = 'Ex: tirar a cebola, maionese à parte etc.'
 
         if prato_id:
             self.fields["prato"].initial = prato_id
@@ -52,14 +61,7 @@ class PedidoPratoGarcomForm(forms.ModelForm):
         fields = ["nome_cliente", "quantidade", "prato", "adicional", "observacao"]
         widgets = {
             "quantidade": forms.NumberInput(attrs={"min": 1}),
-            "observacao": forms.Textarea(
-                attrs={
-                    "rows": 3,
-                    "placeholder": "Ex: tirar a cebola, maionese à parte etc.",
-                }
-            ),
-            "nome_cliente": forms.TextInput(attrs={"placeholder": "Nome do cliente ou cpf"}),
-    }
+        }
         
 
 class GarcomForm(forms.ModelForm):
@@ -72,6 +74,11 @@ class GarcomForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.widgets.Input):
+                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['placeholder'] = field_name
+                
 
     def clean_password(self):
         data = self.cleaned_data["password"]
