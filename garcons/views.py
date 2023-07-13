@@ -19,11 +19,13 @@ def home(request):
 
     # Filtra os PedidoPrato com status pronto para entrega
     pedidoPrato_prontos = PedidoPrato.objects.filter(status='pronto para entrega')
-
+    pedidos_para_entrega = Pedido.objects.filter(status="Em rota de entrega")
+    
     context = {
         'tables': tables,
         'orders': orders,
         'pedidoPrato_prontos': pedidoPrato_prontos,  # Adiciona os PedidoPrato prontos ao contexto
+        'pedidos_para_entrega': pedidos_para_entrega
     }
     context["Categorias"] = AUX["Categorias"]
 
@@ -83,12 +85,12 @@ def comprar_carrinho(request):
     cliente = request.user
     pedidosPrato = PedidoPrato.objects.filter(status="carrinho garcom " + cliente.username)
     
+    total = 0
     if request.method == "POST":
         form = GarcomPedidoForm(request.POST)
         if form.is_valid():
             pedido = form.save(commit=False)
             pedido.cliente = cliente
-            total = 0
             
             for pedidoPrato in pedidosPrato:
                 total += pedidoPrato.prato.preco * pedidoPrato.quantidade
@@ -102,12 +104,16 @@ def comprar_carrinho(request):
             
             return redirect("ver_pedidos_garcom")
 
+    for pedidoPrato in pedidosPrato:
+        total += pedidoPrato.prato.preco * pedidoPrato.quantidade
+                
     context = {
         "pedidos": pedidosPrato,
         "form": GarcomPedidoForm(),
+        "total": total,
     }
     
-    return render(request, 'models/pedidos/pagamento.html', context)
+    return render(request, 'models/pedidos/pagamento_garcom.html', context)
 
 
 @has_role_decorator("garcom")
@@ -129,7 +135,21 @@ def servir_pedido(request, pedido_prato_id):
     
     pedido = pedido_prato.pedido
     if len(PedidoPrato.objects.filter(pedido=pedido).exclude(status="servido")) == 0:
-        pedido.status = "Pendente local"
+        pedido.status = "Pendente local pagamento"
+        pedido.save()
+    
+    return redirect("home_garcom")
+
+
+def servir_pedido_site(request, pedido_prato_id):
+    pedido_prato = get_object_or_404(PedidoPrato, id=pedido_prato_id)
+    
+    pedido_prato.status = "servido"
+    pedido_prato.save()
+    
+    pedido = pedido_prato.pedido
+    if len(PedidoPrato.objects.filter(pedido=pedido).exclude(status="servido")) == 0:
+        pedido.status = "Em rota de entrega"
         pedido.save()
     
     return redirect("home_garcom")
@@ -165,8 +185,6 @@ def editar_carrinho(request, id):
     return render(request, 'models/pedidos/fazer_pedido.html', context)
 
 
-
-
 #  ============================ GARCOM CRUD ============================  #
 @has_role_decorator("admin")
 def gerenciar_garcons(request):
@@ -197,7 +215,6 @@ def criar_editar_garcom(request, id=None):
     if request.method == "POST":
         form = GarcomForm(request.POST, instance=garcom)
         if form.is_valid():
-            print("É Validooooo")
             garcom = form.save(commit=False)
             garcom.tipo_conta = "Garcom"
             garcom.save()
@@ -209,3 +226,10 @@ def criar_editar_garcom(request, id=None):
 
     return render(request, "models/forms/form.html", {"form": form, "titulo":"Formulário de Garçom"})
 
+
+def entregar(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    pedido.status = "Entregue"
+    pedido.save()
+    
+    return redirect("home_garcom")

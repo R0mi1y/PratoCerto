@@ -92,7 +92,6 @@ def criar_usuario_cliente(request):
                 messages.success(request, "Cadastro realizado com sucesso!")
 
             return redirect("home")
-
     else:
         form_cliente = ClienteForm(instance=Cliente.objects.filter(username=request.user.username).first())
 
@@ -114,18 +113,6 @@ def gerar_aleatorio(string):
     print(hash_hex)
     
     return (hash_hex[:2] + string + hash_hex[2:4]).upper()
-
-
-
-
-# def notificacoes(request):
-#     status_pedido = "Pendente"  # Substitua essa linha pelo código para obter o status do pedido
-
-#     context = {
-#         'status_pedido': status_pedido
-#     }
-    
-#     return render(request, 'models/clientes/home.html', context)
 
 
 @has_role_decorator("cliente")
@@ -209,7 +196,7 @@ def comprar_carrinho(request):
             
         for pedidoPrato in pedidosPrato:
             total += pedidoPrato.prato.preco * pedidoPrato.quantidade
-            pedidoPrato.status = "Pago"
+            pedidoPrato.status = "Pendente"
             pedidoPrato.pedido = pedido
             
         cliente.pontos = float(total) / float(settings.AUX['pontos']['por_valor_compra'])
@@ -219,7 +206,7 @@ def comprar_carrinho(request):
             valor_preco_pontos = float(total) - float(settings.AUX['pontos']['valor_rs']) * float(cliente.pontos)
             cliente.pontos = 0
         
-        pedido.status = "Pago"
+        pedido.status = "Pendente"
         pedido.total = total
         
         pedido.save()

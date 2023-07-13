@@ -21,7 +21,8 @@
     }
 
     th {
-        background-color: #f2f2f2;
+        background-color: #181818;
+        border-radius: 10px;
     }
 
     /*img {
@@ -33,24 +34,37 @@
         white-space: nowrap;
     }
 
-    .actions a {
-        margin-right: 10px;
+    .actions a{
+        color: #181818;
         text-decoration: none;
-        color: #007bff;
+    }
+    .actions a:hover{
+        text-decoration: none;
     }
 
-    .actions a:hover {
-        text-decoration: underline;
+    .btn-secondary{
+        background-color: transparent;
     }
 </style>
 <section class="book_section ">
 <h1>{{ cliente.0.tipo_conta }}</h1>
 
-<a href="{% url 'cadastrar_mesa' %}">cadastrar</a>
+<h1
+style="
+  text-align: center;
+  font-family: 'Belanosima', sans-serif;
+  color: #181818;
+"
+>
+Mesas
+</h1>
+<hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
+
+<a class="btn btn-secondary" style="color: #181818;"href="{% url 'cadastrar_mesa' %}">cadastrar</a>
 
 <table>
     <thead>
-        <tr>
+        <tr style="color: #fff">
             <th>Numero</th>
             <th>Status</th>
             <th>Ações</th>
@@ -60,13 +74,21 @@
         {% for mesa in mesas %}
         <tr>
             <td>{{ mesa.numero }}</td>
-            <td>{{ mesa.status }}</td>
+            {% if mesa.status == "disponível" %}
+                <td class="status open">{{ mesa.status }}</td>
+            {% else %}
+                <td class="status dead">{{ mesa.status }}</td>
+            {% endif %}
+
             <td class="actions">
-                <a href="{% url "editar_mesa" id=mesa.pk %}">Editar</a>
-                <a href="{% url "deletar_mesa" id=mesa.pk %}">Excluir</a>
+                <a class="btn btn-secondary" style="color: #181818;" href="{% url "editar_mesa" id=mesa.pk %}">Editar</a>
+                <a class="btn btn-secondary" style="color: #181818;" href="{% url "deletar_mesa" id=mesa.pk %}">Excluir</a>
             </td>
         </tr>
         {% endfor %}
+
+
+
     </tbody>
 </table>
 </section>

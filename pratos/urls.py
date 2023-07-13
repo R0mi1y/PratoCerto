@@ -22,7 +22,6 @@ urlpatterns = [
 
     path("Ingrediente/cadastrar", views.criar_editar_ingrediente, name='cadastrar_ingrediente'),
     path("Ingrediente/editar/<int:id>", views.criar_editar_ingrediente, name='editar_ingrediente'),    
-    path("Ingrediente/gerenciar", views.gerenciar_ingredientes, name='gerenciar_ingrediente'),
     path("Ingrediente/deletar/<int:id>", views.deletar_ingrediente, name='deletar_ingrediente'),
 
     # GERENCIA DE ESTOQUE 

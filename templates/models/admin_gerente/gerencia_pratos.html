@@ -3,6 +3,7 @@
 {% block content %}
 
 <style>
+
     body {
         font-family: Arial, sans-serif;
     }
@@ -24,7 +25,8 @@
     }
 
     th {
-        background-color: #f2f2f2;
+        background-color: #181818;
+        border-radius: 10px;
     }
 
     /*img {
@@ -45,16 +47,48 @@
     .actions a:hover {
         text-decoration: underline;
     }
+    .btn-secondary{
+        background-color: transparent;
+       
+    }
+    .actions a{
+        color: #181818;
+        text-decoration: none;
+    }
+    .actions a:hover{
+        text-decoration: none;
+    }
+    .textge > a{
+        color: #181818 !important;
+    }
+
 </style>
+
 <h1>{{ cliente.0.tipo_conta }}</h1>
 
-<a href="{% url 'cadastrar_prato' %}">Cadastrar Prato</a>
-<a href="{% url 'cadastrar_receita' %}">Cadastrar Receita</a>
+<h1
+      style="
+        text-align: center;
+        font-family: 'Belanosima', sans-serif;
+        color: #181818;
+      "
+    >
+      Pratos
+    </h1>
+    <hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
+
+
+
+<div class="textge">
+    <a class="btn btn-secondary" href="{% url 'cadastrar_prato' %}">Cadastrar Prato</a>
+    <a class="btn btn-secondary" href="{% url 'cadastrar_receita' %}">Cadastrar Receita</a>
+</div>
+
 <div class="content">
     <div class="table-responsive">
         <table>
             <thead>
-                <tr>
+                <tr style="color: #fff">
                     <th>Nome</th>
                     <th>Disponível</th>
                     <th>Categoria</th>
@@ -74,7 +108,7 @@
                     <td>{{ prato.nome }}</td>
                     <td>{{ prato.disponivel }}</td>
                     <td>{{ prato.get_categoria_display }}</td>
-                    <td><img src="{{ prato.foto.url }}" alt="Foto do Prato"></td>
+                    <td><img style="max-width: 110px;" src="{{ prato.foto.url }}" alt="Foto do Prato"></td>
                     <td>{{ prato.preco }}</td>
                     <td>{{ prato.descricao }}</td>
                     <td>
@@ -98,11 +132,11 @@
                             Sem comentários
                         {% endfor %}
                     </td>
-                    <td class="actions">
-                        <a href="{% url 'editar_prato' prato.id %}">Editar</a>
-                        <a href="{% url 'deletar_prato' prato.id %}">Excluir</a>
+                    <td class="actions" >
+                        <a  class="btn btn-secondary" href="{% url 'editar_prato' prato.id %}">Editar</a>
+                        <a class="btn btn-secondary" href="{% url 'deletar_prato' prato.id %}">Excluir</a>
                         {% if prato.receita %}
-                        <a href="{% url 'editar_receita' id=prato.receita.pk %}">Editar Receita</a>
+                        <a class="btn btn-secondary" href="{% url 'editar_receita' id=prato.receita.pk %}">Editar Receita</a>
                         {% endif %}
                     </td>
                 </tr>

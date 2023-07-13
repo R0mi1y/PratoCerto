@@ -28,7 +28,8 @@
     }
 
     th {
-        background-color: #f5f5f5;
+        background-color: #181818;
+        border-radius: 10px;
     }
 
     tr:hover {
@@ -55,13 +56,26 @@
     button:hover {
         background-color: #45a049;
     }
+
+    .btn-secondary{
+        background-color: transparent;
+    }
 </style>
 
-<h1>Controle de Estoque</h1>
+<h1
+      style="
+        text-align: center;
+        font-family: 'Belanosima', sans-serif;
+        color: #181818;
+      "
+    >
+      Estoque
+    </h1>
+    <hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
 
 <table>
     <thead>
-        <tr>
+        <tr style="color: #fff">
             <th>Ingrediente</th>
             <th>Quantidade</th>
             <th>Unidade de Medida</th>
@@ -71,7 +85,7 @@
         </tr>
     </thead>
     <tbody>
-        <a href="{% url "cadastrar_ingrediente" %}">Cadastrar ingrediente</a>
+        <a class="btn btn-secondary" style="color: #181818" href="{% url "cadastrar_ingrediente" %}">Cadastrar ingrediente</a>
         {% for ingrediente in ingredientes %}
         <tr>
             <td>{{ ingrediente.nome }}</td>
@@ -82,12 +96,12 @@
                 <form method="post" action="{% url 'atualizar_quantidade' ingrediente.id %}">
                     {% csrf_token %}
                     <input type="number" name="quantidade" value="{{ ingrediente.quantidade }}">
-                    <button type="submit">Atualizar</button>
+                    <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="48"><path d="M196-331q-20-36-28-72.5t-8-74.5q0-131 94.5-225.5T480-798h43l-80-80 39-39 149 149-149 149-40-40 79-79h-41q-107 0-183.5 76.5T220-478q0 29 5.5 55t13.5 49l-43 43ZM476-40 327-189l149-149 39 39-80 80h45q107 0 183.5-76.5T740-479q0-29-5-55t-15-49l43-43q20 36 28.5 72.5T800-479q0 131-94.5 225.5T480-159h-45l80 80-39 39Z"/></svg></button>
                 </form>
             </td>
             <td class="actions">
-                <a href="{% url 'editar_ingrediente' ingrediente.id %}">Editar</a>
-                <a href="{% url 'deletar_ingrediente' ingrediente.id %}">Excluir</a>
+                <a href="{% url 'editar_ingrediente' ingrediente.id %}"><svg xmlns="http://www.w3.org/2000/svg" height="30" fill="black" viewBox="0 -960 960 960" width="48"><path d="M180-180h44l443-443-44-44-443 443v44Zm614-486L666-794l42-42q17-17 42-17t42 17l44 44q17 17 17 42t-17 42l-42 42Zm-42 42L248-120H120v-128l504-504 128 128Zm-107-21-22-22 44 44-22-22Z"/></svg></a>
+                <a href="{% url 'deletar_ingrediente' ingrediente.id %}"><svg xmlns="http://www.w3.org/2000/svg" height="30" fill="black" viewBox="0 -960 960 960" width="48"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg></a>
             </td>
         </tr>
         {% endfor %}

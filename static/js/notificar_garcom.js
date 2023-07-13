@@ -19,12 +19,13 @@ function atualizar_notificacoes() {
   
           if (pedidoPratoPronto.pedido.mesa && pedidoPratoPronto.pedido.mesa.numero) {
             pedidoHTML += '<p>Mesa: ' + pedidoPratoPronto.pedido.mesa.numero + '</p>';
+            pedidoHTML += '<a class="btn btn-secondary" href="/garcons/servir_pedido/' + pedidoPratoPronto.pedidoPrato.id + '">Servir</a>';
           } else if (pedidoPratoPronto.pedido.endereco) {
-            var endereco = pedidoPratoPronto.pedido.endereco[0];
+            var endereco = pedidoPratoPronto.pedido.endereco;
             pedidoHTML += '<p>Endereço: ' + 'Nome: ' + endereco.nome + ', Rua: ' + endereco.rua + ', Bairro: ' + endereco.bairro + ', Complemento: ' + (endereco.complemento || "Não há complemento") + ', Número: ' + endereco.numero + '</p>';
+            pedidoHTML += '<a class="btn btn-secondary" href="/garcons/servir_pedido_site/' + pedidoPratoPronto.pedidoPrato.id + '">Servir</a>';
           }
   
-          pedidoHTML += '<a href="/garcons/servir_pedido/' + pedidoPratoPronto.pedidoPrato.id + '">Servir</a>';
           pedidoHTML += '</div>';
           pedidoHTML += '<hr>';
   

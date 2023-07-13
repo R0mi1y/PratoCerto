@@ -13,6 +13,8 @@ urlpatterns = [
     path('carrinho/editar/<int:id>', views.editar_carrinho, name="editar_carrinho_garcom"),
     path('carrinho/remover/<int:id>', views.remover_carrinho, name="remover_carrinho_garcom"),
     path('servir_pedido/<int:pedido_prato_id>', views.servir_pedido, name='servir_pedido'),
+    path('servir_pedido_site/<int:pedido_prato_id>', views.servir_pedido_site, name='servir_pedido_site'),
+    path('entregar/<int:pedido_id>', views.entregar, name='entregar'),
     # APIS
     path('get_pedidosPrato/<str:status>', apis.get_pedidoPrato, name='get_pedidosPrato'),
     path('get_pedidos/<str:status>', apis.get_pedidos, name='get_pedidos'),

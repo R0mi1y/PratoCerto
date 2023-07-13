@@ -24,7 +24,8 @@
     }
 
     th {
-        background-color: #f2f2f2;
+        background-color: #181818;
+        border-radius: 10px;
     }
 
     /*img {
@@ -45,15 +46,32 @@
     .actions a:hover {
         text-decoration: underline;
     }
+    .btn-secondary{
+        background-color: transparent;
+       
+    }
 </style>
 
 <h1>{{ cliente.0.tipo_conta }}</h1>
 
-<a href="{% url 'cadastrar_'|add:pg %}">Cadastrar</a>
+<h1
+      style="
+        text-align: center;
+        font-family: 'Belanosima', sans-serif;
+        color: #181818;
+      "
+    >
+      Adicionais
+    </h1>
+    <hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
+
+<a class="btn btn-secondary"  style="color: #181818;"href="{% url 'cadastrar_'|add:pg %}">Cadastrar</a>
+
+
 
 <table>
     <thead>
-        <tr>
+        <tr style="color: #fff">
             <th>Nome</th>
             <th>Descricao</th>
             <th>Foto</th>

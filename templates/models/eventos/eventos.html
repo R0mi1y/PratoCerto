@@ -1,108 +1,187 @@
-{% extends 'base/base.html' %}
-{% load static %}
-
-{% block title %}Form{% endblock %}
-
+{% extends 'base/base.html' %} 
+{% load static %} 
+{% block title %}Form{% endblock %} 
 {% block content %}
 <style>
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-        }
+  .content {
+    flex-grow: 1;
+    padding: 20px;
+  }
 
-        h1, h2 {
-            color: red;
-        }
+  h1,
+  h2 {
+    color: red;
+  }
 
-        .event-box {
-            background-color: lightyellow;
-            border: 1px solid red;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .event-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: red;
-        }
+  .event-box {
+    background-color: lightyellow;
+    border: 1px solid red;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
 
-        .event-date {
-            color: red;
-        }
+  .event-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: red;
+  }
 
-        .message {
-            font-style: italic;
-        }
-        
-        .a {
-            color: red;
-            text-decoration: none;
-        }
+  .event-date {
+    color: red;
+  }
 
-        .a:hover {
-            text-decoration: underline;
-        }
-        .center {
-            align-items: center;
-            text-align: center;
-        }
-    </style>
-    <div class="container">
-        <div class="content center">
-            <h1>Eventos do Restaurante</h1>
-            
-            {% if events %}
-            <hr>
-                <h2 class="center">Próximos Eventos:</h2>
-                {% for evento in events %}
-                <section class="container">
-                    <div class="my-carousel-section">
-                        <div class="my-carousel-container">
-                            <div class="my-carousel-item">
-                                <img src="{{ evento.foto.url }}" alt="" />
-                                <div class="my-carousel-item-text">
-                                    <h5>{{ evento.nome }}</h5>
-                                    <p>{{ evento.descricao }}</p>
-                                    {% if user.is_authenticated and user.is_superuser %}
-                                        <p><a class="a" href="{% url 'editar_evento' evento.id %}" style="color: red;"><svg xmlns="http://www.w3.org/2000/svg" height="30" fill="white" viewBox="0 -960 960 960" width="48"><path d="M180-180h44l443-443-44-44-443 443v44Zm614-486L666-794l42-42q17-17 42-17t42 17l44 44q17 17 17 42t-17 42l-42 42Zm-42 42L248-120H120v-128l504-504 128 128Zm-107-21-22-22 44 44-22-22Z"/></svg>
-                                        </a></p>
-                                        <p><a class="a" href="{% url 'deletar_evento' evento.id %}" style="color: red;"><svg xmlns="http://www.w3.org/2000/svg" height="30" fill="white" viewBox="0 -960 960 960" width="48"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg></a></p>
-                                    {% endif %} 
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <br>
-                    <hr>
-                    <br>
-                    {% empty %}
-            <section class="container">
-                <div class="my-carousel-section">
-                    <div class="my-carousel-item">
-                        <img src="{% static 'images/img1.png' %}" alt="" />
-                          <div class="my-carousel-item-text">
-                            <h5>Prato Certo</h5>
-                            <p>O sabor que você procura, servido com excelência!</p>
-                          </div>
-                        </div>
-                        {% endfor %}
-                      </div>
-                    </div>
-                  </section>
-                    {% else %}
-                    <p class="message">Não há eventos programados no momento.</p>
-            {% endif %}
+  .message {
+    font-style: italic;
+  }
 
+  .a {
+    color: red;
+    text-decoration: none;
+  }
 
-            {% if user.is_authenticated and user.is_superuser %}
-            <h2>Gerenciar Eventos:</h2>
-            <p>Aqui você pode cadastrar e editar eventos:</p>
-                <a class="a" href="{% url 'criar_evento' %}" style="color: red;">Cadastrar Evento</a>
-                {% endif %}
+  .a:hover {
+    text-decoration: underline;
+  }
+  .center {
+    align-items: center;
+    text-align: center;
+  }
+
+  .btn-secondary{
+    background-color: transparent;
+}
+</style>
+<div class="container">
+  <div class="content center">
+    <h1
+style="
+  text-align: center;
+  font-family: 'Belanosima', sans-serif;
+  color: #181818;
+"
+>
+Eventos do Restaurante
+</h1>
+<hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
+    {% if events %}
+    <!-- <h2 class="center">Próximos Eventos:</h2> -->
+
+    <h1
+style="
+ font-size: 2.15rem;
+  text-align: center;
+  font-family: 'Belanosima', sans-serif;
+  color: #181818;
+"
+>
+Eventos Ativos
+</h1>
+    <section class="container">
+      <div class="my-carousel-section">
+        <div class="my-carousel-container">
+          {% for evento in events %}
+          <div class="my-carousel-item">
+            <img src="{{ evento.foto.url }}" alt="" />
+            <div class="my-carousel-item-text">
+              <h5>{{ evento.nome }}</h5>
+              <p>{{ evento.descricao }}</p>
+              {% if user.is_authenticated and user.is_superuser %}
+              <p>
+                <a
+                  class="a"
+                  href="{% url 'editar_evento' evento.id %}"
+                  style="color: red"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="30"
+                    fill="white"
+                    viewBox="0 -960 960 960"
+                    width="48"
+                  >
+                    <path
+                      d="M180-180h44l443-443-44-44-443 443v44Zm614-486L666-794l42-42q17-17 42-17t42 17l44 44q17 17 17 42t-17 42l-42 42Zm-42 42L248-120H120v-128l504-504 128 128Zm-107-21-22-22 44 44-22-22Z"
+                    />
+                  </svg>
+                </a>
+              </p>
+              <p>
+                <form action="{% url "deletar_evento" evento.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit"
+                  class="a"
+                  style="color: red; background-color: transparent; border: none"
+                  ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                    height="30"
+                    fill="white"
+                    viewBox="0 -960 960 960"
+                    width="48"
+                  >
+                    <path
+                      d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"
+                    /></svg
+                ></button>
+              </form>
+              </p>
+              {% endif %}
             </div>
-    </div>
+          </div>
+          {% empty %}
+          <div class="my-carousel-item">
+            <img src="{% static 'images/img1.png' %}" alt="" />
+            <div class="my-carousel-item-text">
+              <h5>Prato Certo</h5>
+              <p>O sabor que você procura, servido com excelência!</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% else %}
+    <p class="message">Não há eventos programados no momento.</p>
+    {% endif %} 
+    <hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
+
+    {% if user.is_authenticated and user.is_superuser %}
+    <h1
+style="
+ font-size: 2.15rem;
+  text-align: center;
+  font-family: 'Belanosima', sans-serif;
+  color: #181818;
+"
+>
+Gerenciar Eventos:
+</h1>
+    <p>Aqui você pode cadastrar e editar eventos:</p>
+    <a class="btn btn-secondary" style="color: #181818;" href="{% url 'criar_evento' %}" style="color: red"
+      >Cadastrar Evento</a
+    >
+    {% endif %}
+  </div>
+</div>
+
 <script>
+  function startCarousel() {
+    const carouselItems = document.querySelectorAll(".my-carousel-item");
+    const totalItems = carouselItems.length;
+    let currentIndex = 0;
+
+    function showItem(index) {
+      carouselItems.forEach((item, i) => {
+        item.style.display = i === index ? "flex" : "none";
+      });
+    }
+
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % totalItems;
+      showItem(currentIndex);
+    }, 5000);
+
+    showItem(currentIndex);
+  }
+  startCarousel();
 </script>
 {% endblock content %}

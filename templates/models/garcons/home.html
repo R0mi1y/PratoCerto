@@ -57,6 +57,7 @@
         width: 200px;
     } */
   /* Estilos adicionais para notificações da cozinha */
+
   .kitchen-notifications {
     background-color: #f2f2f2;
     padding: 20px;
@@ -91,6 +92,12 @@
 
   .kitchen-notifications .notification .prato {
     margin-bottom: 5px;
+  }
+
+  .btn-secondary{
+    background-color: transparent;
+    border: 1px solid #181818;
+    color: #181818;
   }
 
 
@@ -184,11 +191,29 @@
             {% else %}
                 <p class="message">Não há mesas disponíveis no momento.</p>
             {% endif %}
-
             <div class="kitchen-notifications">
                 <h2>Notificações da Cozinha</h2>
                 <div class="notification" id="pedidoPratos">
-                    <p>Não há notificações da cozinha no momento.</p>
+                    <div class="scroll-vertical">
+
+                        <p>Não há notificações da cozinha no momento.</p>
+                    </div>
+                </div>
+                <h2>Pedidos para serem enviados</h2>
+                <div class="notification" id="pedidoPratos1">
+                    <div class="scroll-vertical">
+                        {% for pedido in pedidos_para_entrega %}
+                            <div class="pedido">
+                                <p>ID do Pedido: {{pedido.id}} </p>
+                                <p>Cliente: {{ pedido.cliente }} </p>
+                                <p>Endereço: <br>Nome: {{ pedido.endereco.nome}} <br> Rua: {{ pedido.endereco.rua }} <br> Bairro: {{ pedido.endereco.bairro }} <br> Complemento: {{pedido.endereco.complemento|default:"Não há complemento"}} <br> Número: {{pedido.endereco.numero}} </p>
+                                <a class="btn btn-secondary" href="{% url "entregar" pedido.id %}">Entregar</a>
+                            </div>
+                            <hr>
+                        {% empty %}
+                        <p>Não há pedidos para serem enviados.</p>
+                        {% endfor %}
+                    </div>
                 </div>
             </div> 
         </div>

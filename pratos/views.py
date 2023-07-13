@@ -165,16 +165,7 @@ def criar_editar_ingrediente(request, id=None):
 @has_role_decorator("admin")
 def deletar_ingrediente(request, id):
     Ingrediente.objects.get(id=id).delete()
-    return redirect("gerenciar_ingrediente")
-
-
-@has_role_decorator("admin")
-def gerenciar_ingredientes(request):
-    context = {
-        "ingredientes": Ingrediente.objects.all(),
-    }
-
-    return render(request, "models/admin_gerente/gerencia_ingredientes.html", context)
+    return redirect("gerenciar_estoque")
 
 
 @has_role_decorator("admin")

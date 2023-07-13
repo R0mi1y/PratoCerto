@@ -59,7 +59,7 @@ def home(request):
         pedido = get_object_or_404(Pedido, id=pedido_id)
 
         if decimal.Decimal(valor_pago) >= pedido.total:
-            pedido.status = 'Pago'
+            pedido.status = 'Finalizado'
             pedido.save()
 
             troco = decimal.Decimal(valor_pago) - pedido.total
@@ -82,7 +82,7 @@ def historico_pedidos(request):
     hoje = timezone.now().date()
     
     # Obter histórico diário
-    pedidos_pagos = Pedido.objects.filter(status='Pago')
+    pedidos_pagos = Pedido.objects.filter(status='Finalizado')
     historico_diario = []
     total_diario = 0  # Variável para calcular a quantidade arrecadada do dia
     
@@ -97,7 +97,7 @@ def historico_pedidos(request):
     total_mensal = 0  # Variável para calcular a quantidade arrecadada do mês
     primeiro_dia_mes = hoje.replace(day=1)
     ultimo_dia_mes = primeiro_dia_mes + timedelta(days=31)
-    pedidos_mensais = Pedido.objects.filter(status='Pago', data_pedido__range=(primeiro_dia_mes, ultimo_dia_mes))
+    pedidos_mensais = Pedido.objects.filter(status='Finalizado', data_pedido__range=(primeiro_dia_mes, ultimo_dia_mes))
     
     for pedido in pedidos_mensais:
         data_pedido = timezone.localtime(pedido.data_pedido).date()

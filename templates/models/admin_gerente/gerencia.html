@@ -21,7 +21,8 @@
     }
 
     th {
-        background-color: #f2f2f2;
+        background-color: #181818;
+        border-radius: 10px;
     }
 
     /*img {
@@ -33,29 +34,42 @@
         white-space: nowrap;
     }
 
-    .actions a {
-        margin-right: 10px;
+    .actions a{
+        color: #181818;
         text-decoration: none;
-        color: #007bff;
     }
-
-    .actions a:hover {
-        text-decoration: underline;
+    .actions a:hover{
+        text-decoration: none;
     }
     .content{
         margin-top: 10px;
     }
+
+    .btn-secondary{
+        background-color: transparent; 
+    }
 </style>
 <section class="book_section">
+
+    <h1
+      style="
+        text-align: center;
+        font-family: 'Belanosima', sans-serif;
+        color: #181818;
+      "
+    >
+      Contas 
+    </h1>
+    <hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
 <h1>{{ cliente.0.tipo_conta }}</h1>
 
-<a href="{% url 'cadastrar_'|add:pg %}">cadastrar</a>
+<a class="btn btn-secondary" style="color: #181818" href="{% url 'cadastrar_'|add:pg %}">cadastrar</a>
 
 <div class="content">
     <div class="table-responsive">
         <table>
             <thead>
-                <tr>
+                <tr style="color: #fff;">
                     <th>Nome</th>
                     <th>Telefone</th>
                     <th>CPF</th>
@@ -75,8 +89,8 @@
                     <td>{{ cliente.pontos }}</td>
                     <td>{{ cliente.tipo_conta }}</td>
                     <td class="actions">
-                        <a href="{% url "editar_"|add:pg id=cliente.pk %}">Editar</a>
-                        <a href="{% url "deletar_"|add:pg id=cliente.pk %}">Excluir</a>
+                        <a class="btn btn-secondary" style="color: #181818" href="{% url "editar_"|add:pg id=cliente.pk %}">Editar</a>
+                        <a class="btn btn-secondary" style="color: #181818" href="{% url "deletar_"|add:pg id=cliente.pk %}">Excluir</a>
                     </td>
                 </tr>
                 {% endfor %}

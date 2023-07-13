@@ -287,6 +287,11 @@ body::after {
   padding: 40px;
 }
 
+.scroll-vertical {
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
 .scroll-horizontal::-webkit-scrollbar {
   width: 18px; 
   background-color: transparent; 
