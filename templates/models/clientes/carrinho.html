@@ -100,11 +100,16 @@
             </div>
         </div>
         <hr>
+    {% empty %}
+    <div class="nome"> <h1>Não há itens no carrinho!</h1></div>
     {% endfor %}
     
     <div class="div_link">
         <a class="my-link" href="{% url "comprar_carrinho_cliente" %}">Pedir</a>
     </div>
+
+{% else %}
+    <div class="nome"> <h1>Não há itens no carrinho!</h1></div>
 {% endif %}
 
 {% endblock %}

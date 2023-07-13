@@ -10,7 +10,6 @@
 
 </style>
 
-
 <!-- base.html -->
 {% load static %}
 {% load decorators %}
@@ -42,17 +41,17 @@
   <!-- font awesome style -->
   <link href="{% static "css/font-awesome.min.css"%}" rel="stylesheet" />
   
+  
   <!-- Custom styles for this template -->
   <link  rel="stylesheet"  href="{% static "css/style.css"%}"/>
   
-  <!-- <link rel="stylesheet" href="{% static "css/style_login.css"%}"> -->
   <link rel="stylesheet" href="{% static "css/nav.css"%}">
   
-  
   {% block head %}
-  <!-- responsive style -->
   <link href="{% static "css/index.css"%}" rel="stylesheet" />
   {% endblock head %}
+
+  <!-- <link rel="stylesheet" href="{% static "css/card_recomendacao.css"%}"> -->
   
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Belanosima&family=Dancing+Script&family=Inter&display=swap');
@@ -67,7 +66,48 @@
     option {
       color: black;
       background-color: #eee;
-    } 
+    }
+    
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Cor do fundo escurecido */
+      z-index: 9999;
+    }
+    
+    /* Estilos para a div centralizada */
+    .popup-content {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px; /* Largura da div */
+      height: 300px; /* Altura da div */
+      overflow-y: scroll;
+      background-color: #fff; /* Cor de fundo da div */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra da div */
+      z-index: 10000;
+    }
+    .inner-popup {
+      margin: 20px;
+    }
+    .titulo-popUp {
+      text-align: center;
+      background-color: rgb(234, 92, 92);
+      pad: 20px;
+    }
+    .leave-text{
+      border: none; 
+      background-color: transparent; 
+      font-family: "Belanosima", sans-serif;
+    }
+    .leave-text:hover{
+      color: #91202d;
+
+    }
   </style>
 </head>
 
@@ -86,37 +126,6 @@
               </div>
       
               <div class="nav-menu">
-                {% if user.is_authenticated %}
-                <div class="dropdown">
-                  
-                  <ul class="dropdown-menu" style="">
-                    {% if has_admin_role %}
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_prato" %}">Pratos</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_garcons" %}">Garçons</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_caixas" %}">Caixas</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_cozinhas" %}">Cozinhas</a>
-                      </li>
-                      <li class="nav-item">
-                          <a onclick="loadingPage()" onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_clientes" %}">Clientes</a>
-                      </li>
-                      <li class="nav-item">
-                        <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_adicionais" %}">Adicionais</a>
-                      </li> 
-                      <li class="nav-item">
-                        <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_mesas" %}">Mesas</a>
-                      </li>
-                    {% endif %}
-                  </ul>
-                  
-                </div>
-                {% endif %}
                 <ul>
                   {% if has_admin_role %}
                   <li class="nav-item">
@@ -140,9 +149,6 @@
                   </li>
                   <li class="nav-item">
                       <a onclick="loadingPage()" class="nav-link" href="{% url "ver_pedidos_cliente" %}">pedidos</a>
-                  </li>
-                  <li class="nav-item">
-                      <a onclick="loadingPage()" class="nav-link" href="{% url "perfil_cliente" %}">Perfil</a>
                   </li>
                   {% elif has_garcom_role %}
                     <li class="nav-item">
@@ -168,46 +174,110 @@
                 {% endif %}
               </ul>
               {% if has_admin_role %}
-              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button  id="btn-gerenciar" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown-gerenciar" aria-expanded="false" onclick="toggleDropdown('dropdown-gerenciar')">
                 GERENCIAR
               </button>
               {% endif %}
-
-                
+              {% if user.is_authenticated %}
+                <div class="dropdown ">
+                  <ul  id="dropdown-gerenciar" class="dropdown-menu " style="">
+                    {% if has_admin_role %}
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_prato" %}">Pratos</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_garcons" %}">Garçons</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_caixas" %}">Caixas</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_cozinhas" %}">Cozinhas</a>
+                      </li>
+                      <li class="nav-item">
+                          <a onclick="loadingPage()" onclick="loadingPage()" class="nav-link" href="{% url "gerenciar_clientes" %}">Clientes</a>
+                      </li>
+                      <li class="nav-item">
+                        <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_adicionais" %}">Adicionais</a>
+                      </li> 
+                      <li class="nav-item">
+                        <a onclick="loadingPagetwo()" class="nav-link" href="{% url "gerenciar_mesas" %}">Mesas</a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </div>
+                {% endif %}
               <ul>
                 {% if not user.is_authenticated %}
-                <li class="nav-item">
-                  <a  onclick="loadingPage()" class="nav-link" href="{% url "account_login" %}">Login</a>
-                </li>
-                <li class="nav-item">
-                  <a onclick="loadingPage()" class="nav-link" href="{% url "cadastrar_cliente" %}">Cadastre-se</a>
-                </li>
+                  <li class="nav-item">
+                    <a  onclick="loadingPage()" class="nav-link" href="{% url "account_login" %}">Login</a>
+                  </li>
+                  <li class="nav-item">
+                    <a onclick="loadingPage()" class="nav-link" href="{% url "cadastrar_cliente" %}">Cadastre-se</a>
+                  </li>
                 {% endif %}
               </ul>
               <ul>
                 {% if user.is_authenticated %}
-                <li>
-                  <a class="nav-link" href="#" onclick="performLogout()">Sair</a>
-                </li>
+                  {% if has_admin_role %}
+                    <li>
+                      <a class="nav-link" href="#" onclick="performLogout()">Sair</a>
+                    </li>
+                  {% elif not has_cliente_role %}
+                    <li>
+                      <a class="nav-link" href="#" onclick="performLogout()">Sair</a>
+                    </li>
+                  {% endif %}
+                {% endif %}
                 <form id="logoutForm" method="post" action="{% url 'account_logout' %}">
                   {% csrf_token %}
                 </form>
-                {% endif %}
+
                 {% if has_admin_role %}
                   {% elif has_cliente_role %}
                     <li>
-                      <a href="{% url "ver carrinho cliente" %}">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="35" fill="white" viewBox="0 -960 960 960" width="48"><path d="M286.788-81Q257-81 236-102.212q-21-21.213-21-51Q215-183 236.212-204q21.213-21 51-21Q317-225 338-203.788q21 21.213 21 51Q359-123 337.788-102q-21.213 21-51 21Zm400 0Q657-81 636-102.212q-21-21.213-21-51Q615-183 636.212-204q21.213-21 51-21Q717-225 738-203.788q21 21.213 21 51Q759-123 737.788-102q-21.213 21-51 21ZM235-741l110 228h288l125-228H235Zm-30-60h589.074q22.964 0 34.945 21Q841-759 829-738L694-495q-11 19-28.559 30.5Q647.881-453 627-453H324l-56 104h491v60H277q-42 0-60.5-28t.5-63l64-118-152-322H51v-60h117l37 79Zm140 288h288-288Z"/></svg>
+                      <a href="{% url "ver carrinho cliente" %}" style="margin-top: 32px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="30" fill="white" viewBox="0 -960 960 960" width="48"><path d="M286.788-81Q257-81 236-102.212q-21-21.213-21-51Q215-183 236.212-204q21.213-21 51-21Q317-225 338-203.788q21 21.213 21 51Q359-123 337.788-102q-21.213 21-51 21Zm400 0Q657-81 636-102.212q-21-21.213-21-51Q615-183 636.212-204q21.213-21 51-21Q717-225 738-203.788q21 21.213 21 51Q759-123 737.788-102q-21.213 21-51 21ZM235-741l110 228h288l125-228H235Zm-30-60h589.074q22.964 0 34.945 21Q841-759 829-738L694-495q-11 19-28.559 30.5Q647.881-453 627-453H324l-56 104h491v60H277q-42 0-60.5-28t.5-63l64-118-152-322H51v-60h117l37 79Zm140 288h288-288Z"/></svg>
+                      </a>
+                    </li>
+                    <li>
+                      <a id="notification_icon" href="#" style="margin-top: 32px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="30" fill="white" viewBox="0 -960 960 960" width="48"><path d="M160-200v-60h84v-306q0-84 49.5-149.5T424-798v-29q0-23 16.5-38t39.5-15q23 0 39.5 15t16.5 38v29q81 17 131 82.5T717-566v306h83v60H160Zm320-295Zm0 415q-32 0-56-23.5T400-160h160q0 33-23.5 56.5T480-80ZM304-260h353v-306q0-74-51-126t-125-52q-74 0-125.5 52T304-566v306Z"/></svg>
+                      </a>
+                    </li> 
+                    <li>
+                      <!-- <a href="{% url "perfil_cliente" %}" style="margin-top: 32px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="30" fill="white" viewBox="0 -960 960 960" width="48"><path d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.921 44.694q31.301 14.126 50.19 40.966Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"/></svg>
+                      </a> -->
+                      <a  id="btn-usuario" style="margin-top: 32px; cursor: pointer;" data-bs-toggle="dropdown-usuario" onclick="toggleDropdown('dropdown-usuario')">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="30" fill="white" viewBox="0 -960 960 960" width="48"><path d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.921 44.694q31.301 14.126 50.19 40.966Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"/></svg>
                       </a>
                     </li>
                   {% elif has_garcom_role %}
                     <li>
-                      <a href="{% url "ver carrinho cliente" %}">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="35" fill="white" viewBox="0 -960 960 960" width="48"><path d="M286.788-81Q257-81 236-102.212q-21-21.213-21-51Q215-183 236.212-204q21.213-21 51-21Q317-225 338-203.788q21 21.213 21 51Q359-123 337.788-102q-21.213 21-51 21Zm400 0Q657-81 636-102.212q-21-21.213-21-51Q615-183 636.212-204q21.213-21 51-21Q717-225 738-203.788q21 21.213 21 51Q759-123 737.788-102q-21.213 21-51 21ZM235-741l110 228h288l125-228H235Zm-30-60h589.074q22.964 0 34.945 21Q841-759 829-738L694-495q-11 19-28.559 30.5Q647.881-453 627-453H324l-56 104h491v60H277q-42 0-60.5-28t.5-63l64-118-152-322H51v-60h117l37 79Zm140 288h288-288Z"/></svg>
+                      <a href="{% url "ver_carrinho_garcom" %}" style="margin-top: 32px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="30" fill="white" viewBox="0 -960 960 960" width="48"><path d="M286.788-81Q257-81 236-102.212q-21-21.213-21-51Q215-183 236.212-204q21.213-21 51-21Q317-225 338-203.788q21 21.213 21 51Q359-123 337.788-102q-21.213 21-51 21Zm400 0Q657-81 636-102.212q-21-21.213-21-51Q615-183 636.212-204q21.213-21 51-21Q717-225 738-203.788q21 21.213 21 51Q759-123 737.788-102q-21.213 21-51 21ZM235-741l110 228h288l125-228H235Zm-30-60h589.074q22.964 0 34.945 21Q841-759 829-738L694-495q-11 19-28.559 30.5Q647.881-453 627-453H324l-56 104h491v60H277q-42 0-60.5-28t.5-63l64-118-152-322H51v-60h117l37 79Zm140 288h288-288Z"/></svg>
                       </a>
                     </li>
                   {% endif %}
                 </ul>
+                  <div  class="dropdown">
+                      <ul  id="dropdown-usuario" class="dropdown-menu" style="">
+                          <li>
+                            <a class="nav-link" href="{% url "perfil_cliente" %}" >
+                              Perfil
+                            </a>
+                          </li>
+                        {% if user.is_authenticated %}
+                        <li>
+                          <button  type="submit" class="nav-link leave-text" onclick="performLogout()">Sair</button>
+                        </li>
+                        <form id="logoutForm" method="post" action="{% url 'account_logout' %}">
+                          {% csrf_token %}
+                        </form>
+                        {% endif %}
+                      </ul>
+                  </div>
               </div>
                   <div id="mobile-menu-btn">
                     <div></div>
@@ -323,6 +393,7 @@
   <script src="{% static "js/home.js"%}"></script>
   <script src="{% static "js_bootstrap/bootstrap.js"%}"></script>
   <script>
+    
       // FUNÇÃO DE CARREGAMENTO DA PAGINA
     function loadingPage() {
       var links = document.querySelectorAll('.dropdown-menu a');
@@ -340,6 +411,7 @@
       }
     }
     loadingPage();
+
 
     // FUNÇÃO DE CARREGAMENTO DA PAGINA
     function loadingPagetwo() {
@@ -359,6 +431,8 @@
     }
     loadingPagetwo();
 
+
+
     function performLogout() {
       var form = document.getElementById('logoutForm');
       var loadingOverlay = document.getElementById('loadingOverlay');
@@ -366,9 +440,21 @@
     
       setTimeout(function() {
         form.submit(); // Envia o formulário de logout após um tempo de espera
-      }, 1200); // Tempo de espera em milissegundos (por exemplo, 2000ms = 2 segundos)
+      }, 200); // Tempo de espera em milissegundos (por exemplo, 2000ms = 2 segundos)
     }
 
+    function toggleDropdown(dropdownId) {
+      var dropdown = document.getElementById(dropdownId);
+      dropdown.classList.toggle('show');
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const msm = urlParams.get('msm');
+    if (msm) {
+      alert(msm);
+    }
   </script>
+
+  <script src={% static "js/notificar_cliente.js" %} ></script>
 </body>
 </html>

@@ -8,15 +8,29 @@ from pedidos.models import PedidoPrato, Pedido
 from django.http import HttpResponse
 
 
-def pagar_pedido(request, pedido):
+def pagar_pedido(request, pedido, valor_preco_pontos=None):
     preference = {
-      "items": [],
-      "back_urls": {
+        "items": [],
+        "back_urls": {
             "success": f"http://localhost:8000/pagamentos/pedido/sucesso/",
             "failure": "http://localhost:8000/",
             "pending": "http://localhost:8000/"
         }
     }
+    if valor_preco_pontos:
+        preference["items"].append({
+          "title": "Frete",
+          "quantity": 1,
+          "currency_id": "BRL",
+          "unit_price": float(settings.AUX['frete_entrega']) - float(valor_preco_pontos)
+    })
+    else:
+        preference["items"].append({
+            "title": "Frete",
+            "quantity": 1,
+            "currency_id": "BRL",
+            "unit_price": float(settings.AUX['frete_entrega'])
+        })
     pedidoprato_set = PedidoPrato.objects.filter(pedido=pedido)
     for pedidoPrato in pedidoprato_set:
         preference["items"].append({
@@ -26,12 +40,6 @@ def pagar_pedido(request, pedido):
           "unit_price": float(pedidoPrato.prato.preco)
         })
         
-    # preference["items"].append({
-    #       "title": "Frete",
-    #       "quantity": 1,
-    #       "currency_id": "BRL",
-    #       "unit_price": float(settings.AUX['frete_entrega'])
-    # })
     
     print(preference["items"])
     mp = mercadopago.MP(settings.CLIENT_ID, settings.CLIENT_SECRET)
@@ -43,6 +51,30 @@ def pagar_pedido(request, pedido):
     print(preferenceResult["response"]["id"])
     pedido.id_pagamento = preferenceResult["response"]["id"]
     pedido.save()
+    
+    return redirect(url)
+
+
+def pagar_reserva(request, valor):
+    preference = {
+        "items": [{
+          "title": "Reserva da mesa",
+          "quantity": 1,
+          "currency_id": "BRL",
+          "unit_price": float(valor),
+        }],
+        "back_urls": {
+            "success": f"http://localhost:8000/pagamentos/pedido/sucesso/",
+            "failure": "http://localhost:8000/",
+            "pending": "http://localhost:8000/"
+        },
+    }
+        
+    mp = mercadopago.MP(settings.CLIENT_ID, settings.CLIENT_SECRET)
+
+    preferenceResult = mp.create_preference(preference)
+
+    url = preferenceResult["response"]["init_point"]
     
     return redirect(url)
 

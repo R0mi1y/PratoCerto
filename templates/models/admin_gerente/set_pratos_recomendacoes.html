@@ -11,93 +11,61 @@
         height: auto;
     }
 </style>
-    <h1>Lista de Pratos</h1>
-    <h2>{{ Categoria }}</h2>
-
-    <div class="filters-content">
-        <div class="row grid">
+<section class="offer_section">
+  <div class="offer_container">
+    <h1
+      style="
+        text-align: center;
+        font-family: 'Belanosima', sans-serif;
+        color: #181818;
+      "
+    >
+      Lista de Pratos
+    </h1>
+    <hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
+    <div class="container">
+      <div class="row">
         {% for prato in pratos %}
-          <div class="col-sm-6 col-lg-4 all pizza">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="{{ prato.foto.url }}" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    {{ prato.nome }}
-                  </h5>
-                  <p>
-                    {{ prato.descricao }}
-                  </p>
-                  <div class="options">
-                    <h6>
-                        R$ {{prato.preco}}
-                    </h6>
-                    {% if prato.id in recomendados %}
-                    <a class="btn btn-primary" style="background-color: red;" href="{% url "deletar_recomendacoes" id=prato.id %}">
-                    {% else %}
-                    <a class="btn btn-primary" style="background-color: green;" href="{% url "adicionar_recomendacoes" id=prato.id %}">
-                    {% endif %}
-                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                        <g>
-                          <g>
-                            <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                          </g>
-                        </g>
-                        <g>
-                          <g>
-                            <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                          </g>
-                        </g>
-                        <g>
-                          <g>
-                            <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
-                          </g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                        <g>
-                        </g>
-                      </svg>
-                    </a>
+        <div class="card mycard">
+          <div class="card-teste mycard-teste">
+            <div class="card-body mycard-body">
+              <div class="login-wrap p-0">
+                  <div class="myimage-container">
+                    <img src="{{ prato.foto.url }}" alt=""/>
                   </div>
-                </div>
+                  <div style="color: #eeeeee">
+                    <h6
+                      style="
+                        font-size: 1.6rem;
+                        font-family: 'Dancing Script', cursive;
+                      "
+                    >
+                    {{ prato.nome }}
+                    </h6>
+                    <h6>
+                      <span>{{ categoria.1 }}</span>
+                    </h6>
+                    <p>{{ prato.descricao }}</p>
+                    <div style="
+                    display: flex;
+                    align-items: baseline;
+                    justify-content: space-evenly;
+                ">
+                      <h6>R$ {{prato.preco}}</h6>
+                      {% if prato.id in recomendados %}
+                      <a class="btn btn-secondary" href="{% url "deletar_recomendacoes" id=prato.id %}"><svg xmlns="http://www.w3.org/2000/svg" height="30" fill="red" viewBox="0 -960 960 960" width="48"><path d="M200-450v-60h560v60H200Z"/></svg></a>
+                      {% else %}
+                      <a class="btn btn-secondary" href="{% url "adicionar_recomendacoes" id=prato.id %}"><svg xmlns="http://www.w3.org/2000/svg" height="30" fill="green" viewBox="0 -960 960 960" width="48"><path d="M450-200v-250H200v-60h250v-250h60v250h250v60H510v250h-60Z"/></svg></a>
+                      {% endif %}
+                    </div>
+                  </div>
               </div>
             </div>
           </div>
-          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
     </div>
-    </div>
+  </div>
+</section>
 {% endblock content %}

@@ -1,152 +1,177 @@
-<!-- home.html -->
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block title %}Criar Pedido{% endblock %}
+{% block title %}Form{% endblock %}
 
 {% block content %}
-<style>
-    .form-container {
-        background-color: white;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        width: 400px;
-        margin: 0 auto;
-    }
-    
-    .form-container h2 {
-        color: red;
-        text-align: center;
-    }
-    
-    .form-container form {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .form-container label {
-        margin-bottom: 10px;
-    }
-    
-    .form-container input[type="text"],
-    .form-container input[type="email"],
-    .form-container input[type="password"],
-    .form-container textarea {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
-    
-    .form-container input[type="submit"] {
-        background-color: yellow;
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    
-    .form-container input[type="submit"]:hover {
-        background-color: gold;
+{% block head %}{% endblock head %}
+    <title>
+      {% if titulo %}
+      {{ titulo }}
+      {% else %}
+      Formulário de Cadastro
+      {% endif %}
+    </title>
+    <link rel="icon" href="{% static "images/icons/logo-icon.png" %}"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap"/>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+
+    <link rel="stylesheet" href="{% static "css/style_form.css"%}">
+
+    <style>
+      body {
+        background-image: url({% static "images/img1.png" %});
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+        width: 100%;
+      }
+      .helptext {
+        display: none;
+      }
+      section > .container {
+        margin-top: 140px;
+      }
+      .container {
+        max-width: 540px;
     }
 
-    .alert {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 22px 10px;
-        font-family: interBold;
-        font-size: 15px;
-        color: black;
-        background-color: gray;
-        border-radius: 10px;
-        border: 1px solid #90816A;
-        {% comment %} opacity: 0; {% endcomment %}
-        animation-name: fade-in-out;
-        animation-duration: 5s;
-        animation-fill-mode: forwards;
+    p {
+        color:white;
     }
-    
-    .alert-close {
-        float: right;
-        cursor: pointer;
-        margin-left: 10px;
-        font-size: 15px;
-        margin-top: -15px;
-    }
-</style>
-<div class="form-container">
-    <form id="form_pedido" action="" method="post">
-        {% csrf_token %}
-        {{ form }}
-        {% if has_garcom_role %}
-            <input id="btn_pedido" type="submit" value="Comprar">
-        {% else %}
-            <input id="btn_pedido" type="button" onclick="submitForm()" value="Comprar">
-        {% endif %}
-    </form>
-    {% for pedido in pedidos %}
-    <p>{{ pedido.prato }}</p>
-    <p>{{ pedido.cliente | default:pedido.nome_cliente }}</p>
-    {% endfor %}
-    <a href="{% url "adicionar endereco" %}">adicionar endereço</a>
-</div>
+    </style>
+      <div class="loading-overlay" id="loadingOverlay"  style="max-width: 150px;">
+          <div class="loading-spinner">
+          <img style="width: 45px;" src="/static/images/icons/icon-loading.png">
+          </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="login-wrap p-0">
+            <h3 class="text-center">
+              Fazer pedido
+            </h3>
+            <p class="text-center mb-4"> </p>
+            <form id="loginForm" enctype="multipart/form-data" method="POST" class="signin-form">
+              {% csrf_token %}
+                    <div class="form-group">
+                        {{ form }}
+                    </div>
+                    <div class="form-group">
+                {% if has_garcom_role %}
+                    <button id="loginButton" type="submit" class="form-control btn btn-primary submit px-3">
+                        Confirmar
+                    </button>
+                {% else %}
+                    {% if user.pontos > 0 %}
+                    <div class="form-group">
+                        <input type="checkbox" name="usar_pontos" id="usar_pontos">
+                        <label for="usar_pontos">Usar {{ user.pontos }} Pontos</label>
+                    </div>
+                    {% else %}
+                    <p>Você não tem pontos para usar!</p>
+                    {% endif %}
+                <button id="loginButton" type="button" onclick="submitForm()" class="form-control btn btn-primary submit px-3">
+                    Confirmar
+                </button>
+                {% endif %}
+            </div>
+            <hr>
+            {% if pedido.cliente %}
+                <p>{{ pedido.cliente | default:pedido.nome_cliente }}</p>
+            {% endif %}
+            {% for pedido in pedidos %}
+                <p>{{ pedido.prato }}</p>
+                {% if not pedido.cliente %}
+                    <p>{{ pedido.nome_cliente }}</p>
+                {% endif %}
+                <hr>
+            {% endfor %}
+            <p>Preço do prato: R$ {{ total }}</p>
+            <p id='frete'>Frete: R$ 0,00</p>
+            <hr>
+            <h3>Total: R$<p id="total">{{ total }}</p></h3>
+                <a href="{% url "adicionar endereco" %}">adicionar endereço</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
 <script>
+    var valor_rs_ponto = parseFloat("{{ valor_rs }}".replace(",", "."))
+    var pontos = parseFloat("{{ user.pontos }}".replace(",", "."));
+    var total = parseFloat("{{ total }}".replace(",", "."));
+    var taxa_entrega = parseFloat("{{ taxa_entrega }}".replace(",", "."))
+    
+    var p_total = document.getElementById('total')
+    var p_frete = document.getElementById('frete')
+    var checkbox = document.getElementById("usar_pontos");
+    
     var enderecoRadios = document.querySelectorAll('input[type="radio"][name="endereco"]');
 
-for (var i = 0; i < enderecoRadios.length; i++) {
-  enderecoRadios[i].checked = false;
-  enderecoRadios[i].disabled = true;
-}
+    checkbox.addEventListener("change", function() {
+        if (checkbox.checked) {
+            total = total - valor_rs_ponto * pontos;
+        } else {
+            total = total + valor_rs_ponto * pontos;
+        }
+        p_total.innerHTML = total.toFixed(2).replace('.', ',');
+    });
 
-document.getElementById("id_local_retirada").addEventListener("change", function() {
-  if (this.value === "restaurante") {
     for (var i = 0; i < enderecoRadios.length; i++) {
-      enderecoRadios[i].checked = false;
-      enderecoRadios[i].disabled = true;
+        enderecoRadios[i].checked = false;
+        enderecoRadios[i].disabled = true;
     }
-  } else {
-    for (var i = 0; i < enderecoRadios.length; i++) {
-      enderecoRadios[i].checked = false;
-      enderecoRadios[i].disabled = false;
-    }
-  }
-});
 
-function submitForm(){
-    let local_retirada = document.getElementById("id_local_retirada");
-    
-    let form = document.getElementById("form_pedido");
-    if(local_retirada.value == "restaurante") {
-        var radioInput = document.createElement('input');
+    document.getElementById("id_local_retirada").addEventListener("change", function() {
+        if (this.value === "restaurante") {
+            total = total - {{ taxa_entrega }};
+            p_frete.innerHTML = "Frete: R$ 00,00";
+            p_total.innerHTML = total.toFixed(2).replace('.', ',');
+            
+            for (var i = 0; i < enderecoRadios.length; i++) {
+                enderecoRadios[i].checked = false;
+                enderecoRadios[i].disabled = true;
+            }
+        } else if (this.value === "entrega") {
+            p_frete.innerHTML = "Frete: R$ " + taxa_entrega;
+            total = total + taxa_entrega;
+            p_total.innerHTML = (total).toFixed(2).replace('.', ',');
 
-        radioInput.setAttribute('type', 'radio');
-        radioInput.setAttribute('name', 'endereco');
-        radioInput.setAttribute('value', null);
-        radioInput.setAttribute('checked', true);
-        radioInput.setAttribute('display', "none");
-
-        form.appendChild(radioInput);
-        form.submit()
-    } else {
-        for (var i = 0; i < enderecoRadios.length; i++) {
-            enderecoRadios[i].disabled = false;
-            if(enderecoRadios[i].checked == true) {
-                if(document.getElementById("id_metodo_pagamento").value != ''){
-                    form.submit();
-                    return;
-                } else {
-                    alert("Selecione o método de pagamento!");
-                    return;
-                }
-
+            for (var i = 0; i < enderecoRadios.length; i++) {
+                enderecoRadios[i].checked = false;
+                enderecoRadios[i].disabled = false;
             }
         }
-        alert("Selecione um endereço!");
-    }
+    });
 
-}
+    function submitForm(){
+        let local_retirada = document.getElementById("id_local_retirada");
+        
+        let form = document.getElementById("loginForm");
+        if(local_retirada.value == "restaurante") {
+            form.submit()
+        } else {
+            for (var i = 0; i < enderecoRadios.length; i++) {
+                enderecoRadios[i].disabled = false;
+                if(enderecoRadios[i].checked == true) {
+                    if(document.getElementById("id_metodo_pagamento").value != ''){
+                        form.submit();
+                        return;
+                    } else {
+                        alert("Selecione o método de pagamento!");
+                        return;
+                    }
+                }
+            }
+            alert("Selecione um endereço!");
+        }
+    }
 </script>
 {% comment %} <div class="_6qQnMm"><div class="+8JojR">Novo Endereço</div><form><div class="FjAbyn"><div class="U+ue2m"><div class="M7ul5X"><div class="VBEzJh S550Wl"><div class="+QLhYo"><div class="VumFUt">Nome Completo</div><input class="_4TB5gZ" type="text" placeholder="Nome Completo" autocomplete="name" maxlength="50" value=""></div></div><div class="upIqg6"></div><div class="VBEzJh oadHXi"><div class="+QLhYo"><div class="VumFUt">Número de Telefone</div><input class="_4TB5gZ" type="text" placeholder="Número de Telefone" autocomplete="user-address-phone" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh mUJpLQ"><div class="+QLhYo"><div class="VumFUt">CEP</div><input class="_4TB5gZ" type="text" placeholder="CEP" autocomplete="postal-code" maxlength="9" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh Vo0kRt"><div class="+QLhYo"><div class="VumFUt">Estado - Cidade</div><input class="_4TB5gZ" readonly="" type="text" placeholder="Estado - Cidade" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh NHI4eE"><div class="+QLhYo"><div class="VumFUt">Bairro</div><input class="_4TB5gZ" type="text" placeholder="Bairro" maxlength="30" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh HC4rnd"><div class="+QLhYo"><div class="VumFUt">Rua / Avenida</div><input class="_4TB5gZ" type="text" placeholder="Rua / Avenida" maxlength="150" value=""></div></div><div class="upIqg6"></div><div class="VBEzJh _2Lm+me"><div class="+QLhYo"><div class="VumFUt">Número</div><input class="_4TB5gZ" type="text" placeholder="Número" maxlength="5" value=""></div></div></div><div class="M7ul5X"><div class="VBEzJh qnrlZg"><div class="+QLhYo"><div class="VumFUt">Complemento</div><input class="_4TB5gZ" type="text" placeholder="Complemento" maxlength="30" value=""></div></div></div><div class="S2LL9g"><div class="_5W-GdV">Salvar Como:</div><div class="n17c0S"><div class="_0jt5tH"><span class="MR8NHz">Casa</span></div><div class="_0jt5tH"><span class="MR8NHz">Trabalho</span></div></div></div><div class="_9m40T7"><label class="VQRLw-"><input class="QAVe-Q" type="checkbox"><div class="tcK1ox"></div>Definir como endereço padrão</label></div></div><div class="KKsTzS"><button class="MzDiRI _9q6Q2s _9+tJoA">Cancelar</button><button class="_9q6Q2s _3B7lBt">Enviar</button></div></div></form></div> {% endcomment %}
 {% endblock %}

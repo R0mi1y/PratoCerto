@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import apis
 
 urlpatterns = [
     path("home", views.home, name="home_cliente"),
@@ -23,4 +24,9 @@ urlpatterns = [
     path("editar/<int:id>", views.editar_cliente, name='editar_cliente'),
     path("editar", views.editar_cliente_cliente, name='editar_cliente_cliente'),
     path("deletar/<int:id>", views.deletar_cliente, name='deletar_cliente'),
+
+
+    # Notificações do status do prato 
+
+    path("notificacoes", apis.notificacoes, name='notificacoes'),
 ]

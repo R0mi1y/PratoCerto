@@ -39,7 +39,6 @@ body::after {
   object-fit: cover;
 }
 
-
 .card-body .image-container img {
   transition: transform 0.2s ease;
 }
@@ -123,9 +122,11 @@ body::after {
 }
 /* LOADING DE LOGIN */
 
+/* CARROSSEL PAGINA HOME */
 section > .container {
   margin-top: 140px;
 }
+
 
 .my-carousel-section {
   position: relative;
@@ -173,70 +174,84 @@ section > .container {
 }
 
 .my-carousel-item-text h5 {
-  color:#eee;
+  color: #eee;
   font-size: 24px;
   /* margin-bottom: 10px; */
 }
 
 .my-carousel-item-text p {
-  color:#eee;
+  color: #eee;
   font-size: 16px;
   margin-bottom: 0px;
 }
 
-/* 
+/* CARD DUS PRATUS */
 body::after {
   background: #eeeeee;
 }
 
-.colum-card {
+.mycolum-card {
   padding: 5px;
 }
 
-.image-container {
-  width: 250px;
-  height: 130px;
+.myimage-container {
+  width: 240px;
+  height: 179px;
   overflow: hidden;
-  margin-bottom: 45px;
+  margin-bottom: 19px;
 }
 
-.image-container img {
+.myimage-container img {
   border-radius: 30px;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-left: 3px solid #eee;
   border-right: 3px solid #eee;
-
 }
 
-.card {
+.mycard {
   background-color: #181818;
   border-radius: 22px 33px 22px 22px;
   border: none;
   box-shadow: none;
   position: relative;
   margin: 10px;
-  min-height: 300px;
+  min-height: 368px;
+  max-width: 257px;
   -webkit-box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.21);
   -moz-box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.21);
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.21);
 }
 
-.card-teste {
-  background-color: #cf3c4d;
+.mycard-body:hover .myimage-container img {
+  transform: scale(1);
+}
+.mycard-body .myimage-container img {
+  transition: transform 0.2s ease;
+}
+
+.mycard-body {
+  transition: transform 0.2s ease;
+}
+
+.mycard-body:hover {
+  transform: scale(1);
+}
+
+.mycard-teste {
+  background-color: #181818;
   border-radius: 20px 30px 0px 40px;
   position: relative;
-  height: 180px;
+  height: 203px;
   border-bottom: 5px solid #eee;
-
 }
 
 .row {
   justify-content: space-between;
 }
 
-.button-category {
+.mybutton-category {
   text-align: center;
   display: block;
   width: 100%;
@@ -248,9 +263,101 @@ body::after {
   background-color: #eeeeee;
   border: 1px solid #ced4da;
   border-radius: 2.25rem;
-  font-family: 'Belanosima', sans-serif;
+  font-family: "Belanosima", sans-serif;
 }
 
-.button-category:hover {
+.mybutton-category:hover {
   color: #91202d;
-} */
+}
+
+/* HOME GARÇOM */
+.garcomrow {
+  display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+    flex-wrap: nowrap;
+}
+
+
+.scroll-horizontal {
+  overflow-x: scroll;
+  white-space: nowrap;
+  padding: 40px;
+}
+
+.scroll-horizontal::-webkit-scrollbar {
+  width: 18px; 
+  background-color: transparent; 
+}
+
+
+.scroll-horizontal::-webkit-scrollbar-thumb {
+  background-color: #91202d; 
+  border-radius: 20px; 
+}
+
+/* STATUS GARÇOM */
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.status {
+  &.open:before {
+    background-color: #94E185;
+    border-color: #78D965;
+    box-shadow: 0px 0px 4px 1px #94E185;
+  }
+
+  &.in-progress:before {
+    background-color: #FFC182;
+    border-color: #FFB161;
+    box-shadow: 0px 0px 4px 1px #FFC182;
+  }
+  
+  &.dead:before {
+    background-color: #C9404D;
+    border-color: #C42C3B;
+    box-shadow: 0px 0px 4px 1px #C9404D;
+  }
+
+  &:before {
+    content: ' ';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 10px;
+    border: 1px solid #000;
+    border-radius: 7px;
+  }
+}
+  
+  
+
+
+@media (max-width: 576px) {
+  .scroll-horizontal {
+    max-height: 630px;
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-horizontal {
+    max-height: 630px;
+  }
+}
+
+@media (max-width: 992px) {
+  .scroll-horizontal {
+    max-height: 630px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .scroll-horizontal {
+    max-height: 630px;
+  }
+}

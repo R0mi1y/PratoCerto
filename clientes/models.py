@@ -30,7 +30,7 @@ class Endereco(models.Model):
     cliente = models.ForeignKey(Cliente, blank=True, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.rua}, {self.estado_cidade} - CEP: {self.cep}"
+        return f"nome:{self.nome}, Rua {self.rua}, bairro {self.bairro}, complemento: {self.complemento}, numero {self.numero}"
     
     
 @receiver(pre_save, sender=Endereco)

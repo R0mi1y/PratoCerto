@@ -101,7 +101,7 @@ class ClienteFormEditar(forms.ModelForm):
         
         
         
-class ClienteFormAdmin(forms.ModelForm):
+class EditarClienteFormAdmin(forms.ModelForm):
     telefone = forms.CharField(required=False, widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Telefone'}
     ))
@@ -110,6 +110,12 @@ class ClienteFormAdmin(forms.ModelForm):
     ))
     cpf = forms.CharField(required=False, widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'CPF'}
+    ))
+    email = forms.EmailField(required=False, widget=forms.EmailInput(
+        attrs={'class': 'form-control', 'placeholder': 'Email'}
+    ))
+    username = forms.EmailField(required=False, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Nome'}
     ))
 
     class Meta:

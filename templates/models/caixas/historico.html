@@ -28,10 +28,21 @@
   /* Estilo específico para a taxa de entrega */
   .pedido-box .taxa-entrega {
     font-style: italic;
+    
+  .quantidade-arrecadada {
+    font-size: 20px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
   }
 </style>
 
 <h2>Histórico Diário {{ hoje }}</h2>
+
+<h3 class="quantidade-arrecadada">Quantidade Arrecadada do Dia: R$ {{ total_diario }}</h3>
+
 {% for pedido in historico_diario %}
   <div class="pedido-box">
     <h3>Pedido {{ pedido.id }}</h3>
@@ -50,19 +61,19 @@
 {% endfor %}
 
 <h2>Histórico Mensal {{ hoje|date:"F" }}</h2>
+
+<h3 class="quantidade-arrecadada">Quantidade Arrecadada do Mês: R$ {{ total_mensal }}</h3>
 {% for pedido in historico_mensal %}
   <div class="pedido-box">
     <h3>Pedido {{ pedido.id }}</h3>
     <p>Status: {{ pedido.status }}</p>
     <p>Valor Total: R$ {{ pedido.total }}</p>
-    
     {% if pedido.local_retirada == 'entrega' %}
       <p>Taxa de Entrega: R$ {{ pedido.taxa_entrega }}</p>
     {% endif %}
     
     <p>Método de Pagamento: {{ pedido.metodo_pagamento }}</p>
   </div>
-  <!-- Exiba outras informações do pedido aqui -->
 {% empty %}
   <p>Não há histórico de pedidos para este mês.</p>
 {% endfor %}

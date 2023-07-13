@@ -56,22 +56,11 @@
               Formulário de Cadastro
               {% endif %}</h3>
             <p class="text-center mb-4"> </p>
-            <form id="loginForm" enctype="multipart/form-data" method="POST" class="signin-form">
+            <form id="loginForm" action="{% url "criar reserva" %}" enctype="multipart/form-data" method="POST" class="signin-form">
               {% csrf_token %}
                   <div class="form-group">
-                    {{ form.cliente }}
-                    {{ form.mesa.label }}
-                    {{ form.mesa }}
-                    {{ form.data_reserva.label }}
-                    {{ form.data_reserva }}
-                    {{ form.horario.label }}
-                    {{ form.horario }}
+                    {{ form }}
                     <br>
-                    Quantidade de pessoas
-                    <input type="number" class="form-control" name="qnt_pessoas" min="1" max="0" value="1" required id="id_qnt_pessoas">
-                    {{ form.observacao.label }}
-                    {{ form.observacao }}
-                    {{ form.preco_total }}
                     <div style="text-align: center;">
                         <h3>Preco Total: </h3><h3 id="preco">R$ 0.00</h3>
                     </div>
@@ -117,5 +106,6 @@
     for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].addEventListener("change", check_boxes);
     }
+    
 </script>
 {% endblock content %}

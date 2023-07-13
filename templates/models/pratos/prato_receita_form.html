@@ -1,90 +1,116 @@
-{% extends 'base/base.html' %} 
-{% load static %} 
-{% block title %}Form{% endblock %} 
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Form{% endblock %}
+
 {% block content %}
-<style>
-  .imagem-quadrada {
-    width: 100%; /* Defina a largura desejada */
-    height: auto; /* Defina a altura desejada */
-    overflow: hidden; /* Para ocultar qualquer conteúdo que exceda as dimensões definidas */
-  }
+{% block head %}{% endblock head %}
+    <title>
+      {% if titulo %}
+      {{ titulo }}
+      {% else %}
+      Formulário de Cadastro
+      {% endif %}
+    </title>
+    <link rel="icon" href="{% static "images/icons/logo-icon.png" %}"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-  .imagem-quadrada img {
-    width: 100%;
-    height: auto;
-    object-fit: cover; /* Para preencher a área mantendo a proporção */
-  }
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap"/>
 
-  input[type="text"],
-  input[type="password"],
-  input[type="email"],
-  input[type="number"],
-  input[type="date"],
-  textarea {
-    width: 100%;
-    border: none;
-    height: 50px;
-    margin-bottom: 25px;
-    padding-left: 25px;
-    border: 1px solid #999;
-    outline: none;
-    color: #000;
-    border-radius: 5px;
-    box-shadow: none;
-  }
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 
-  input[type="text"]::placeholder,
-  input[type="password"]::placeholder,
-  input[type="email"]::placeholder,
-  input[type="number"]::placeholder,
-  input[type="date"]::placeholder,
-  textarea::placeholder {
-    color: #222222;
-  }
-</style>
-<section class="book_section">
-  <div class="container">
-    <div class="heading_container">
-      <h2>Formulário</h2>
-      <br>
-      <br>
-      <hr>
-      <form action="{% url "cadastrar_receita" %}" method="POST">
-        {% csrf_token %}
-        <label for="nome_receita"><h1>Nome da receita</h1></label>
-        <input type="text" maxlength="50" id="nome_receita" name="nome_receita">
-          {% for ingrediente in ingredientes %}
-          <input type="checkbox" value="{{ ingrediente.pk }}" name="item_{{ ingrediente.pk }}"> <label for="id_ingrediente_{{ ingrediente.pk }}"><h2>{{ ingrediente }}</h2></label><br>
-          <label for="id_qnt_{{ ingrediente.pk }}">{{ ingrediente.unidade_medida }}</label><input id="id_qnt_{{ ingrediente.pk }}" type="number" id="id_ingrediente_{{ ingrediente.pk }}" name="quantidade_{{ ingrediente.pk }}" id="">
-          <hr>
-          {% endfor %}
-          <input type="submit" value="cadastrar">
-      </form>
 
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form_container">{% for ingrediente in ingredientes %}
-          {% endfor %}</div>
+    <link rel="stylesheet" href="{% static "css/style_form.css"%}">
+
+    <style>
+      body {
+        background-image: url({% static "images/img1.png" %});
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+        width: 100%;
+      }
+      .helptext {
+        display: none;
+      }
+      section > .container {
+        margin-top: 140px;
+      }
+      .container {
+        max-width: 540px;
+    }
+    </style>
+      <div class="loading-overlay" id="loadingOverlay"  style="max-width: 150px;">
+          <div class="loading-spinner">
+          <img style="width: 45px;" src="/static/images/icons/icon-loading.png">
+          </div>
       </div>
-    </div>
-  </div>
-</section>
-<script>
-  document.getElementById("upload").addEventListener("change", function (e) {
-    var file = e.target.files[0];
-    var reader = new FileReader();
-
-    reader.onload = function (e) {
-      var image = document.createElement("img");
-      image.src = e.target.result;
-      let image_div = document.getElementById("preview");
-      image_div.innerHTML = "";
-      image_div.appendChild(image);
-    };
-
-    reader.readAsDataURL(file);
-  });
-</script>
-
+      <div class="card">
+        <div class="card-body">
+          <div class="login-wrap p-0">
+            <h3 class="text-center">
+              {% if titulo %}
+              {{ titulo }}
+              {% else %}
+              Formulário de Cadastro
+              {% endif %}</h3>
+            <p class="text-center mb-4"> </p>
+            <form action="{% url "cadastrar_receita" %}" id="loginForm" enctype="multipart/form-data" method="POST" class="signin-form">
+                {% csrf_token %}
+                <input type="text" class="form-control" maxlength="50" id="nome_receita" placeholder="Nome da receita" name="nome_receita">
+                  {% for ingrediente in ingredientes %}
+                  <input type="checkbox" value="{{ ingrediente.pk }}" name="item_{{ ingrediente.pk }}"> <label for="id_ingrediente_{{ ingrediente.pk }}"><h2>{{ ingrediente }}</h2></label><br>
+                  <label for="id_qnt_{{ ingrediente.pk }}">{{ ingrediente.unidade_medida }}</label><input class="form-control" placeholder="Quantidade" id="id_qnt_{{ ingrediente.pk }}" type="number" id="id_ingrediente_{{ ingrediente.pk }}" name="quantidade_{{ ingrediente.pk }}" id="">
+                  <hr>
+                  {% endfor %}
+              </form>
+                <button id="loginButton" type="submit" class="form-control btn btn-primary submit px-3">
+                  Confirmar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="{% static "js/main.js"%}"></script>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const msm = urlParams.get('msm');
+      if (msm) {
+        alert(msm);
+      }
+    </script>
+    <script>
+      document.getElementById("id_cep").addEventListener("change", function() {
+          var cep = this.value.replace(/\D/g, "");
+          
+          if (cep.length === 8) {
+              // Faz a chamada à API para obter os dados do CEP
+              fetch(`https://viacep.com.br/ws/${cep}/json/`)
+              .then(response => response.json())
+              .then(data => {
+                  if (data.erro) {
+                      console.log("CEP não encontrado");
+                      return;
+                  }
+                  console.log(data)
+                  
+                  // Preenche os campos do formulário com os dados retornados
+                  document.getElementById("id_estado_cidade").value = `${data.uf}, ${data.localidade}`;
+                  document.getElementById("id_bairro").value = data.bairro;
+                  document.getElementById("id_rua").value = data.logradouro;
+                  if (document.getElementById("id_telefone").value == ''){
+                      document.getElementById("id_telefone").value = data.ddd;
+                  }
+              })
+              .catch(error => {
+                  console.log("Erro ao obter dados do CEP:", error);
+              });
+          }
+      });
+  </script>
 {% endblock content %}
+
+

@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('numero', models.IntegerField(unique=True, verbose_name='Numero da mesa')),
-                ('status', models.CharField(default='disponível', max_length=20, verbose_name='Status da mesa')),
+                ('status', models.CharField(default='Disponível', max_length=20, verbose_name='Status da mesa')),
             ],
         ),
         migrations.CreateModel(

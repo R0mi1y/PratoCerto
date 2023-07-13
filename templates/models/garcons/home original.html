@@ -1,0 +1,169 @@
+<!-- home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Página Inicial - Garçons{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .sidebar {
+            background-color: #f2f2f2;
+            padding: 20px;
+            width: 200px;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .table-box {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .table-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .table-status {
+            color: #333;
+        }
+
+        .message {
+            color: #333;
+            font-style: italic;
+        }
+
+        a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        img {
+            width: 200px;
+            height: auto;
+        }
+    
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+    
+        .image-container img {
+            display: block;
+        }
+    
+        .image-container p {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px;
+            text-align: center;
+            color: white;
+        }
+        /* Estilos adicionais para notificações da cozinha */
+        .kitchen-notifications {
+            background-color: #f2f2f2;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .kitchen-notifications h2 {
+            color: #333;
+        }
+
+        .kitchen-notifications .notification {
+            background-color: #ffcc00;
+            color: #333;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .kitchen-notifications .notification p {
+            margin: 0;
+        }
+
+        .kitchen-notifications .notification .order {
+            font-weight: bold;
+        }
+
+        .kitchen-notifications .notification .pratos {
+            margin-top: 5px;
+        }
+
+        .kitchen-notifications .notification .prato {
+            margin-bottom: 5px;
+        }
+    </style>
+
+
+      
+    <section class="container">
+        <div class="sidebar">
+            <h2>Cardápio</h2>
+            {% for categoria in Categorias %}
+                <a href="/pratos/categoria/{{ categoria.0 }}" class="category-link">
+                    <div class="image-container">
+                        <img src="{% static 'img/' %}{{ categoria.0 }}.jpeg" alt="">
+                        <p>{{ categoria.1 }}</p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        
+    </section>
+
+    <section class="container">
+        <div class="content">
+            <h1>Página Inicial - Garçons</h1>
+            {% if tables %}
+                <h2>Mesas Disponíveis:</h2>
+                {% for table in tables %}
+                    <div class="table-box">
+                        <div class="table-number">Mesa {{ table.numero }}</div>
+                        <div class="table-status">Status: {{ table.status }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="message">Não há mesas disponíveis no momento.</p>
+            {% endif %}
+
+            <div class="kitchen-notifications">
+                <h2>Notificações da Cozinha</h2>
+                <div class="notification" id="pedidoPratos">
+                    <p>Não há notificações da cozinha no momento.</p>
+                </div>
+            </div> 
+        </div>
+    </section>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/notificar_garcom.js' %}"></script>
+{% endblock content %}

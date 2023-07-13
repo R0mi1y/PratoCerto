@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
+    
+    'corsheaders',
 ]
 
 SITE_ID = 1
@@ -63,6 +65,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "PratoCerto.urls"
@@ -176,7 +179,7 @@ AUX = {
         ("entradas", "Entradas"),
         ("pratos_principais", "Pratos Principais"),
         ("massas_risotos", "Massas e Risotos"),
-        ("sanduiches_hamburgueres", "Sanduíches e Hambúrgueres"),
+        ("sanduiches_hamburgueres", "Lanches"),
         ("sobremesas", "Sobremesas"),
         ("bebidas", "Bebidas"),
         ("especiais_chef", "Especiais do Chef"),
@@ -186,8 +189,9 @@ AUX = {
     "pontos": {
         "indicação": 20,
         "indicado": 10,
-        "por_compra": 10,
+        "por_valor_compra": 10,
         "por_rs": 1,
+        "valor_rs": 0.2,
     },
     "horario_abertura": "9:00",
     "horario_encerramento": "21:00",
@@ -200,3 +204,5 @@ MERCADOPAGO_PUBLIC_KEY = "APP_USR-d3aa1835-6e08-417b-aaf1-4e7eb7623102"
 MERCADOPAGO_ACCESS_TOKEN = 'APP_USR-4147311653907718-071021-d4636e2f103e1d55546819b03e8c141d-1336869796'
 CLIENT_ID = '4147311653907718'
 CLIENT_SECRET = 'kvAxR7bd8Xtb87ThC5CjEqpCVWbHJKy9'
+
+CORS_ORIGIN_ALLOW_ALL = True

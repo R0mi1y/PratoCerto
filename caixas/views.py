@@ -47,11 +47,15 @@ from django.shortcuts import redirect
 def home(request):
     pedido = None
     troco = None
-
+    
+    contexto = {
+        "troco": round(0, 2) ,
+    }
     if request.method == 'POST':
         pedido_id = request.POST.get('pedido_id')
         valor_pago = request.POST.get('valor_pago')
-
+        request.method = "GET"
+        
         pedido = get_object_or_404(Pedido, id=pedido_id)
 
         if decimal.Decimal(valor_pago) >= pedido.total:
@@ -59,32 +63,19 @@ def home(request):
             pedido.save()
 
             troco = decimal.Decimal(valor_pago) - pedido.total
-            troco = round(troco, 2)
-
-            # Define o valor de 'troco' na sessão
-            request.session['troco'] = str(troco)
-
+            contexto['troco'] = round(troco, 2)
+        
             # Redireciona para a mesma página para limpar os valores anteriores
-            return redirect('home')
+            # return redirect('home')
 
     elif request.method == 'GET':
         pedido_id = request.GET.get('pedido_id')
         if pedido_id:
             pedido = get_object_or_404(Pedido, id=pedido_id)
 
-        # Remove o valor de 'troco' da sessão
-        if 'troco' in request.session:
-            del request.session['troco']
-
-    contexto = {
-        'pedido': pedido,
-        'troco': troco
-    }
+    contexto['pedido'] = pedido
 
     return render(request, 'models/caixas/home_caixa.html', contexto)
-
-
-
 
 
 def historico_pedidos(request):
@@ -93,14 +84,17 @@ def historico_pedidos(request):
     # Obter histórico diário
     pedidos_pagos = Pedido.objects.filter(status='Pago')
     historico_diario = []
+    total_diario = 0  # Variável para calcular a quantidade arrecadada do dia
     
     for pedido in pedidos_pagos:
         data_pedido = timezone.localtime(pedido.data_pedido).date()
         if data_pedido == hoje:
             historico_diario.append(pedido)
+            total_diario += pedido.total
     
     # Obter histórico mensal
     historico_mensal = []
+    total_mensal = 0  # Variável para calcular a quantidade arrecadada do mês
     primeiro_dia_mes = hoje.replace(day=1)
     ultimo_dia_mes = primeiro_dia_mes + timedelta(days=31)
     pedidos_mensais = Pedido.objects.filter(status='Pago', data_pedido__range=(primeiro_dia_mes, ultimo_dia_mes))
@@ -109,11 +103,14 @@ def historico_pedidos(request):
         data_pedido = timezone.localtime(pedido.data_pedido).date()
         if primeiro_dia_mes <= data_pedido <= ultimo_dia_mes:
             historico_mensal.append(pedido)
+            total_mensal += pedido.total
 
     contexto = {
         'historico_diario': historico_diario,
         'historico_mensal': historico_mensal,
         'hoje': hoje,
+        'total_diario': total_diario,
+        'total_mensal': total_mensal,
     }
 
     return render(request, 'models/caixas/historico.html', contexto)
@@ -145,20 +142,7 @@ def criar_editar_caixa(request, id=None):
         caixa = Caixa.objects.get(id=id)
 
     if request.method == "POST":
-        if id:
-            garcom = Garcom.objects.get(id=id)
-            
-            garcom.password = make_password(request.POST.get("password"))
-            garcom.cpf = request.POST.get('cpf')
-            garcom.telefone = request.POST.get('telefone')
-            garcom.email = request.POST.get('email')
-            garcom.tipo_conta = "Garcom"
-            garcom.save()
-            
-            assign_role(garcom, "garcom")
-            
-            return redirect("home_admin")
-        form = CaixaForm(request.POST)
+        form = CaixaForm(request.POST, instance=caixa)
         if form.is_valid():
             caixa = form.save(commit=False)
             caixa.tipo_conta = "Caixa"

@@ -35,7 +35,8 @@ def home(request):
         "Categorias":AUX["Categorias"],
         "cliente": request.user,
         "eventos": Evento.objects.filter(data_inicio__lte=current_datetime, data_termino__gte=current_datetime),
-        "recomendados":recomendados
+        "recomendados":recomendados,
+        "notificacao": True,
     }
     
     return render(request, "models/clientes/home.html", data)
@@ -113,6 +114,18 @@ def gerar_aleatorio(string):
     print(hash_hex)
     
     return (hash_hex[:2] + string + hash_hex[2:4]).upper()
+
+
+
+
+# def notificacoes(request):
+#     status_pedido = "Pendente"  # Substitua essa linha pelo código para obter o status do pedido
+
+#     context = {
+#         'status_pedido': status_pedido
+#     }
+    
+#     return render(request, 'models/clientes/home.html', context)
 
 
 @has_role_decorator("cliente")
@@ -199,23 +212,35 @@ def comprar_carrinho(request):
             pedidoPrato.status = "Pago"
             pedidoPrato.pedido = pedido
             
-        pedido.total = total
+        cliente.pontos = float(total) / float(settings.AUX['pontos']['por_valor_compra'])
+        valor_preco_pontos = None
+        if request.POST.get('usar_pontos'):
+            total = float(total) - float(settings.AUX['pontos']['valor_rs']) * float(cliente.pontos)
+            valor_preco_pontos = float(total) - float(settings.AUX['pontos']['valor_rs']) * float(cliente.pontos)
+            cliente.pontos = 0
         
-        if len(PedidoPrato.objects.filter(pedido=pedido).exclude(status="Pago")) == 0:
-            pedido.status = "Pago"
+        pedido.status = "Pago"
+        pedido.total = total
         
         pedido.save()
         [pedidoPrato.save() for pedidoPrato in pedidosPrato]
         
+        cliente.save()
+        
         if pedido.local_retirada == 'entrega' and pedido.metodo_pagamento != 'dinheiro':
-            return pagar_pedido(request, pedido)
+            return pagar_pedido(request, pedido, valor_preco_pontos)
         return redirect("home_cliente")
+    total = 0
                 
-                
-
+    for pedidoPrato in pedidosPrato:
+        total += pedidoPrato.prato.preco * pedidoPrato.quantidade
+    
     context = {
         "pedidos": pedidosPrato,
         "form": PedidoForm(cliente_id=cliente.pk),
+        "total": total,
+        "taxa_entrega": settings.AUX["frete_entrega"],
+        'valor_rs': settings.AUX['pontos']['valor_rs'],
     }
     
     return render(request, 'models/pedidos/pagamento.html', context)
@@ -350,13 +375,13 @@ def editar_cliente(request, id):
         cliente = Cliente.objects.get(id=id)
     
     if request.method == "POST":
-        form = ClienteFormAdmin(request.POST, request.FILES, instance=cliente)
+        form = EditarClienteFormAdmin(request.POST, request.FILES, instance=cliente)
         if form.is_valid():
             form.save()
 
             return redirect("gerenciar_clientes")
     else:
-        form = ClienteFormAdmin(instance=cliente)
+        form = EditarClienteFormAdmin(instance=cliente)
     return render(request, "models/forms/form.html", {"form": form, "cliente": cliente, "titulo":"Editar Cliente"})
 
 

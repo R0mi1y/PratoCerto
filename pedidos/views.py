@@ -5,6 +5,7 @@ from pratos.models import Prato, Comentario
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from pagamentos.views import pagar_reserva
 
 
 def fazer_pedido(request, id):
@@ -54,7 +55,8 @@ def criar_reserva(request):
         form = ReservaForm(request.POST, cliente_id=cliente.pk)
         if form.is_valid():
             reserva = form.save()
-
+            
+            print("================================================================")
             for mesa in reserva.mesa.all():
                 reservas = Reserva.objects.filter(mesa=mesa).exclude(id=reserva.pk)
 
@@ -65,14 +67,17 @@ def criar_reserva(request):
                                 reserva2.data_reserva == reserva.data_reserva
                                 and reserva2.horario == reserva.horario
                             ):
-                                msm += f"{mesa} indisponível para {reserva2.horario} {reserva2.data_reserva}!\n"
+                                msm += f"{mesa} Indisponível para {reserva2.horario} {reserva2.data_reserva}!\n"
                         else:
                             if reserva2.data_reserva == reserva.data_reserva:
-                                msm += f"{mesa} indisponível para {reserva2.data_reserva}!\n"
+                                msm += f"{mesa} Indisponível para {reserva2.data_reserva}!\n"
             if msm == "":
-                return redirect("home")
+                total = request.POST.get("preco_total")
+                print(total + "================================================================")
+                return pagar_reserva(request, total)
+            
             reserva.delete()
-            messages.error(request, msm)
+            return redirect("/pedidos/pedir/reserva?msm=" + msm)
 
     return render(
         request,

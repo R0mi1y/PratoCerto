@@ -50,7 +50,7 @@ class PedidoPratoGarcomForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-control'
                 field.widget.attrs['placeholder'] = field_name
                 
-        self.fields.widget["observacao"].attrs = 'Ex: tirar a cebola, maionese à parte etc.'
+        self.fields["observacao"].widget.attrs["placeholder"] = 'Ex: tirar a cebola, maionese à parte etc.'
 
         if prato_id:
             self.fields["prato"].initial = prato_id

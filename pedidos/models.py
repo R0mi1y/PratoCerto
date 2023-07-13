@@ -12,7 +12,7 @@ class Mesa(models.Model):
     status = models.CharField(
         "Status da mesa",
         max_length=20,
-        default="disponível",
+        default="Disponível",
         choices=[
             ("disponível", "Disponível"),
             ("indisponível", "Indisponível"),

@@ -1,19 +1,15 @@
 from django import forms
 from .models import Adicional, Prato, Ingrediente, Receita, IngredienteReceita
+from django.utils.html import format_html
+
 
 class PratoForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            if isinstance(field.widget, forms.widgets.Input):
-                field.widget.attrs['class'] = 'form-control'
 
     adicional = forms.ModelMultipleChoiceField(
         queryset=Adicional.objects.all(),
-        widget=forms.MultipleChoiceField(attrs={'class': 'form-control'}),
+        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
         required=False,
     )
-
     receita = forms.ModelChoiceField(
         queryset=Receita.objects.all(),
         required=False,
@@ -23,7 +19,14 @@ class PratoForm(forms.ModelForm):
     class Meta:
         model = Prato
         fields = ["nome", "disponivel", "categoria", "preco", "foto", "adicional", "receita", "descricao"]
-
+        widgets = {
+            "categoria":forms.Select(attrs={'class': 'form-control'}),
+            "descricao":forms.Textarea(attrs={'class': 'form-control'}),
+            "nome": forms.TextInput(attrs={'class': 'form-control'}),
+            "preco": forms.NumberInput(attrs={'class': 'form-control'}),
+            "foto": forms.FileInput(attrs={'class': 'form-control'}),
+            "disponivel": forms.CheckboxInput(attrs={'class':'form-control-checkbox'}),
+        }
 
 
 class IngredienteReceitaForm(forms.ModelForm):
@@ -37,23 +40,12 @@ class AdicionalForm(forms.ModelForm):
     class Meta:
         model = Adicional
         fields = ['nome', 'descricao', 'preco', 'foto']
-        labels = {
-            'nome': 'Nome',
-            'descricao': 'Descrição',
-            'preco': 'Preço',
-            'foto': 'Imagem do Prato'
-        }
         widgets = {
-            'descricao': forms.Textarea(attrs={'rows': 3}),
-            'foto': forms.FileInput()
+            'preco': forms.NumberInput(attrs={'class': 'form-control', 'placeholder':'Preço'}),
+            'nome': forms.TextInput(attrs={'rows': 3, 'class': 'form-control', 'placeholder': 'Nome'}),
+            'descricao': forms.Textarea(attrs={'rows': 3, 'class': 'form-control', 'placeholder': 'Descrição'}),
+            'foto': forms.FileInput(attrs={'class': 'form-control'})
         }
-        
-    def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
-        for field_name, field in self.fields.items():
-            if isinstance(field.widget, forms.widgets.Input):
-                field.widget.attrs['class'] = 'form-control'
-                field.widget.attrs['placeholder'] = field_name
 
 
 class IngredienteForm(forms.ModelForm):

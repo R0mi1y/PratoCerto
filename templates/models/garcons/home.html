@@ -1,127 +1,152 @@
 <!-- home.html -->
-{% extends 'base/base.html' %}
-{% load static %}
-
-{% block title %}Página Inicial - Garçons{% endblock %}
-
+{% extends 'base/base.html' %} 
+{% load static %} 
+{% block title %}Página Inicial - Garçons{% endblock %} 
 {% block content %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+<style>
+    /*
+    .container {
+        display: flex;
+        align-items: stretch;
+    }
 
-        .container {
-            display: flex;
-            align-items: stretch;
-        }
+    .content {
+        flex-grow: 1;
+        padding: 20px;
+    } */
 
-        .sidebar {
-            background-color: #f2f2f2;
-            padding: 20px;
-            width: 200px;
-        }
+    h1, h2 {
+        color: #281828;
+        font-family: "Belanosima", sans-serif;
+    }
 
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-        }
+    .table-box {
+        background-color: #fff;
+        border: 1px solid #181818;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
 
-        h1, h2 {
-            color: #333;
-        }
+    .table-number {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+    }
 
-        .table-box {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
+    .table-status {
+        color: #181818;
+    }
 
-        .table-number {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
+    .message {
+        color: #333;
+        font-style: italic;
+    }
 
-        .table-status {
-            color: #333;
-        }
+    a {
+        color: #333;
+        text-decoration: none;
+    }
 
-        .message {
-            color: #333;
-            font-style: italic;
-        }
+    a:hover {
+        text-decoration: underline;
+    }
+    /* .sidebar {
+        background-color: #f2f2f2;
+        padding: 20px;
+        width: 200px;
+    } */
+  /* Estilos adicionais para notificações da cozinha */
+  .kitchen-notifications {
+    background-color: #f2f2f2;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+  }
 
-        a {
-            color: #333;
-            text-decoration: none;
-        }
+  
+  .kitchen-notifications h2 {
+    color: #333;
+  }
 
-        a:hover {
-            text-decoration: underline;
-        }
+  .kitchen-notifications .notification {
+    background-color: #ffcc00;
+    color: #333;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
 
-        img {
-            width: 200px;
-            height: auto;
-        }
-    
-        .image-container {
-            position: relative;
-            display: inline-block;
-        }
-    
-        .image-container img {
-            display: block;
-        }
-    
-        .image-container p {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 10px;
-            text-align: center;
-            color: white;
-        }
-        /* Estilos adicionais para notificações da cozinha */
-        .kitchen-notifications {
-            background-color: #f2f2f2;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 5px;
-        }
+  .kitchen-notifications .notification p {
+    margin: 0;
+  }
 
-        .kitchen-notifications h2 {
-            color: #333;
-        }
+  .kitchen-notifications .notification .order {
+    font-weight: bold;
+  }
 
-        .kitchen-notifications .notification {
-            background-color: #ffcc00;
-            color: #333;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
+  .kitchen-notifications .notification .pratos {
+    margin-top: 5px;
+  }
 
-        .kitchen-notifications .notification p {
-            margin: 0;
-        }
+  .kitchen-notifications .notification .prato {
+    margin-bottom: 5px;
+  }
 
-        .kitchen-notifications .notification .order {
-            font-weight: bold;
-        }
 
-        .kitchen-notifications .notification .pratos {
-            margin-top: 5px;
-        }
+</style>
 
-        .kitchen-notifications .notification .prato {
-            margin-bottom: 5px;
-        }
-    </style>
-    <div class="container">
+<section class="offer_section">
+  <div class="sidebar">
+    <div class="offer_container">
+      <h1
+        style="
+          text-align: center;
+          font-family: 'Belanosima', sans-serif;
+          color: #181818;
+        "
+      >
+        Cardápio
+      </h1>
+        <div class="scroll-horizontal">
+            <div class="container">
+                <div class="row garcomrow">
+                    {% for categoria in Categorias %}
+                        <div class="card-body">
+                            <div class="p-0">
+                                <div class="image-container">
+                                    <a href="/pratos/categoria/{{ categoria.0 }}">
+                                    <img
+                                        src="{% static 'img/' %}{{ categoria.0 }}.jpeg"
+                                        alt="Descrição da imagem"
+                                    /></a>
+                                </div>
+                                <div class="card-body">
+                                    <h6
+                                    style="
+                                        font-size: 1.8rem;
+                                        font-family: 'Belanosima', sans-serif;
+                                    "
+                                    >
+                                    <a
+                                        class="button-category"
+                                        href="/pratos/categoria/{{ categoria.0 }}"
+                                    >
+                                        <span style="color: #181818">{{ categoria.1 }}</span>
+                                    </a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="container">
         <div class="sidebar">
             <h2>Cardápio</h2>
             {% for categoria in Categorias %}
@@ -133,6 +158,9 @@
                 </a>
             {% endfor %}
         </div>
+    </section> -->
+
+<section class="container">
         <div class="content">
             <h1>Página Inicial - Garçons</h1>
             {% if tables %}
@@ -140,33 +168,32 @@
                 {% for table in tables %}
                     <div class="table-box">
                         <div class="table-number">Mesa {{ table.numero }}</div>
-                        <div class="table-status">Status: {{ table.status }}</div>
+                        <div class="table-status">
+                            {% if table.status == "disponível" %}
+                            <ul>
+                                <li class="status open">{{ table.status }}</li>
+                            </ul>
+                            {% else %}
+                            <ul>
+                                <li class="status dead">{{ table.status }}</li>
+                            </ul>
+                            {% endif %}
+                        </div>
                     </div>
                 {% endfor %}
             {% else %}
                 <p class="message">Não há mesas disponíveis no momento.</p>
             {% endif %}
 
-            <h2>Pedidos em Andamento:</h2>
-            {% if orders %}
-                <ul>
-                    {% for order in orders %}
-                        <li>{{ order.cliente }} - {{ order.status }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="message">Não há pedidos em andamento.</p>
-            {% endif %}
-
-
-            {% comment %} <div class="kitchen-notifications">
+            <div class="kitchen-notifications">
                 <h2>Notificações da Cozinha</h2>
                 <div class="notification" id="pedidoPratos">
                     <p>Não há notificações da cozinha no momento.</p>
                 </div>
-            </div> {% endcomment %}
+            </div> 
         </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'js/notificar_garcom.js' %}"></script>
+    </section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/notificar_garcom.js' %}"></script>
 {% endblock content %}

@@ -59,10 +59,10 @@ class PedidoPratoForm(forms.ModelForm):
 
         self.fields["adicional"] = forms.ModelMultipleChoiceField(
             queryset=Prato.objects.get(pk=prato_id).adicional,
-            widget=forms.CheckboxSelectMultiple(
-                attrs={
-                    "class": "form-control",
-                    }),
+            widget=forms.CheckboxSelectMultiple(),
+                # attrs={
+                #     "class": "form-control",
+                #     }),
             required=False,
         )
 
@@ -99,7 +99,7 @@ class ReservaForm(forms.ModelForm):
         self.fields["preco_total"].widget = forms.HiddenInput()
         
         self.fields["mesa"] = forms.ModelMultipleChoiceField(
-            queryset=Mesa.objects.filter(status="disponível"),
+            queryset=Mesa.objects.filter(status="Disponível"),
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
@@ -141,7 +141,12 @@ class ReservaForm(forms.ModelForm):
                 
         self.fields["observacao"].widget.attrs['placeholder'] = 'Ex: Festa de aniversário, reuniões de negócios, comemorações familiares, etc..'
         self.fields["observacao"].widget.attrs['class'] = 'form-control'
-
+    qnt_pessoas = forms.IntegerField(widget=forms.NumberInput(attrs={
+            "min": 1,
+            "class": "form-control",
+            "min":"1", "max":"0", "value":"1", "required":True, "id":"id_qnt_pessoas",
+        }), label="Quantidade de pessoas")
+    
     class Meta:
         model = Reserva
         fields = [

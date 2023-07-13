@@ -10,16 +10,24 @@ def get_pedidoPrato(request, status):
 
     for pedidoPrato in pedidoPrato_prontos:
         pedidoPratoDic = {
-            'pedidoPrato' : model_to_dict(pedidoPrato),
+            'pedidoPrato': model_to_dict(pedidoPrato),
             'pedido': model_to_dict(pedidoPrato.pedido),
-            'prato' : {
+            'prato': {
                 'foto': pedidoPrato.prato.foto.url,
                 'nome': pedidoPrato.prato.nome,
             }
         }
+        
+        if pedidoPrato.pedido.mesa_id:
+            pedidoPratoDic['pedido']['mesa'] = model_to_dict(pedidoPrato.pedido.mesa)
+            
+        elif pedidoPrato.pedido.endereco_id:
+            pedidoPratoDic['pedido']['endereco'] = model_to_dict(pedidoPrato.pedido.endereco)
+            
         pedidoPratos_array.append(pedidoPratoDic)
     
     return JsonResponse({"pedidoPrato_prontos": pedidoPratos_array})
+
 
 
 def get_pedidos(request, status):
