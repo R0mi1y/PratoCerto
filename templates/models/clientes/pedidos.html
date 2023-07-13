@@ -8,9 +8,27 @@
 
 <style>
     .nome {
-        color: red;
+        color: #181818;
+    }
+    .info > .data > p{
+        font-family: 'Belanosima', sans-serif !important;
+        font-size: 1.2rem;
+    }
+    .info > .nome > h2{
+        font-family: 'Belanosima', sans-serif !important;
     }
 </style>
+
+<h1
+      style="
+        text-align: center;
+        font-family: 'Belanosima', sans-serif;
+        color: #181818;
+      "
+    >
+      Pedidos
+    </h1>
+    <hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
 
 {% if pedidos %}
     {% for pedido in pedidos %}
@@ -18,7 +36,7 @@
             <div class="info">
                 <div class="nome"><h2>{{ pedido.cliente.username }}</h2></div>
                 <div class="data"><p>{{ pedido.data_pedido }}</p></div>
-                <div class="data"><p>{{ pedido.status }}</p></div>
+                <div class="data" style="color: #ffaa00"><p>{{ pedido.status }}</p></div>
                 <div class="data"><p>R$ {{ pedido.total }}</p></div>
                 {% if has_garcom_role %}
                 <div class="data"><p>{{ pedido.mesa }}</p></div>

@@ -13,7 +13,7 @@
     }
     
     .pedido img {
-        width: 50px;
+        width: 190px;
         height: auto;
         margin-right: 10px;
     }
@@ -38,7 +38,21 @@
         margin-top: 10px;
         margin-bottom: 20px;
     }
+    .btn-secondary{
+        background-color: transparent;
+    }
 </style>
+
+<h1
+      style="
+        text-align: center;
+        font-family: 'Belanosima', sans-serif;
+        color: #181818;
+      "
+    >
+      Carrinho
+    </h1>
+    <hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
 
 {% if pedidos %}
     {% for pedido in pedidos %}
@@ -50,14 +64,14 @@
                 <div class="data">{{ pedido.data_pedido }}</div>
                 <div class="data">{{ pedido.quantidade }}</div>
 
-                <a href="{% url "remover_carrinho_garcom" id=pedido.id %}"> excluir </a> |
-                <a href="{% url "editar_carrinho_garcom" id=pedido.id %}"> editar </a>
+                <a class="btn btn-secondary" style="color: #181818;" href="{% url "remover_carrinho_garcom" id=pedido.id %}"> excluir </a> |
+                <a class="btn btn-secondary" style="color: #181818;" href="{% url "editar_carrinho_garcom" id=pedido.id %}"> editar </a>
             </div>
         </div>
         <hr>
     {% endfor %}
 
-    <a href="{% url "comprar_carrinho_garcom" %}">Pedir</a>
+    <a class="btn btn-secondary" style="color: #181818;" href="{% url "comprar_carrinho_garcom" %}">Pedir</a>
 {% endif %}
 
 {% endblock %}
