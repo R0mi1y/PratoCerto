@@ -43,12 +43,12 @@
     <hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
     
     <div class="container">
-      <div class="row">
+      <div class="row" style="padding: 0px 80px">
         {% for categoria in Categorias %}
         <div class="card-body">
           <div class="p-0">
             <div class="image-container">
-              <a href="/pratos/categoria/{{ categoria.0 }}"> <img
+              <a href="{{prefix}}/pratos/categoria/{{ categoria.0 }}"> <img
                 src="{% static 'img/' %}{{ categoria.0 }}.jpeg"
                 alt="Descrição da imagem"
               /></a>
@@ -62,7 +62,7 @@
               >
                 <a
                   class="button-category"
-                  href="/pratos/categoria/{{ categoria.0 }}"
+                  href="{{prefix}}/pratos/categoria/{{ categoria.0 }}"
                 >
                   <span style="color: #181818">{{ categoria.1 }}</span>
                 </a>

@@ -128,7 +128,7 @@
         <div class="sidebar">
             <h2>Cardápio</h2>
             {% for categoria in Categorias %}
-                <a href="/pratos/categoria/{{ categoria.0 }}" class="category-link">
+                <a href="{{prefix}}/pratos/categoria/{{ categoria.0 }}" class="category-link">
                     <div class="image-container">
                         <img src="{% static 'img/' %}{{ categoria.0 }}.jpeg" alt="">
                         <p>{{ categoria.1 }}</p>

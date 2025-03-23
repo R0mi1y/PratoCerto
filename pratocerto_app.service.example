@@ -1,0 +1,17 @@
+[Unit]
+Description=Servidor da api do PratoCerto
+After=network.target
+
+[Service]
+User=romily
+Group=romily
+WorkingDirectory=/home/romily/repositories/pessoal/pratocerto
+Environment="PATH=/home/romily/repositories/pessoal/pratocerto/venv/bin"
+Environment="DJANGO_SETTINGS_MODULE=PratoCerto.settings"
+ExecStart=/home/romily/repositories/pessoal/pratocerto/venv/bin/daphne \
+          --bind 127.0.0.1 \
+          --port 8002 \
+          PratoCerto.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

@@ -10,9 +10,9 @@ window.addEventListener("resize", () => {
   }
 });
 
-logoElement.addEventListener("click", () => {
-  window.location.href = "/";
-});
+// logoElement.addEventListener("click", () => {
+//   window.location.href = "/";
+// });
 
 mobileMenuBtn.addEventListener("click", () => {
   toggleMobileMenu();

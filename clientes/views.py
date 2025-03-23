@@ -52,15 +52,42 @@ def check_password_strength(password):
         return False
 
 
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+
 def criar_usuario_cliente(request):
     if request.method == "POST":
         form_cliente = ClienteForm(request.POST)
+        senha = request.POST.get("password")
+        senha_confirmacao = request.POST.get("confirm_password")
 
         try:
             print("Recuperando usuario...")
             cliente = Cliente.objects.get(username=request.POST.get("username"))
             print("Usuario Recuperado!")
-            cliente.password = make_password(request.POST.get("password"))
+
+            # Validação da senha
+            if senha != senha_confirmacao:
+                messages.error(request, "As senhas não coincidem.")
+                return render(
+                    request,
+                    "models/clientes/registrar.html",
+                    {"form_cliente": form_cliente},
+                )
+
+            try:
+                # Validação adicional da senha com as regras do Django
+                validate_password(senha)
+            except ValidationError as e:
+                messages.error(request, f"Erro na validação da senha: {', '.join(e.messages)}")
+                return render(
+                    request,
+                    "models/clientes/registrar.html",
+                    {"form_cliente": form_cliente},
+                )
+
+            # Salvar a senha validada
+            cliente.password = make_password(senha)
             cliente.cpf = request.POST.get('cpf')
             cliente.telefone = request.POST.get('telefone')
             cliente.email = request.POST.get('email')

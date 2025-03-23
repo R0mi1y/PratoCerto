@@ -29,7 +29,7 @@
   <meta name="author" content="" />
   <link rel="icon" href="{% static "images/icons/logo-icon.png" %}"/>
   
-  <title>{% block titulo %} PratoCerto {% endblock titulo %} </title>
+  <title>{% block titulo %} {{APP_NAME}} {% endblock titulo %} </title>
   
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css"%}" />
@@ -121,7 +121,7 @@
   <header >
     <section class="container">
             <nav class="fixed-top">
-              <div id="kyu-logo">
+              <div id="kyu-logo" onclick="window.location.href='{{prefix}}/'">
                 <img src="{% static "images/icons/logo.png"%}" />
               </div>
       
@@ -282,7 +282,7 @@
   <!-- Pop-up de carregamento -->
   <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-spinner">
-      <img style="width: 45px;" src="/static/images/icons/icon-loading.png">
+      <img style="width: 45px;" src="{{prefix}}/static/images/icons/icon-loading.png">
     </div>
   </div>
   <!-- Pop-up de carregamento -->
@@ -334,10 +334,10 @@
         <div class="col-md-4 footer-col">
           <div class="footer_detail">
             <a href="" class="footer-logo">
-              Prato Certo
+              {{APP_NAME}}
             </a>
             <p>
-              PratoCerto, O sabor que você procura, servido com excelência!
+              {{APP_NAME}}, O sabor que você procura, servido com excelência!
             </p>
             <div class="footer_social">
               <a href="">

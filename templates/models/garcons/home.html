@@ -122,7 +122,7 @@
                         <div class="card-body">
                             <div class="p-0">
                                 <div class="image-container">
-                                    <a href="/pratos/categoria/{{ categoria.0 }}">
+                                    <a href="{{prefix}}/pratos/categoria/{{ categoria.0 }}">
                                     <img
                                         src="{% static 'img/' %}{{ categoria.0 }}.jpeg"
                                         alt="Descrição da imagem"
@@ -137,7 +137,7 @@
                                     >
                                     <a
                                         class="button-category"
-                                        href="/pratos/categoria/{{ categoria.0 }}"
+                                        href="{{prefix}}/pratos/categoria/{{ categoria.0 }}"
                                     >
                                         <span style="color: #181818">{{ categoria.1 }}</span>
                                     </a>
@@ -157,7 +157,7 @@
         <div class="sidebar">
             <h2>Cardápio</h2>
             {% for categoria in Categorias %}
-                <a href="/pratos/categoria/{{ categoria.0 }}" class="category-link">
+                <a href="{{prefix}}/pratos/categoria/{{ categoria.0 }}" class="category-link">
                     <div class="image-container">
                         <img src="{% static 'img/' %}{{ categoria.0 }}.jpeg" alt="">
                         <p>{{ categoria.1 }}</p>

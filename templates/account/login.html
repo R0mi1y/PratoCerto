@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
-    <title>Login PratoCerto</title>
+    <title>Login {{APP_NAME}}</title>
     <link rel="icon" href="{% static "images/icons/logo-icon.png" %}"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -27,7 +27,7 @@
             <!-- Pop-up de carregamento -->
                 <div class="loading-overlay" id="loadingOverlay">
                   <div class="loading-spinner">
-                    <img style="width: 45px;" src="/static/images/icons/icon-loading.png">
+                    <img style="width: 45px;" src="{{prefix}}/static/images/icons/icon-loading.png">
                   </div>
                 </div>
                 <!-- Pop-up de carregamento -->
@@ -39,7 +39,7 @@
                         <div class="login-wrap p-0">
                             <div class="card2">
                               <div class="row justify-content-center img-man">
-                                  <img style="width: 185px"src="/static/images/icons/man-icon.png"/>
+                                  <img style="width: 185px"src="{{prefix}}/static/images/icons/man-icon.png"/>
                               </div>
                             </div>
                           <h3 class="text-center" style="color: #91202d"><b>Recupere a sua Senha</b></h3>
@@ -75,7 +75,7 @@
                 <div class="login-wrap p-0">
                   <h3 class="text-center">Boas-vindas!</h3>
                   <p class="text-center mb-4"> Faça o login em sua conta</p>
-                  <form id="loginForm" action="/accounts/login/" method="POST" class="signin-form">
+                  <form id="loginForm" action="{{prefix}}/accounts/login/" method="POST" class="signin-form">
                     {% csrf_token %}
                     <div class="form-group">
                       <input id="username-field"type="text" class="form-control" placeholder="Nome" name="login" required />
@@ -99,7 +99,7 @@
                     <span id="senhaErro" class="error-message"></span>
                     <div class="form-group d-md-flex">
                       <div class="w-20 text-md-right">
-                        <a href="/accounts/password/reset/" style="user-select: none; color: #181818">Esqueceu sua senha?</a>
+                        <a href="{% url "account_reset_password" %}" style="user-select: none; color: #181818">Esqueceu sua senha?</a>
                       </div>
                     </div>
                     <div class="d-md-flex">
@@ -107,7 +107,7 @@
                         <p style="user-select: none; color: #eeeeee">Precisando de uma conta?</p>
                       </div>
                       <div class="w-30 text-md-right">
-                        <a href="/clientes/register" style="user-select: none; color: #181818;">Registre-se</a>
+                        <a href="{% url "cadastrar_cliente" %}" style="user-select: none; color: #181818;">Registre-se</a>
                       </div>
                     </div>
                     {% if redirect_field_value %}
@@ -116,10 +116,10 @@
                   </form>
                   <hr style="background-color: #91202d">
                   <div class="social d-flex text-center justify-content-center">
-                    <form action="/accounts/google/login/?process=login" method="post">
+                    <form action="{{prefix}}/accounts/google/login/?process=login" method="post">
                       {% csrf_token %}
                         <button class="btn btn-primary submit px-3">
-                          <img style="width: 25px" src="/static/images/icons/pesquisa.png">
+                          <img style="width: 25px" src="{{prefix}}/static/images/icons/pesquisa.png">
                           <span class="mr-2 px-2 py-2 ml-md-1" style="font-family: 'Inter', sans-serif;">Google</span>
                         </button>
                     </form>
@@ -131,7 +131,6 @@
         </div>
       </div>
     </section>
-    <script src="{% static "js/main.js"%}"></script>
     <script>
       const urlParams = new URLSearchParams(window.location.search);
       const msm = urlParams.get('msm');
