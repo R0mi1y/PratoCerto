@@ -48,8 +48,8 @@
         <div class="card-body">
           <div class="p-0">
             <div class="image-container">
-              <a href="{{prefix}}/pratos/categoria/{{ categoria.0 }}"> <img
-                src="{% static 'img/' %}{{ categoria.0 }}.jpeg"
+              <a href="{% url 'categoria' categoria.pk %}"> <img
+                src="{{ categoria.image.url }}"
                 alt="Descrição da imagem"
               /></a>
             </div>
@@ -62,9 +62,9 @@
               >
                 <a
                   class="button-category"
-                  href="{{prefix}}/pratos/categoria/{{ categoria.0 }}"
+                  href="{% url 'categoria' categoria.pk %}"
                 >
-                  <span style="color: #181818">{{ categoria.1 }}</span>
+                  <span style="color: #181818">{{ categoria.label }}</span>
                 </a>
               </h6>
             </div>

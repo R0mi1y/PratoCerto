@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django import forms
 from clientes.models import Endereco, Cliente
-from PratoCerto.settings import AUX
+from PratoCerto.settings import CACHED_CATEGORIES
 from pratos.models import Prato
 from .models import Pedido, PedidoPrato, Reserva, Mesa
 
@@ -105,10 +105,10 @@ class ReservaForm(forms.ModelForm):
         )
 
         # Choices de horário
-        if AUX["horario_pulo"] != 24:
-            hora_inicio = datetime.strptime(AUX["horario_abertura"], "%H:%M")
-            hora_fim = datetime.strptime(AUX["horario_encerramento"], "%H:%M")
-            delta = timedelta(hours=AUX["horario_pulo"])
+        if CACHED_CATEGORIES["horario_pulo"] != 24:
+            hora_inicio = datetime.strptime(CACHED_CATEGORIES["horario_abertura"], "%H:%M")
+            hora_fim = datetime.strptime(CACHED_CATEGORIES["horario_encerramento"], "%H:%M")
+            delta = timedelta(hours=CACHED_CATEGORIES["horario_pulo"])
             horarios_choices = []
             hora_atual = hora_inicio
             while hora_atual <= hora_fim:
@@ -127,7 +127,7 @@ class ReservaForm(forms.ModelForm):
             
         # Choices de data
         data_inicio = datetime.now().date()
-        data_fim = data_inicio + timedelta(days=(AUX["data_limite_reserva"]-1))
+        data_fim = data_inicio + timedelta(days=(CACHED_CATEGORIES["data_limite_reserva"]-1))
         datas_choices = []
         data_atual = data_inicio
         while data_atual <= data_fim:

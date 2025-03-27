@@ -4,7 +4,8 @@ from clientes.models import Cliente
 from pratos.models import *
 from pedidos.models import Mesa, Pedido, PedidoPrato
 from pedidos.forms import GarcomPedidoForm
-from PratoCerto.settings import AUX
+from PratoCerto.settings import CACHED_CATEGORIES
+from settings.models import Category
 from .forms import *
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import permission_required, user_passes_test
@@ -27,7 +28,7 @@ def home(request):
         'pedidoPrato_prontos': pedidoPrato_prontos,  # Adiciona os PedidoPrato prontos ao contexto
         'pedidos_para_entrega': pedidos_para_entrega
     }
-    context["Categorias"] = AUX["Categorias"]
+    context["Categorias"] = Category.objects.all().values('key', 'label', 'image')
 
     return render(request, 'models/garcons/home.html', context)
 

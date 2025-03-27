@@ -22,14 +22,14 @@ def pagar_pedido(request, pedido, valor_preco_pontos=None):
           "title": "Frete",
           "quantity": 1,
           "currency_id": "BRL",
-          "unit_price": float(settings.AUX['frete_entrega']) - float(valor_preco_pontos)
+          "unit_price": float(settings.CACHED_CATEGORIES['frete_entrega']) - float(valor_preco_pontos)
     })
     else:
         preference["items"].append({
             "title": "Frete",
             "quantity": 1,
             "currency_id": "BRL",
-            "unit_price": float(settings.AUX['frete_entrega'])
+            "unit_price": float(settings.CACHED_CATEGORIES['frete_entrega'])
         })
     pedidoprato_set = PedidoPrato.objects.filter(pedido=pedido)
     for pedidoPrato in pedidoprato_set:
@@ -40,15 +40,11 @@ def pagar_pedido(request, pedido, valor_preco_pontos=None):
           "unit_price": float(pedidoPrato.prato.preco)
         })
         
-    
-    print(preference["items"])
     mp = mercadopago.MP(settings.CLIENT_ID, settings.CLIENT_SECRET)
-
     preferenceResult = mp.create_preference(preference)
 
     url = preferenceResult["response"]["init_point"]
     
-    print(preferenceResult["response"]["id"])
     pedido.id_pagamento = preferenceResult["response"]["id"]
     pedido.save()
     
@@ -99,7 +95,7 @@ def retorno_mercadopago(request):
             pedido.cliente = cliente
             total = 0
             if pedido.local_retirada == "entrega":
-                pedido.taxa_entrega = settings.AUX["frete_entrega"]
+                pedido.taxa_entrega = settings.CACHED_CATEGORIES["frete_entrega"]
                 total += pedido.taxa_entrega
             else:
                 pedido.taxa_entrega = 0

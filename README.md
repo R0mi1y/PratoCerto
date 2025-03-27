@@ -2,7 +2,7 @@
 
 # Prato Certo
 
-Prato Certo é uma aplicação web desenvolvida em Django, destinada a auxiliar restaurantes no gerenciamento de suas operações. A aplicação oferece funcionalidades abrangentes, incluindo gerenciamento de garçons, eventos, reservas, pratos, pedidos, pagamentos, caixas, clientes e cozinhas.
+Prato Certo é uma aplicação web desenvolvida em Django, destinada a CACHED_CATEGORIESiliar restaurantes no gerenciamento de suas operações. A aplicação oferece funcionalidades abrangentes, incluindo gerenciamento de garçons, eventos, reservas, pratos, pedidos, pagamentos, caixas, clientes e cozinhas.
 
 ## Funcionalidades
 

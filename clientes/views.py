@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from pratos.models import *
 from pedidos.forms import PedidoPratoForm, PedidoForm, GarcomPedidoForm
 from pedidos.models import *
+from settings.models import Category
 from .models import *
 from .forms import *
 from django.contrib import messages
@@ -25,14 +26,10 @@ from main.models import Referencia
 
 def home(request):
     current_datetime = timezone.now()
-    id_pratos = Referencia.objects.filter(chave="recomendacoes")
-    
-    recomendados = []
-    
-    [recomendados.append(Prato.objects.get(id=i.valor)) for i in id_pratos]
+    recomendados = Prato.objects.filter(disponivel=True, recomendado=True)
     
     data = {
-        "Categorias":AUX["Categorias"],
+        "Categorias": Category.objects.all(),
         "cliente": request.user,
         "eventos": Evento.objects.filter(data_inicio__lte=current_datetime, data_termino__gte=current_datetime),
         "recomendados":recomendados,
@@ -51,7 +48,6 @@ def check_password_strength(password):
         # A senha não atende aos requisitos
         return False
 
-
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
@@ -62,9 +58,7 @@ def criar_usuario_cliente(request):
         senha_confirmacao = request.POST.get("confirm_password")
 
         try:
-            print("Recuperando usuario...")
             cliente = Cliente.objects.get(username=request.POST.get("username"))
-            print("Usuario Recuperado!")
 
             # Validação da senha
             if senha != senha_confirmacao:
@@ -104,7 +98,6 @@ def criar_usuario_cliente(request):
             cliente.save()
             assign_role(cliente, "cliente")
         except Cliente.DoesNotExist:
-            print("Usuario não encontrado, realizando cadastro!")
             if form_cliente.is_valid():
                 cliente = form_cliente.save(commit=False)
 
@@ -136,8 +129,6 @@ def gerar_aleatorio(string):
     # Aplica a função de hash (SHA-256) à string aleatória
     hash_object = hashlib.sha256(string_aleatoria.encode())
     hash_hex = hash_object.hexdigest()
-    
-    print(hash_hex)
     
     return (hash_hex[:2] + string + hash_hex[2:4]).upper()
 
@@ -216,7 +207,7 @@ def comprar_carrinho(request):
         pedido.cliente = cliente
         total = 0
         if pedido.local_retirada == "entrega":
-            pedido.taxa_entrega = settings.AUX["frete_entrega"]
+            pedido.taxa_entrega = settings.CACHED_CATEGORIES["frete_entrega"]
             total += pedido.taxa_entrega
         else:
             pedido.taxa_entrega = 0
@@ -226,11 +217,11 @@ def comprar_carrinho(request):
             pedidoPrato.status = "Pendente"
             pedidoPrato.pedido = pedido
             
-        cliente.pontos = float(total) / float(settings.AUX['pontos']['por_valor_compra'])
+        cliente.pontos = float(total) / float(settings.CACHED_CATEGORIES['pontos']['por_valor_compra'])
         valor_preco_pontos = None
         if request.POST.get('usar_pontos'):
-            total = float(total) - float(settings.AUX['pontos']['valor_rs']) * float(cliente.pontos)
-            valor_preco_pontos = float(total) - float(settings.AUX['pontos']['valor_rs']) * float(cliente.pontos)
+            total = float(total) - float(settings.CACHED_CATEGORIES['pontos']['valor_rs']) * float(cliente.pontos)
+            valor_preco_pontos = float(total) - float(settings.CACHED_CATEGORIES['pontos']['valor_rs']) * float(cliente.pontos)
             cliente.pontos = 0
         
         pedido.status = "Pendente"
@@ -253,8 +244,8 @@ def comprar_carrinho(request):
         "pedidos": pedidosPrato,
         "form": PedidoForm(cliente_id=cliente.pk),
         "total": total,
-        "taxa_entrega": settings.AUX["frete_entrega"],
-        'valor_rs': settings.AUX['pontos']['valor_rs'],
+        "taxa_entrega": settings.CACHED_CATEGORIES["frete_entrega"],
+        'valor_rs': settings.CACHED_CATEGORIES['pontos']['valor_rs'],
     }
     
     return render(request, 'models/pedidos/pagamento.html', context)

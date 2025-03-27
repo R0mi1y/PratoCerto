@@ -5,23 +5,21 @@
 {% block title %}Form{% endblock %}
 
 {% block content %}
-{% block head %}{% endblock head %}
+{% block head %}
     <title>
       {% if titulo %}
-      {{ titulo }}
+        {{ titulo }}
       {% else %}
-      Formulário de Cadastro
+        Formulário de Cadastro
       {% endif %}
     </title>
-    <link rel="icon" href="{% static "images/icons/logo-icon.png" %}"/>
+    
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
+    <link rel="icon" href="{% static "images/icons/logo-icon.png" %}"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap"/>
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-
-
     <link rel="stylesheet" href="{% static "css/style_form.css"%}">
 
     <style>
@@ -45,11 +43,12 @@
         display: flex !important;
       }
     </style>
+    {% endblock head %}
     <section>
       <div class="loading-overlay" id="loadingOverlay"  style="max-width: 150px;">
-          <div class="loading-spinner">
+        <div class="loading-spinner">
           <img style="width: 45px;" src="{{prefix}}/static/images/icons/icon-loading.png">
-          </div>
+        </div>
       </div>
       <div class="card">
         <div class="card-body">

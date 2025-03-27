@@ -20,7 +20,7 @@
         color: #181818;
       "
     >
-      Lista de Pratos
+      {{ categoria.label }}
     </h1>
     <hr style="width: 100%; border: 2px solid; margin-bottom: 40px;" />
     <div class="container">
@@ -72,6 +72,16 @@
             </div>
           </div>
         </div>
+        {% empty %}
+        <h1
+          style="
+            text-align: center;
+            font-family: 'Belanosima', sans-serif;
+            color:rgb(51, 51, 51);
+          "
+        >
+          Nenhum prato cadastrado
+        </h1>
         {% endfor %}
       </div>
     </div>

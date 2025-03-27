@@ -10,7 +10,6 @@ from pratos.models import Ingrediente, Receita, IngredienteReceita
 def home(request):
     pedidos_restaurante = PedidoPrato.objects.filter(status='Pendente local')
     pedidos_site = PedidoPrato.objects.filter(status='Pendente')
-    print(pedidos_site)
     ingredientes = Ingrediente.objects.all()
     receitas = Receita.objects.all()
     ingredientes_receita = IngredienteReceita.objects.all()

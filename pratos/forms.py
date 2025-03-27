@@ -1,4 +1,7 @@
 from django import forms
+
+from PratoCerto.settings import CACHED_CATEGORIES
+from settings.models import Category
 from .models import Adicional, Prato, Ingrediente, Receita, IngredienteReceita
 from django.utils.html import format_html
 
@@ -20,7 +23,10 @@ class PratoForm(forms.ModelForm):
         model = Prato
         fields = ["nome", "disponivel", "categoria", "preco", "foto", "adicional", "receita", "descricao"]
         widgets = {
-            "categoria":forms.Select(attrs={'class': 'form-control'}),
+            "categoria": forms.Select(
+                attrs={'class': 'form-control'},
+                choices=[(category.key, category.label) for category in Category.objects.all()]
+            ),
             "descricao":forms.Textarea(attrs={'class': 'form-control'}),
             "nome": forms.TextInput(attrs={'class': 'form-control'}),
             "preco": forms.NumberInput(attrs={'class': 'form-control'}),

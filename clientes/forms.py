@@ -1,6 +1,6 @@
 from django import forms
 from .models import Cliente, Endereco
-from PratoCerto.settings import AUX
+from PratoCerto.settings import CACHED_CATEGORIES
 from django.contrib.auth.hashers import make_password
 
 
@@ -44,10 +44,10 @@ class ClienteForm(forms.ModelForm):
 
         if indicador and indicador != "":
             try:
-                Cliente.objects.get(codigo_afiliado=indicador).pontos += AUX["pontos"][
+                Cliente.objects.get(codigo_afiliado=indicador).pontos += CACHED_CATEGORIES["pontos"][
                     "indicação"
                 ]
-                self.cleaned_data["pontos"] += AUX["pontos"]["indicado"]
+                self.cleaned_data["pontos"] += CACHED_CATEGORIES["pontos"]["indicado"]
             except Cliente.DoesNotExist:
                 raise forms.ValidationError("Código do indicador inválido.")
 
@@ -90,10 +90,10 @@ class ClienteFormEditar(forms.ModelForm):
 
         if indicador and indicador != "":
             try:
-                Cliente.objects.get(codigo_afiliado=indicador).pontos += AUX["pontos"][
+                Cliente.objects.get(codigo_afiliado=indicador).pontos += CACHED_CATEGORIES["pontos"][
                     "indicação"
                 ]
-                self.cleaned_data["pontos"] += AUX["pontos"]["indicado"]
+                self.cleaned_data["pontos"] += CACHED_CATEGORIES["pontos"]["indicado"]
             except Cliente.DoesNotExist:
                 raise forms.ValidationError("Código do indicador inválido.")
 

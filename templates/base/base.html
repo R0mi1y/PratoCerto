@@ -129,6 +129,9 @@
                 <ul>
                   {% if has_admin_role %}
                   <li class="nav-item">
+                    <a onclick="loadingPage()" class="nav-link" href="{% url "settings" %}">Configurações</a>
+                  </li>
+                  <li class="nav-item">
                     <a onclick="loadingPagetwo()" class="nav-link" href="{% url 'home_eventos' %}">Eventos</a>
                   </li>
                   <li class="nav-item">

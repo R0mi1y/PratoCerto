@@ -56,7 +56,6 @@ def criar_reserva(request):
         if form.is_valid():
             reserva = form.save()
             
-            print("================================================================")
             for mesa in reserva.mesa.all():
                 reservas = Reserva.objects.filter(mesa=mesa).exclude(id=reserva.pk)
 
@@ -73,7 +72,6 @@ def criar_reserva(request):
                                 msm += f"{mesa} Indisponível para {reserva2.data_reserva}!\n"
             if msm == "":
                 total = request.POST.get("preco_total")
-                print(total + "================================================================")
                 return pagar_reserva(request, total)
             
             reserva.delete()

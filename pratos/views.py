@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from clientes.models import Cliente
-from PratoCerto.settings import AUX
+from PratoCerto.settings import CACHED_CATEGORIES
 from .models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
@@ -9,13 +9,10 @@ from rolepermissions.decorators import has_role_decorator
 
 def template_categoria(request, categoria):
     data = {}
-    data["pratos"] = Prato.objects.filter(categoria=categoria, disponivel=True)
     
-    for tupla in AUX["Categorias"]:
-        if tupla[0] == categoria:
-            data["Categoria"] = tupla[1]
-            break
-    data['cliente'] = request.user
+    categoria = Category.objects.filter(pk=categoria).first()
+    data["pratos"] = Prato.objects.filter(categoria=categoria.key, disponivel=True)
+    data["categoria"] = categoria
     
     return render(request, "models/pratos/lista_pratos.html", data)
 

@@ -1,0 +1,157 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load form_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Configurações</h2>
+        </div>
+    </div>
+
+    {% if messages %}
+        <div class="row">
+            <div class="col-12">
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Configurações de Pontos e Horários</h5>
+                </div>
+                <div class="p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <h6>Pontos</h6>
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <label for="id_indication" class="form-label">Indicação</label>
+                                    {{ points_form.indication|add_class:"form-control" }}
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label for="id_indicated" class="form-label">Indicado</label>
+                                    {{ points_form.indicated|add_class:"form-control" }}
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label for="id_per_purchase_value" class="form-label">Por Valor de Compra</label>
+                                    {{ points_form.per_purchase_value|add_class:"form-control" }}
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label for="id_per_rs" class="form-label">Por RS</label>
+                                    {{ points_form.per_rs|add_class:"form-control" }}
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label for="id_rs_value" class="form-label">Valor RS</label>
+                                    {{ points_form.rs_value|add_class:"form-control" }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Horários</h6>
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <label for="id_opening_time" class="form-label">Horário de Abertura</label>
+                                    {{ hours_form.opening_time|add_class:"form-control" }}
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label for="id_closing_time" class="form-label">Horário de Encerramento</label>
+                                    {{ hours_form.closing_time|add_class:"form-control" }}
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label for="id_reservation_deadline" class="form-label">Data Limite para Reserva</label>
+                                    {{ hours_form.reservation_deadline|add_class:"form-control" }}
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label for="id_time_jump" class="form-label">Horário Pulo</label>
+                                    {{ hours_form.time_jump|add_class:"form-control" }}
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label for="id_delivery_fee" class="form-label">Frete de Entrega</label>
+                                    {{ hours_form.delivery_fee|add_class:"form-control" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-3">Salvar Configurações</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Adicionar Categoria</h5>
+                </div>
+                <div class="p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_label" class="form-label">Nome da Categoria</label>
+                            {{ category_form.label|add_class:"form-control" }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_image" class="form-label">Imagem</label>
+                            {{ category_form.image|add_class:"form-control" }}
+                        </div>
+                        <button type="submit" class="btn btn-success">Adicionar Categoria</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h4>Categorias</h4>
+            <table class="table table-striped table-bordered mt-3">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nome</th>
+                        <th>Código</th>
+                        <th>Imagem</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td><strong>{{ category.label }}</strong></td>
+                            <td>{{ category.key }}</td>
+                            <td>
+                                {% if category.image %}
+                                    <img src="{{ category.image.url }}" alt="{{ category.label }}" width="50">
+                                {% else %}
+                                    <span>Sem imagem</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form action="{% url 'delete_category' category.pk %}" method="post" onsubmit="return confirm('Tem certeza que deseja deletar esta categoria?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">Nenhuma categoria cadastrada.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

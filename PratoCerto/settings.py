@@ -8,18 +8,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 
+APPEND_SLASH = True
+
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
 APP_ICON = env('APP_ICON')
 APP_NAME = env('APP_NAME')
-BOT_NAME = env('BOT_NAME')
 FORCE_SCRIPT_NAME = env("FORCE_SCRIPT_NAME")
-
-# CRONJOBS = [
-#     (env('CRON_SCHEDULE'), 'notifications.cron.send_random_motivation_notifications')
-# ]
 
 DB_CONNECTION = env('DB_CONNECTION', default='sqlite')  # Valor default para sqlite
 DB_HOST = env('DB_HOST', default='127.0.0.1')
@@ -76,8 +73,8 @@ INSTALLED_APPS = [
     "pedidos",
     "pratos",
     "eventos",
-    "django_cron",
     "main",
+    "settings",
     "admin_gerente",
     "pagamentos",
     #  Django all-auth
@@ -87,6 +84,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
     
+    "django_cron",
     'corsheaders',
 ]
 
@@ -179,7 +177,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # precisam estar em 2, o primeiro é o valor que será salvo no BD
 # o segundo é o q vai aparecer para o usuário
 # as imagens de cada um tem q estar no formato do primeiro .jpeg
-AUX = {
+CACHED_CATEGORIES = {
     "Categorias": [
         ("entradas", "Entradas"),
         ("pratos_principais", "Pratos Principais"),
@@ -205,9 +203,9 @@ AUX = {
     'frete_entrega':8,
 }
 
-MERCADOPAGO_PUBLIC_KEY = "APP_USR-d3aa1835-6e08-417b-aaf1-4e7eb7623102"
-MERCADOPAGO_ACCESS_TOKEN = 'APP_USR-4147311653907718-071021-d4636e2f103e1d55546819b03e8c141d-1336869796'
-CLIENT_ID = '4147311653907718'
-CLIENT_SECRET = 'kvAxR7bd8Xtb87ThC5CjEqpCVWbHJKy9'
+MERCADOPAGO_PUBLIC_KEY = env("MERCADOPAGO_PUBLIC_KEY")
+MERCADOPAGO_ACCESS_TOKEN = env("MERCADOPAGO_ACCESS_TOKEN")
+CLIENT_ID = env("CLIENT_ID")
+CLIENT_SECRET = env("CLIENT_SECRET")
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = env.bool('CORS_ORIGIN_ALLOW_ALL')

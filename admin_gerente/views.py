@@ -7,7 +7,6 @@ from pratos.models import *
 from rolepermissions.roles import assign_role
 from rolepermissions.decorators import has_role_decorator
 from .forms import AdminForm
-from PratoCerto.settings import AUX
 from main.models import Referencia
 
 
@@ -53,25 +52,18 @@ def home(request):
 
 @has_role_decorator("admin")
 def deletar_recomendacao(request, id):
-    Referencia.objects.filter(chave="recomendacoes", valor=str(id)).delete()
+    Prato.objects.filter(id=id).update(recomendado=False)
     return redirect("gerenciar_recomendacoes")
     
     
 @has_role_decorator("admin")
 def add_recomendacao(request, id=None):
-    if id:
-        Referencia.objects.create(chave="recomendacoes", valor=id)
+    Prato.objects.filter(id=id).update(recomendado=True)
+    
     return redirect("gerenciar_recomendacoes")
 
 
 @has_role_decorator("admin")
 def ver_recomendacoes(request):
-    id_pratos = Referencia.objects.filter(chave="recomendacoes")
-    
-    recomendados = []
-    [recomendados.append(int(i.valor)) for i in id_pratos]
-    
-    print(recomendados)
-        
     pratos = Prato.objects.all()
-    return render(request, "models/admin_gerente/set_pratos_recomendacoes.html",{"pratos":pratos, "recomendados":recomendados})
+    return render(request, "models/admin_gerente/set_pratos_recomendacoes.html",{"pratos":pratos})
