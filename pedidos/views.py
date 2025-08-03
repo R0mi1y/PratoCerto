@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from .forms import *
 from .models import *
-from pratos.models import Prato, Comentario
+from pratos.models import Prato
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.http import HttpResponseRedirect
 from pagamentos.views import pagar_reserva
 
